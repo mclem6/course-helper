@@ -66,4 +66,4 @@ A Java desktop application designed to help students manage their coursework. Th
 
 
 
-This is just a skeleton for app objectives and possible technologies to use. My learning objective is to learn full-stack development utilizing Java technologies. 
+This is just a skeleton for app objectives and possible technologies to use. The learning objective is to master full-stack development utilizing Java technologies, become familiar with the full software development process, and learn to design products for specific pain points. 
