@@ -6,6 +6,7 @@ Java desktop application for students to manage class schedules and assignments.
 A Java desktop application designed to help students manage their coursework. The key features will include:
 
 - Calendar Creation and Management.
+- Dedicated sections for today's tasks, upcoming deadlines, plans, and study tools (flashcards, lecture refreshers...)
 - Integration with Google Calendar to sync deadlines and events.
 - AI-powered Chatbot to assist with studying and deadline reminders.
 
