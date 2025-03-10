@@ -65,5 +65,22 @@ A Java desktop application designed to help students manage their coursework. Th
 - Use JDBC or JPA (Java Persistence API) for database interaction.
 
 
+## Phase 1: 
+### build different calendar views (month, week, daily) 
+- month (block schedule like UI, see task details on hover), 
+- week (see details about tasks, on hover see task plan)
+- day (see plan of each task)
+
+### widgets
+- stats about tasks/schedule widget
+- upcoming deadline widget
+- fun widget (motivational quote)
+
+* TODO: *
+- create class diagram
+- design UI
+- set up project code (maven build, create pom file)
+
+
 
 This is just a skeleton for app objectives and possible technologies to use. The learning objective is to master full-stack development utilizing Java technologies, become familiar with the full software development process, and learn to design products for specific pain points. 
