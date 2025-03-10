@@ -76,10 +76,10 @@ A Java desktop application designed to help students manage their coursework. Th
 - upcoming deadline widget
 - fun widget (motivational quote)
 
-* TODO: *
-- create class diagram
-- design UI
-- set up project code (maven build, create pom file)
+* TODO: 
+1. create class diagram
+2. design UI
+3. set up project code (maven build, create pom file)
 
 
 
