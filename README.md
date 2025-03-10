@@ -66,6 +66,7 @@ A Java desktop application designed to help students manage their coursework. Th
 
 
 ## Phase 1: 
+
 ### build different calendar views (month, week, daily) 
 - month (block schedule like UI, see task details on hover), 
 - week (see details about tasks, on hover see task plan)
@@ -76,7 +77,7 @@ A Java desktop application designed to help students manage their coursework. Th
 - upcoming deadline widget
 - fun widget (motivational quote)
 
-* TODO: 
+TODO: 
 1. create class diagram
 2. design UI
 3. set up project code (maven build, create pom file)
