@@ -15,10 +15,11 @@ A Java desktop application designed to help students manage their coursework. Th
 ### Desktop Application Framework:
 - Use JavaFX to build the graphical user interface (GUI) for the desktop application.
 - JavaFX Scene Builder: A visual layout tool to design user interfaces quickly.
+- CalendarFX: to build and manage calendars. 
 
 ### Back-End:
 - Use Spring Boot for the backend logic if needed (for managing Google Calendar integration, databases, or AI processing).
-- * Alternatively, Java-based back-end logic can be implemented directly using Java Services for a pure Java desktop app. *
+- ** Alternatively, Java-based back-end logic can be implemented directly using Java Services for a pure Java desktop app. **
 
 
 ### Database:
@@ -30,9 +31,9 @@ A Java desktop application designed to help students manage their coursework. Th
 
 ## Creating and Managing Coursework Calendars:
 
-### Calendar Interface (JavaFX):
-- Build a calendar view using JavaFX's JavaFX CalendarView or create a custom calendar layout.
-- Users can add, update, and delete course events, assignments, and exams using JavaFX input forms.
+### Calendar Interface (CalendarFx):
+- Build the calendar using Java'as CalendarFX.
+- Users can add, update, and delete course events, assignments, and exams.
 
 ### Google Calendar Sync:
 - Integrate Google Calendar API for syncing coursework events.
@@ -68,14 +69,16 @@ A Java desktop application designed to help students manage their coursework. Th
 ## Phase 1: 
 
 ### build different calendar views (month, week, daily) 
-- month (block schedule like UI, see task details on hover), 
+- month (blocking-schedule-like UI, see task details on hover), 
 - week (see details about tasks, on hover see task plan)
 - day (see plan of each task)
 
 ### widgets
 - stats about tasks/schedule widget
 - upcoming deadline widget
-- fun widget (motivational quote)
+- fun widget (motivational quote, streak recorder, countdowns...)
+
+
 
 TODO: 
 1. create class diagram
