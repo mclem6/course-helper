@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "com.coursehelper/com.coursehelper.App",
+            "projectName": "coursehelperapp"
+        },
+        {
+            "vmArgs": "--module-path /Users/mclem/Downloads/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
