@@ -22,6 +22,7 @@ public class App extends Application {
         stage.show();
     }
 
+    //sets the scene, pass root result of loadFMXL which returns root
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
