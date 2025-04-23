@@ -1,4 +1,4 @@
-com/coursehelper/SecondaryController.class
 com/coursehelper/App.class
 module-info.class
-com/coursehelper/PrimaryController.class
+com/coursehelper/AccessScreenController.class
+com/coursehelper/SecondaryController.class
