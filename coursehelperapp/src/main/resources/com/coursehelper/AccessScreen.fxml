@@ -9,7 +9,7 @@
    <children>
       <Label text="Coure Helper" />
       <Button fx:id="LogInButton" text="Log In" onAction="#login"/>
-      <Button fx:id="SignUpButton" text="Sign U" onAction="#signup"/>
+      <Button fx:id="SignUpButton" text="Sign Up" onAction="#signup"/>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
