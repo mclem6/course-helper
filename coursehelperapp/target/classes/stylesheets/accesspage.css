@@ -1,0 +1,12 @@
+.root{
+    /* -fx-background-color: black; */
+    -fx-background-image: url("/images/accessScreen-bg2.png");
+    -fx-background-size: 640px auto;
+    -fx-background-repeat: no-repeat;
+    -fx-alignment: center
+
+}
+
+.vbox {
+    -fx-alignment: center;
+}
