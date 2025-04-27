@@ -17,7 +17,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("AccessScreen"), 640, 480);
+        scene = new Scene(loadFXML("AccessScreen"), 650, 540);
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/accesspage.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -28,7 +29,7 @@ public class App extends Application {
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/FXML/" + fxml + ".fxml"));
         return fxmlLoader.load();
     }
 
