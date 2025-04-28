@@ -3,10 +3,26 @@
     -fx-background-image: url("/images/accessScreen-bg2.png");
     -fx-background-size: 640px auto;
     -fx-background-repeat: no-repeat;
-    -fx-alignment: center
+    /* -fx-alignment: center; */
 
 }
 
-.vbox {
-    -fx-alignment: center;
+.hbox {
+    /* -fx-alignment: center; */
+}
+
+.access-container {
+    -fx-background-color: #d1e8ff;   /* Light blue background */
+    -fx-background-radius: 25;       /* Rounded corners */
+    -fx-padding: 50 20 50 20;      
+    -fx-pref-width: 300px;
+    -fx-max-height: 400px;
+    
+    
+}
+
+.text-field {
+    -fx-pref-width: 200;
+    -fx-pref-height: 36;
+    -fx-background-radius: 25; 
 }

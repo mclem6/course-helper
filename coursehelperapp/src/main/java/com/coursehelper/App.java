@@ -20,7 +20,9 @@ public class App extends Application {
         scene = new Scene(loadFXML("AccessScreen"), 650, 540);
         scene.getStylesheets().add(getClass().getResource("/stylesheets/accesspage.css").toExternalForm());
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
+    
     }
 
     //sets the scene, pass root result of loadFMXL which returns root
