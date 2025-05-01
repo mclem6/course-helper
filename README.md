@@ -1,6 +1,5 @@
 # course-helper
 Java desktop application for students to manage class schedules and assignments. Integration with Google Calendar and AI to assist with studying and deadline reminders.
-crystal
 
 ## Project Overview:
 A Java desktop application designed to help students manage their coursework. The key features will include:
