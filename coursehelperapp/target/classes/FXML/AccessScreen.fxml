@@ -32,8 +32,8 @@
                <TextField fx:id="password" styleClass="text-field"/>
 
                <HBox alignment="center" spacing="10">
-                  <Button fx:id="LogInButton" text="Log In" onAction="#login"/>
-                  <Button fx:id="SignUpButton" text="Create Account" onAction="#signup"/>
+                  <Button fx:id="logInButton" text="Log In" onAction="#login"/>
+                  <Button fx:id="createAccountButton" text="Create Account" onAction="#createAccount"/>
                </HBox>
 
             </children> 

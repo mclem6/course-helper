@@ -2,7 +2,6 @@ package com.coursehelper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -10,10 +9,10 @@ public class DatabaseUtils{
 
     //register user
 
-    public static int registerUser(String username, String password){
+    public static void registerUser(String username, String password){
 
         //address of database 
-        String url = "jdbc:sqlite:courseHelper.db"
+        String url = "jdbc:sqlite:courseHelper.db";
 
         //connect to datase, created if doesn't exist
         //returns connection object -- live connection to database
