@@ -7,6 +7,20 @@ import javafx.fxml.FXML;
 public class AccessScreenController {
 
     @FXML
+    Button createAccountButton;
+
+    @FXML
+    Button login;
+
+    @FXML
+    TextField username;
+
+    @FXML
+    TextField password;
+
+
+
+    @FXML
     private void login() throws IOException {
         //authenticate user 
         
@@ -16,17 +30,16 @@ public class AccessScreenController {
         //if not alert user of error
     }
 
-    @FXML
-    private void signup() throws IOException {
-        //open signup options
-        
-        //load create account button
+  
 
-    
-    }
+    private void createAccount() throws IOException{
+        //verify if all needed fields are inputted
+        if(username.getText() == "" || password.getText == ""){
+            System.out.println("missing field");
+        } else {
+            registerUser(username.getText(), password.getText())
+        }
 
-    private void createaccount() throws IOException{
-        //verify is information entered correctly
 
         //if verified create account
 
