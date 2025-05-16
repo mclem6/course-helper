@@ -3,6 +3,8 @@ package com.coursehelper;
 import java.io.IOException;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 public class AccessScreenController {
 
@@ -31,13 +33,13 @@ public class AccessScreenController {
     }
 
   
-
+    @FXML
     private void createAccount() throws IOException{
         //verify if all needed fields are inputted
-        if(username.getText() == "" || password.getText == ""){
+        if(username.getText() == "" || password.getText() == ""){
             System.out.println("missing field");
         } else {
-            registerUser(username.getText(), password.getText())
+            DatabaseUtils.registerUser(username.getText(), password.getText());
         }
 
 
