@@ -19,17 +19,21 @@
             <Insets top="100" right="50" bottom="0" left="0"/>
          </BorderPane.margin>
          <VBox alignment="center">
-            <Text  text="Coure Helper" />
+            <Text styleClass="app-name" text="Coure Helper" />
          </VBox>
          
-         <VBox alignment="center" spacing="10" styleClass="access-container">
+         <VBox alignment="center" spacing="30" styleClass="access-container">
       
             <children>
 
-               <Label text="Username"/>
-               <TextField fx:id="username" styleClass="text-field"/>
-               <Label text="Password"/>
-               <TextField fx:id="password" styleClass="text-field"/>
+               <VBox alignment="center" spacing="10">
+                  <Label text="Username"/>
+                  <TextField fx:id="username" styleClass="text-field"/>
+                  <Label text="Password"/>
+                  <TextField fx:id="password" styleClass="text-field"/>
+               </VBox>
+
+               <Text fx:id="errorText" style="-fx-fill: red;" />
 
                <HBox alignment="center" spacing="10">
                   <Button fx:id="logInButton" text="Log In" onAction="#login"/>

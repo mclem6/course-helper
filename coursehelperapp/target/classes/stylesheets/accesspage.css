@@ -7,6 +7,10 @@
 
 }
 
+.app-name {
+    -fx-font-size: 30px;
+}
+
 .hbox {
     /* -fx-alignment: center; */
 }
