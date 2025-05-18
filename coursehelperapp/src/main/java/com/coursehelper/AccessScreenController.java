@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 public class AccessScreenController {
 
@@ -20,33 +21,48 @@ public class AccessScreenController {
     @FXML
     TextField password;
 
+    @FXML
+    Text errorText;
+
 
 
     @FXML
     private void login() throws IOException {
+
         //authenticate user 
-        
+        if(username.getText().equals("") || password.getText().equals("")){
+            errorText.setText("*missing username or password");
+        } else {
 
-        //if user exists// correct info entered, load user's home page 
+            //check if user does not exist
+            if(DatabaseUtils.findUser(username.getText(), password.getText()) == DatabaseUtils.USER_DOESNOTEXIST){
+                errorText.setText("incorrect username or password");
+            } else{
+                //user exists, log in and load user's homepage 
+                errorText.setText("user found, logging in");
+            }
+        }
 
-        //if not alert user of error
     }
 
   
     @FXML
     private void createAccount() throws IOException{
         //verify if all needed fields are inputted
-        if(username.getText() == "" || password.getText() == ""){
-            System.out.println("missing field");
+        if(username.getText().equals("") || password.getText().equals("")){
+            System.out.println("*missing field");
         } else {
-            DatabaseUtils.registerUser(username.getText(), password.getText());
+            //attempt to create account
+            if(DatabaseUtils.registerUser(username.getText(), password.getText()) == DatabaseUtils.USER_EXISTS){
+                errorText.setText("*username taken. Enter a different username");
+            } else {
+                //account created, load user's homepage 
+                errorText.setText("account created");
+            }
         }
-
-
-        //if verified create account
-
-        //if not alert user of error
+    
     }
+
 
 
 }
