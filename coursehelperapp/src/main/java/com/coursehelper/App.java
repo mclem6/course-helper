@@ -13,10 +13,12 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+    public static Stage primaryStage;
     private static Scene scene;
 
     @Override
     public void start(Stage stage) throws IOException {
+        primaryStage = stage;
         scene = new Scene(loadFXML("AccessScreen"), 650, 540);
         scene.getStylesheets().add(getClass().getResource("/stylesheets/accesspage.css").toExternalForm());
         stage.setScene(scene);
@@ -30,7 +32,7 @@ public class App extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/FXML/" + fxml + ".fxml"));
         return fxmlLoader.load();
     }

@@ -1,38 +1,43 @@
 package com.coursehelper;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 
+//class for accessing database (Data Access Object)
+public class UserDAO {
 
+    final int USER_DOESNOTEXIST = 0;
+    final int USER_EXISTS = 1;
+    final int ERROR = -1;
 
-public class DatabaseUtils{
+    public UserDAO(){
+        
+        try(Connection conn = Database.getConnection()){
+            //create user table if doesn't exist
+            Statement stmt = conn.createStatement();
+            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, name TEXT)");
+        } catch(SQLException e){
+            System.out.println("Database error: " + e.getMessage());
+        }
 
-
-    final static String DATABASE_PATH = "jdbc:sqlite:courseHelper.db";
-    final static int USER_DOESNOTEXIST = 0;
-    final static int USER_EXISTS = 1;
-    final static int ERROR = -1;
+    }
 
 
     //register user
-    public static int registerUser(String username, String password){
+    public int registerUser(String username, String password){
 
 
         //connect to datase, create if doesn't exist
-        try(Connection conn = DriverManager.getConnection(DATABASE_PATH)){
+        try(Connection conn = Database.getConnection()){
 
             //connection successful
             if (conn != null){
 
-                //create user table if doesn't exist
-                Statement stmt = conn.createStatement();
-                stmt.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
-                
+
 
                 //check if user exists
                 if(is_username_taken(username) == 1){
@@ -41,9 +46,10 @@ public class DatabaseUtils{
                 }
 
                 //insert user
-                PreparedStatement psmt = conn.prepareStatement("INSERT INTO users (username, password) VALUES(?, ?)");
+                PreparedStatement psmt = conn.prepareStatement("INSERT INTO users (username, password, name) VALUES(?, ?, ?)");
                 psmt.setString(1, username);            
                 psmt.setString(2, password);  
+                psmt.setString(3, "Jane Doe");  
                 
                 if(psmt.executeUpdate() == 1){
                     System.out.println("user registered");
@@ -68,9 +74,9 @@ public class DatabaseUtils{
     }
 
     //check if username is taken
-    public static int is_username_taken(String username){
+    public int is_username_taken(String username){
 
-        try( Connection conn = DriverManager.getConnection(DATABASE_PATH);
+        try( Connection conn = Database.getConnection();
         PreparedStatement stmt = conn.prepareStatement("SELECT 1 FROM users WHERE username = ? ");
        ){
        if (conn != null){
@@ -101,10 +107,10 @@ public class DatabaseUtils{
 
 
     
-    public static int findUser(String username, String password){
+    public int findUser(String username, String password){
 
 
-        try( Connection conn = DriverManager.getConnection(DATABASE_PATH);
+        try( Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT id FROM users WHERE username = ? AND password = ? LIMIT 1");
             ){
             if (conn != null){
@@ -138,12 +144,12 @@ public class DatabaseUtils{
 
 
     
-    public static int get_userId(String username, String password){
+    public int get_userId(String username, String password){
 
         //check if user exists, return user id if yes, otherwise return error
         if(findUser(username, password) == USER_EXISTS){
             //query for user's id
-            try( Connection conn = DriverManager.getConnection(DATABASE_PATH);
+            try( Connection conn = Database.getConnection();
                  PreparedStatement stmt = conn.prepareStatement("SELECT id FROM users WHERE username = ? AND password = ? LIMIT 1");
            ){
 
@@ -170,5 +176,39 @@ public class DatabaseUtils{
         return ERROR;
     }
 
+    public String get_userName(String username, String password){
 
+         //check if user exists, return user id if yes, otherwise return error
+        if(findUser(username, password) == USER_EXISTS){
+            //query for user's name
+            try( Connection conn = Database.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement("SELECT name FROM users WHERE username = ? AND password = ? LIMIT 1");
+           ){
+
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                String userName = rs.getString("name");
+                System.out.println("user name is " + userName);
+                return userName;
+            } 
+            else {
+                System.out.println("User not found.");
+            }
+
+           } catch(SQLException e){
+                System.out.println("Database error: " + e.getMessage());
+           }
+
+        }
+
+        //database
+        return username; 
+        
+
+    }
+
+    
 }
