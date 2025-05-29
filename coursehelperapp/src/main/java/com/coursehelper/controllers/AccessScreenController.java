@@ -1,6 +1,9 @@
-package com.coursehelper;
+package com.coursehelper.controllers;
 
 import java.io.IOException;
+
+import com.coursehelper.App;
+import com.coursehelper.UserDAO;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

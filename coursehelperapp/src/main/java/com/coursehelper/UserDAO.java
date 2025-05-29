@@ -10,9 +10,9 @@ import java.sql.Statement;
 //class for accessing database (Data Access Object)
 public class UserDAO {
 
-    final int USER_DOESNOTEXIST = 0;
-    final int USER_EXISTS = 1;
-    final int ERROR = -1;
+    public static final int USER_DOESNOTEXIST = 0;
+    public static final int USER_EXISTS = 1;
+    public static final int ERROR = -1;
 
     public UserDAO(){
         
