@@ -8,7 +8,7 @@ public class HomePageController {
     @FXML
     Text welcomeText;
 
-    public void welcomeText(String userName){
+    public void setWelcomeMessage(String userName){
         welcomeText.setText("Welcome, " + userName);
     }
 
