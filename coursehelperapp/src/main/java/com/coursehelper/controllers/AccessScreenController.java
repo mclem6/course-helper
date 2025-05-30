@@ -3,7 +3,9 @@ package com.coursehelper.controllers;
 import java.io.IOException;
 
 import com.coursehelper.App;
+import com.coursehelper.User;
 import com.coursehelper.UserDAO;
+import com.coursehelper.UserSession;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,23 +37,38 @@ public class AccessScreenController {
 
     UserDAO userDao = new UserDAO();
 
+    User user;
 
 
     @FXML
     private void login() throws IOException {
 
-        //authenticate user 
+        //authenticating user 
+        //check if entry is not valid
         if(username.getText().equals("") || password.getText().equals("")){
             errorText.setText("*missing username or password");
-        } else {
+        } 
+        
+        //check if user exists/credentials are correct
+        else {
 
-            //check if user does not exist
+            //user does not exist or credentials not correct
             if(userDao.findUser(username.getText(), password.getText()) == userDao.USER_DOESNOTEXIST){
                 errorText.setText("incorrect username or password");
-            } else{
-                //user exists, log in and load user's homepage 
-                errorText.setText("user found, logging in");
-                init_homePage(App.primaryStage);
+            } 
+
+            //user exists, log in and load user's homepage 
+            else{
+                
+                //initialize User object
+                user = userDao.getUserByCredentials(username.getText(), password.getText());
+                //null check
+                if(user != null){
+                    UserSession.init(user.getId(), user.getName(), user.getUsername());
+                    init_homePage(App.primaryStage);
+
+                }
+        
             }
         }
 
@@ -80,10 +97,6 @@ public class AccessScreenController {
 
         //get dimensions
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        
-        //center screen
-        stage.setX(bounds.getMinX());
-        stage.setY(bounds.getMinY());
 
         //get homepage controller
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/HomePage.fxml"));
@@ -91,16 +104,22 @@ public class AccessScreenController {
 
         //get controller to set welcome message
         HomePageController controller = loader.getController();
-        controller.welcomeText(userDao.get_userName(username.getText(), password.getText()));
+        String userName = user.getName();
+        
+        if(userName != null){
+            controller.setWelcomeMessage(userName);
+        }
 
         //set style sheet of homepage
         root.getStylesheets().add(getClass().getResource("/stylesheets/homepage.css").toExternalForm());
-        //get homepage loader
-        Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
+       
+        //set scene
+        Scene scene = new Scene(root, (bounds.getWidth() - 500), bounds.getHeight());
         stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(true);
 
-       
-       
+
     }
 
 

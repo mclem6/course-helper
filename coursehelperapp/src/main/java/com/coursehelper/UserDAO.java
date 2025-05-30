@@ -49,7 +49,7 @@ public class UserDAO {
                 PreparedStatement psmt = conn.prepareStatement("INSERT INTO users (username, password, name) VALUES(?, ?, ?)");
                 psmt.setString(1, username);            
                 psmt.setString(2, password);  
-                psmt.setString(3, "Jane Doe");  
+                psmt.setString(3, username);  //TODO : fix after adding create account page
                 
                 if(psmt.executeUpdate() == 1){
                     System.out.println("user registered");
@@ -141,16 +141,13 @@ public class UserDAO {
         return ERROR;
 
     }
+    public User getUserByCredentials(String username, String password){
 
-
-    
-    public int get_userId(String username, String password){
-
-        //check if user exists, return user id if yes, otherwise return error
+         //check if user exists, return User object if true
         if(findUser(username, password) == USER_EXISTS){
             //query for user's id
             try( Connection conn = Database.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement("SELECT id FROM users WHERE username = ? AND password = ? LIMIT 1");
+                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ? LIMIT 1");
            ){
 
             stmt.setString(1, username);
@@ -158,44 +155,13 @@ public class UserDAO {
 
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
-                int userId = rs.getInt("id");
-                System.out.println("user id is " + userId);
-                return userId;
+                //create User object and pass args
+                return new User( rs.getInt("id"), rs.getString("name"), rs.getString("username"));
+                
             } 
             else {
-                System.out.println("User not found.");
-            }
-
-           } catch(SQLException e){
-                System.out.println("Database error: " + e.getMessage());
-           }
-
-        }
-        
-
-        return ERROR;
-    }
-
-    public String get_userName(String username, String password){
-
-         //check if user exists, return user id if yes, otherwise return error
-        if(findUser(username, password) == USER_EXISTS){
-            //query for user's name
-            try( Connection conn = Database.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement("SELECT name FROM users WHERE username = ? AND password = ? LIMIT 1");
-           ){
-
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-
-            ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
-                String userName = rs.getString("name");
-                System.out.println("user name is " + userName);
-                return userName;
-            } 
-            else {
-                System.out.println("User not found.");
+                //not sure when this would occur but here incase
+                return null;
             }
 
            } catch(SQLException e){
@@ -204,11 +170,77 @@ public class UserDAO {
 
         }
 
-        //database
-        return username; 
-        
+        return null;
 
     }
+
+    //possibly don't need these last methods 
+    
+    // public int get_userId(String username, String password){
+
+    //     //check if user exists, return user id if yes, otherwise return error
+    //     if(findUser(username, password) == USER_EXISTS){
+    //         //query for user's id
+    //         try( Connection conn = Database.getConnection();
+    //              PreparedStatement stmt = conn.prepareStatement("SELECT id FROM users WHERE username = ? AND password = ? LIMIT 1");
+    //        ){
+
+    //         stmt.setString(1, username);
+    //         stmt.setString(2, password);
+
+    //         ResultSet rs = stmt.executeQuery();
+    //         if(rs.next()){
+    //             int userId = rs.getInt("id");
+    //             System.out.println("user id is " + userId);
+    //             return userId;
+    //         } 
+    //         else {
+    //             System.out.println("User not found.");
+    //         }
+
+    //        } catch(SQLException e){
+    //             System.out.println("Database error: " + e.getMessage());
+    //        }
+
+    //     }
+        
+
+    //     return ERROR;
+    // }
+
+    // public String get_userName(String username, String password){
+
+    //      //check if user exists, return user id if yes, otherwise return error
+    //     if(findUser(username, password) == USER_EXISTS){
+    //         //query for user's name
+    //         try( Connection conn = Database.getConnection();
+    //              PreparedStatement stmt = conn.prepareStatement("SELECT name FROM users WHERE username = ? AND password = ? LIMIT 1");
+    //        ){
+
+    //         stmt.setString(1, username);
+    //         stmt.setString(2, password);
+
+    //         ResultSet rs = stmt.executeQuery();
+    //         if(rs.next()){
+    //             String userName = rs.getString("name");
+    //             System.out.println("user name is " + userName);
+    //             return userName;
+    //         } 
+    //         else {
+    //             System.out.println("User not found.");
+    //         }
+
+    //        } catch(SQLException e){
+    //             System.out.println("Database error: " + e.getMessage());
+    //        }
+
+    //     }
+
+    //     //database
+    //     return username; 
+        
+
+    // }
 
     
 }

@@ -7,11 +7,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane  styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.HomePageController">
+<BorderPane  styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.HomePageController">
    
     <left>
         <VBox styleClass="vbox">
             <Text fx:id= "welcomeText"/>
+            <fx:include source="Navigation.fxml" />
         </VBox>
     </left>
 
