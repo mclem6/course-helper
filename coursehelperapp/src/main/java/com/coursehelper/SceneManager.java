@@ -15,10 +15,22 @@ public class SceneManager {
 
     public void switchScene(String fxmlPath){
         try {
-            FXMLLoader loader = new FXMLLoader(App.class.getClass().getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(App.class.getResource(fxmlPath));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+
+            //use prev scene
+            Scene currentScene = stage.getScene();
+
+            //check if it exists
+            if(stage.getScene() != null){
+                //it exists,just replace
+                currentScene.setRoot(root);
+            } else {
+                //doesnt exist create new one
+                currentScene = new Scene(root);
+                stage.setScene(currentScene);
+            }
+        
             stage.show();
             
         } catch (Exception e) {

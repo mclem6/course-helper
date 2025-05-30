@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Hyperlink?>
+
+
+<VBox styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml" fx:controller="com.coursehelper.controllers.NavigationController">
+    <Hyperlink text="Home" onAction="#goToHomePage"/>
+    <Hyperlink text="Calendar"/>
+    <Hyperlink text="Todo List"/>
+    <Hyperlink text="Files"/>
+    <Hyperlink text="Setting"/>
+</VBox >
