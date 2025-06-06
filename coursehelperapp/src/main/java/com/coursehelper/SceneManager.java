@@ -13,10 +13,13 @@ public class SceneManager {
         this.stage = stage;
     }
 
-    public void switchScene(String fxmlPath){
+    public void switchScene(String fxmlPath, String styleSheetPath){
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource(fxmlPath));
             Parent root = loader.load();
+
+            //set style sheet of homepage
+            root.getStylesheets().add(getClass().getResource(styleSheetPath).toExternalForm());
 
             //use prev scene
             Scene currentScene = stage.getScene();

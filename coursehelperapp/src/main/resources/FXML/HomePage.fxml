@@ -11,14 +11,13 @@
    
     <left>
         <VBox styleClass="vbox">
-            <Text fx:id= "welcomeText"/>
-            <fx:include source="Navigation.fxml" />
+            <fx:include source="navigation.fxml" />
         </VBox>
     </left>
 
     <center>
         <VBox styleClass="vbox" alignment="TOP_CENTER">
-            <Text text="middle dashboard content"/>
+            <Text text="home page"/>
         </VBox>
     </center>
 
