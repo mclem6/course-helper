@@ -8,6 +8,8 @@ import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.UserDAO;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -43,40 +45,64 @@ public class AccessScreenController {
 
 
     @FXML
-    private void login() throws IOException {
+    private void handleLogin() throws IOException {
 
-        //authenticating user 
-        //check if entry is not valid
+         //authenticating user 
+
+        //check if entries is empty
         if(username.getText().equals("") || password.getText().equals("")){
             errorText.setText("*missing username or password");
         } 
         
-        //check if user exists/credentials are correct
+        //entries not empty, check if user exists/credentials are correct
         else {
 
-            //user does not exist or credentials not correct
-            if(userDao.findUser(username.getText(), password.getText()) == userDao.USER_DOES_NOT_EXIST){
-                errorText.setText("incorrect username or password");
-            } 
-
-            //user exists, log in and load user's homepage 
-            else{
+            //create new thread for database access
+            Task <Void> task = new Task<>(){
                 
-                //initialize User object
-                user = userDao.getUserByCredentials(username.getText(), password.getText());
+                @Override
+                protected Void call() throws Exception {
 
-                //initialize Courses object?
-                courseDAO = new CourseDAO();
+                    //user does not exist or credentials not correct // update UI
+                    if(userDao.authUser(username.getText(), password.getText()) == userDao.USER_DOES_NOT_EXIST){
+                        Platform.runLater(() -> errorText.setText("incorrect username or password"));
+                        
+                    } 
 
-                //null check
-                if(user != null){
-                    UserSession.init(user.getId(), user.getName(), user.getUsername());
-                    initHomePage(App.primaryStage);
+                    //user exists, log in and load user's homepage 
+                    else{
 
+                        //initialize User object
+                        user = userDao.getUserByCredentials(username.getText(), password.getText());
+
+                        //null check
+                        if(user != null){
+                            UserSession.init(user.getId(), user.getName(), user.getUsername());
+                            //upload user's homepage 
+                            Platform.runLater(() -> {
+                                try{
+                                    initHomePage(App.primaryStage);
+                            } catch (IOException e){
+                                e.printStackTrace();
+                            }
+                            
+                        });
+                
+                        }
+                    }
+
+                    return null;
                 }
-        
-            }
+
+
+            };
+
+            //start thread
+            new Thread(task).start();
         }
+
+    
+
 
     }
 
@@ -86,14 +112,54 @@ public class AccessScreenController {
         //verify if all needed fields are inputted
         if(username.getText().equals("") || password.getText().equals("")){
             System.out.println("*missing field");
-        } else {
-            //attempt to create account
-            if(userDao.registerUser(username.getText(), password.getText()) == userDao.USER_EXISTS){
-                errorText.setText("*username taken. Enter a different username");
-            } else {
-                //account created, load user's homepage 
-                errorText.setText("account created");
-            }
+        } 
+        
+        //attempt to create account
+        else {
+            //create task for database access
+            Task <Void> task = new Task<>(){
+                
+                @Override
+                protected Void call() throws Exception {
+
+                    //check if user name is taken 
+                    if(userDao.registerUser(username.getText(), password.getText()) == userDao.USER_EXISTS){
+                        //update UI
+
+                        Platform.runLater(() -> errorText.setText("*username taken. Enter a different username"));
+                    } 
+
+                    //username is available, account created
+                    else {
+                        //load new user's homepage 
+                        //initialize User object
+                        user = userDao.getUserByCredentials(username.getText(), password.getText());
+
+                        //null check
+                        if(user != null){
+                            UserSession.init(user.getId(), user.getName(), user.getUsername());
+
+                            //upload user's homepage 
+                            Platform.runLater(() -> {
+                                try{
+                                    initHomePage(App.primaryStage);
+                            } catch (IOException e){
+                                e.printStackTrace();
+                            }
+                            
+                        });
+                
+                        }
+                        
+                    }
+
+                    return null;
+
+                }
+            };
+
+            //start thread
+            new Thread(task).start();
         }
     
     }

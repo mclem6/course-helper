@@ -16,7 +16,7 @@
     </left>
 
     <center>
-        <VBox styleClass="vbox" alignment="TOP_CENTER" spacing="20">
+        <VBox styleClass="vbox, middle-pane" alignment="TOP_CENTER" spacing="20">
             <Text text="course page"/>
             <Button fx:id="add_new_course_btn" text="Add New Course" onAction="#addNewCourse"/>
             <VBox fx:id="add_course_form_vbox">

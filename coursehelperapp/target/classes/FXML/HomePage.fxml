@@ -16,7 +16,7 @@
     </left>
 
     <center>
-        <VBox styleClass="vbox" alignment="TOP_CENTER">
+        <VBox styleClass="vbox, middle-pane" alignment="TOP_CENTER">
             <Text text="home page"/>
         </VBox>
     </center>
