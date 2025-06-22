@@ -29,7 +29,8 @@ public class CoursesPageController {
 
     public void addNewCourse(){
 
-        //load form fxml and show
+        //load and show couse form
+        //TODO: should be a pop-up window 
         try {
 
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/courseForm.fxml"));
