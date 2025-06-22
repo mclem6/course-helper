@@ -1,32 +1,55 @@
+@font-face{
+    -fx-font-family: "Jost Light";
+    src: url("/stylesheets/fonts/Jost-Light.ttf");
+}
+
 .root{
-    /* -fx-background-color: black; */
-    -fx-background-image: url("/images/accessScreen-bg2.png");
-    -fx-background-size: 640px auto;
+    -fx-background-image: url("/images/gradientBackground.png");
+    -fx-background-size: 264px 555px;
     -fx-background-repeat: no-repeat;
-    /* -fx-alignment: center; */
 
 }
 
 .app-name {
     -fx-font-size: 30px;
+    -fx-font-family: "Jost Light";
+    -fx-color: #454545;
+    -fx-display: flex;
+    -fx-width: 300px;
+    -fx-height: 50px;
+    -fx-flex-direction: column;
+    -fx-justify-content: center;
 }
 
 .hbox {
-    /* -fx-alignment: center; */
+    /* find what this is */
+}
+
+.login-button {
+    -fx-pref-width: 147px;
+    -fx-pref-height: 35px;
+    -fx-background-color: #FFB8B9;
+    -fx-background-radius: 15px;
+    -fx-text-fill: white;
+    /* add font size after removing create account button */
+    /* -fx-font-size: 14px; */ 
 }
 
 .access-container {
-    -fx-background-color: #d1e8ff;   /* Light blue background */
-    -fx-background-radius: 25;       /* Rounded corners */
-    -fx-padding: 50 20 50 20;      
-    -fx-pref-width: 300px;
-    -fx-max-height: 400px;
-    
-    
+    -fx-padding: 20 20 0 20;      
+    -fx-pref-width: 250px;
+    -fx-max-height: 300px;
+}
+
+.un-pw-text {
+    -fx-padding: 13px 0 0 10px;
 }
 
 .text-field {
-    -fx-pref-width: 200;
-    -fx-pref-height: 36;
-    -fx-background-radius: 25; 
+    -fx-padding: 3px 0 3px 9px;
+    -fx-pref-width: 250;
+    -fx-pref-height: 35;
+    -fx-background-radius: 12;
+    -fx-border: 1px solid #E6E6E6;
+    -fx-background: #FFF;
 }

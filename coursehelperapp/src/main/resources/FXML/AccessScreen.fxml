@@ -13,31 +13,31 @@
   
   <right> 
       
-     <VBox spacing="25">
+     <VBox spacing="0">
 
          <BorderPane.margin>
-            <Insets top="100" right="50" bottom="0" left="0"/>
+            <Insets top="150" right="142" bottom="0" left="0"/>
          </BorderPane.margin>
          <VBox alignment="center">
             <Text styleClass="app-name" text="Course Helper" />
          </VBox>
          
-         <VBox alignment="center" spacing="30" styleClass="access-container">
+         <VBox spacing="15" styleClass="access-container">
       
             <children>
 
-               <VBox alignment="center" spacing="10">
-                  <Label text="Username"/>
+               <VBox spacing="10">
+                  <Label text="Username" styleClass="un-pw-text"/>
                   <TextField fx:id="username" styleClass="text-field"/>
-                  <Label text="Password"/>
+                  <Label text="Password" styleClass="un-pw-text"/>
                   <TextField fx:id="password" styleClass="text-field"/>
                </VBox>
 
                <Text fx:id="errorText" style="-fx-fill: red;" />
 
-               <HBox alignment="center" spacing="10">
-                  <Button fx:id="logInButton" text="Log In" onAction="#handleLogin"/>
-                  <Button fx:id="createAccountButton" text="Create Account" onAction="#createAccount"/>
+               <HBox spacing="10">
+                  <Button fx:id="logInButton" text="Log In" onAction="#handleLogin" styleClass="login-button"/>
+                  <Button fx:id="createAccountButton" text="Create Account" onAction="#createAccount" styleClass="login-button"/>
                </HBox>
 
             </children> 

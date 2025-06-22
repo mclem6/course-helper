@@ -19,7 +19,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
-        scene = new Scene(loadFXML("accessScreen"), 650, 540);
+        scene = new Scene(loadFXML("accessScreen"), 800, 555);
         scene.getStylesheets().add(getClass().getResource("/stylesheets/accesspage.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(false);
