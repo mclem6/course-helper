@@ -1,16 +1,16 @@
 package com.coursehelper.controllers;
 
-import javafx.fxml.FXML;
-import javafx.scene.text.Text;
+import com.coursehelper.UserSession;
 
 public class HomePageController {
 
-    @FXML
-    Text welcomeText;
+    UserSession userSession = UserSession.getInstance();
 
-    public void setWelcomeMessage(String userName){
-        welcomeText.setText("Welcome, " + userName);
+    public void initialize(){
+
     }
+
+    
 
     
     

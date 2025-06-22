@@ -36,7 +36,7 @@
                <Text fx:id="errorText" style="-fx-fill: red;" />
 
                <HBox alignment="center" spacing="10">
-                  <Button fx:id="logInButton" text="Log In" onAction="#login"/>
+                  <Button fx:id="logInButton" text="Log In" onAction="#handleLogin"/>
                   <Button fx:id="createAccountButton" text="Create Account" onAction="#createAccount"/>
                </HBox>
 
