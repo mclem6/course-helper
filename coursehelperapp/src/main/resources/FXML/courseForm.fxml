@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
+<?import org.controlsfx.control.CheckComboBox?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.controlsfx.control.CheckComboBox?>
 <?import javafx.collections.*?>
 <?import java.lang.*?>
 
@@ -91,8 +91,8 @@
     </ComboBox>
     <CheckComboBox fx:id="select_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
     <HBox spacing="5">
-        <Button fx:id="add_course_button" text="add"/>
-        <Button fx:id="cancel_course_button" text="cancel"/>
+        <Button fx:id="add_course_button" text="add" prefWidth= "50" maxWidth="50" onAction="#addCourse"/>
+        <Button fx:id="cancel_course_button" text="cancel" prefWidth= "75" maxWidth="75"/>
     </HBox>
 
     

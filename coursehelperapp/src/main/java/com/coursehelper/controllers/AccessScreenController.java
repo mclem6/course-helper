@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.coursehelper.App;
 import com.coursehelper.User;
 import com.coursehelper.UserSession;
-import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.UserDAO;
 
 import javafx.application.Platform;
@@ -39,7 +38,7 @@ public class AccessScreenController {
     Text errorText;
 
     UserDAO userDao = new UserDAO();
-    CourseDAO courseDAO;
+    
 
     User user;
 
@@ -77,7 +76,7 @@ public class AccessScreenController {
 
                         //null check
                         if(user != null){
-                            UserSession.init(user.getId(), user.getName(), user.getUsername());
+                            UserSession.init(user);
                             //upload user's homepage 
                             Platform.runLater(() -> {
                                 try{
@@ -137,7 +136,7 @@ public class AccessScreenController {
 
                         //null check
                         if(user != null){
-                            UserSession.init(user.getId(), user.getName(), user.getUsername());
+                            UserSession.init(user);
 
                             //upload user's homepage 
                             Platform.runLater(() -> {

@@ -6,23 +6,22 @@ public class UserSession {
 
     private static UserSession instance; 
 
-    private int userId;
-    private String userName;
-    private String username;
+    private final User user;
 
-    private UserSession(int userId, String userName, String username){
-        this.userId = userId;
-        this.userName = userName;
-        this.username = username;
+    private UserSession(User user){
+        this.user = user;
     }
 
-    public static void init(int userId, String name, String username){
+    public static void init(User user){
         if(instance == null) {
-            instance = new UserSession(userId, name, username);
+            instance = new UserSession(user);
         }
     }
 
     public static UserSession getInstance() {
+         if (instance == null) {
+            throw new IllegalStateException("UserSession not initialised—call init() first");
+        }
         return instance;
     }
 
@@ -30,9 +29,9 @@ public class UserSession {
         instance = null;
     }
 
-    public int getUserId() { return userId; }
-    public String getUserName() { return userName; }
-    public String getUsername() { return username; }
+    public int getUserId() { return user.id; }
+    public String getUserName() { return user.name; }
+    public String getUsername() { return user.username; }
 
     
 }
