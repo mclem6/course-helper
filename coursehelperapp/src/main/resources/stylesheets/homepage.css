@@ -6,6 +6,7 @@
 
 .vbox {
     -fx-padding: 50 20 20 20; 
+    -fx-min-width: 200px;
 
 
 }
@@ -16,4 +17,5 @@
     -fx-border-style: solid;      /* Border style (optional) */
     /* -fx-padding: 10px;   */
 
+    
 }

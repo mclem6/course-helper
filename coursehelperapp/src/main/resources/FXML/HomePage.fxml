@@ -23,6 +23,9 @@
             <HBox fx:id="coursesContainer" spacing="20">
                 <!-- for course boxes  -->
             </HBox>
+            <VBox fx:id="calendarContainer">
+                <!-- for calendar  -->
+            </VBox>
         </VBox>
     </center>
 
