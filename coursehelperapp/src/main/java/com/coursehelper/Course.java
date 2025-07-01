@@ -1,38 +1,27 @@
 package com.coursehelper;
 
-import java.util.List;
-
-import com.calendarfx.model.Calendar;
-
 
 public class Course {
 
     private int course_id;
     private String course_name;
-    private Calendar calendar;
+    // private String calendarName;
 
 
     //counstructor for creating course
     public Course(int id, String name){
-        course_id = id;
-        course_name = name;
-        this.calendar = new Calendar(name);
+        this.course_id = id;
+        this.course_name = name;
+        // this.calendarName = name;
     }
 
-    //load events for course 
-    public void loadEvents(List<Event> events){
-        for(Event e : events) {
-
-            //get event details and add to entry
-
-            //add entry to calendar
-            
-        }
-        
-    }
 
     public String getCourseName(){
         return course_name;
+    }
+
+    public int getCourseId(){
+        return course_id;
     }
 
 

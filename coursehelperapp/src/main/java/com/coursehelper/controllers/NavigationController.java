@@ -27,15 +27,22 @@ public class NavigationController {
     private void goToHomePage(){
         
         //load user's homepage
-        sceneManager.switchScene("/FXML/homePage.fxml", "/stylesheets/homepage.css");
+        sceneManager.switchScene("/FXML/homePage.fxml", "/stylesheets/homePage.css");
     }
 
     @FXML
-    private void goToCoursesPage(){
+    private void goToCalendarPage(){
         
         //load user's homepage
-        sceneManager.switchScene("/FXML/coursesPage.fxml", "/stylesheets/coursesPage.css");
+        sceneManager.switchScene("/FXML/calendarPage.fxml", "/stylesheets/calendarPage.css");
     }
+
+    // @FXML
+    // private void goToCoursesPage(){
+        
+    //     //load user's homepage
+    //     sceneManager.switchScene("/FXML/coursesPage.fxml", "/stylesheets/coursesPage.css");
+    // }
 
 
     

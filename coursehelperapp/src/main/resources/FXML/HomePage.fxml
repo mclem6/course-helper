@@ -20,10 +20,16 @@
             <VBox alignment="TOP_CENTER">
                 <Text text="home page"/>
             </VBox>
-            <HBox fx:id="coursesContainer" spacing="20">
-                <!-- for course boxes  -->
+            <VBox fx:id="add_course_form_vbox">
+                <!-- for form TODO: make pop-up -->
+            </VBox>
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Button fx:id="add_new_course_btn" text="Add New Course" onAction="#addNewCourse" wrapText="true"/>
+                <HBox fx:id="coursesContainer" styleClass="course-container-hbox" spacing="20" >
+                    <!-- for course boxes  -->
+                </HBox>
             </HBox>
-            <VBox fx:id="calendarContainer">
+            <VBox fx:id="calendarContainer" prefWidth= "600" maxWidth="600">
                 <!-- for calendar  -->
             </VBox>
         </VBox>

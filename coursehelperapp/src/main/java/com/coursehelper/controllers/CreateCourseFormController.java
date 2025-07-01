@@ -2,16 +2,20 @@ package com.coursehelper.controllers;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.controlsfx.control.CheckComboBox;
 
+import com.coursehelper.CalendarManager;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
+import com.coursehelper.dao.EventDAO;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
 public class CreateCourseFormController {
@@ -35,13 +39,24 @@ public class CreateCourseFormController {
     @FXML
     TextField course_name;
 
+    @FXML
+    DatePicker date_picker;
+
     CourseDAO courseDAO;
 
-    UserSession userSession = UserSession.getInstance();
+    EventDAO eventDAO;
+
+    UserSession userSession;
+
+    CalendarManager calendarManager;
 
     public void initialize(){
-        //initialize course data access object
+        //initialize data usersession access object
         courseDAO = CourseDAO.getInstance();
+        eventDAO = EventDAO.getInstance();
+        userSession = UserSession.getInstance();
+
+
         
         //add select_days options
         select_days_checkComboBox.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
@@ -73,15 +88,18 @@ public class CreateCourseFormController {
         //get user input from form fields
         String new_course_name = course_name.getText();
         String new_course_semester = semester_combo.getValue();
-        int new_course_year = Integer.valueOf(year_combo.getValue());
+        int new_course_year = Integer.parseInt(year_combo.getValue());
         String new_course_start_time = start_time_combo.getValue();
         String new_course_end_time = end_time_combo.getValue();
         String new_course_days = select_days_checkComboBox.getTitle();
+        LocalDate new_course_start_date = date_picker.getValue();
 
 
-        //add course to database
-        courseDAO.addCourse(new_course_name, new_course_semester, new_course_year, new_course_start_time, new_course_end_time, new_course_days, userSession.getUserId());
+        //add course to course database
+        int course_id = courseDAO.addCourse(new_course_name, new_course_semester, new_course_year, new_course_start_date, new_course_start_time, new_course_end_time, new_course_days, userSession.getUserId());
 
+        //add schedule to event database
+        eventDAO.addEvent(userSession.getUserId(), new_course_name, EventDAO.EVENT_CLASS, course_id, new_course_start_date, new_course_start_time, new_course_end_time, new_course_days);
 
 
     }

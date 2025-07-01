@@ -17,13 +17,4 @@
     -fx-border-style: solid;      /* Border style (optional) */
     /* -fx-padding: 10px;   */
 
-    
-}
-
-.course-container-hbox {
-    -fx-pref-width: 150px;
-    -fx-max-width: 150px;
-    -fx-pref-height: 150px;
-    -fx-max-height: 150px;
-    -fx-alignment: center;
 }
