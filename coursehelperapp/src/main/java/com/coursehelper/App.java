@@ -20,7 +20,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
         scene = new Scene(loadFXML("accessScreen"), 650, 540);
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/accesspage.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/accessPage.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

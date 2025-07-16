@@ -1,0 +1,17 @@
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/App.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/CalendarManager.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/Course.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/Database.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/Event.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/SceneManager.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/User.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/UserSession.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/AccessScreenController.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/CalendarPageController.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/CoursesPageController.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/CreateCourseFormController.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/HomePageController.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/NavigationController.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/dao/CourseDAO.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/dao/EventDAO.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/dao/UserDAO.java
