@@ -1,9 +1,9 @@
 package com.coursehelper.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
-import com.calendarfx.model.Calendar;
-import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.DetailedDayView;
 import com.coursehelper.App;
 import com.coursehelper.CalendarManager;
@@ -12,12 +12,17 @@ import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 
 public class HomePageController {
@@ -28,18 +33,15 @@ public class HomePageController {
     @FXML
     VBox calendarContainer;
 
-    CalendarManager calendarManager;
+    public CalendarManager calendarManager;
 
     UserSession userSession = UserSession.getInstance();
-    
-    @FXML
-    VBox add_course_form_vbox;
-
-    CreateCourseFormController createCourseFormController;
     
     CourseDAO courseDAO;
 
     EventDAO eventDAO;
+
+    Text courseNode;
     
 
     public void initialize(){
@@ -61,8 +63,9 @@ public class HomePageController {
         if(user_courses.isEmpty()){
 
             //update UI
-            Text courseNode = new Text("No Courses");
+            courseNode = new Text("No Courses");
             coursesContainer.getChildren().add(courseNode);
+            createCalendars(null);
 
         } 
         //user has courses 
@@ -70,8 +73,7 @@ public class HomePageController {
 
             //Update UI : add course(s) to UI
             for (Course course : user_courses){
-            Text courseNode = new Text(course.getCourseName());
-            coursesContainer.getChildren().add(courseNode);
+                addCourseToHBox(course);
             }
 
             //display calendars
@@ -80,8 +82,14 @@ public class HomePageController {
         }
         
         
+    }
 
-
+    public void addCourseToHBox(Course course){
+        Text courseTitle = new Text(course.getCourseName());
+        HBox courseHBox = new HBox();
+        courseHBox.getChildren().add(courseTitle);
+        courseHBox.setStyle("-fx-background-color: " + course.getCourseStyleHex());
+        coursesContainer.getChildren().add(courseHBox);
     }
 
     private void createCalendars(List<Course> user_courses){
@@ -89,31 +97,47 @@ public class HomePageController {
             //create calendar view
             DetailedDayView calendarView = new DetailedDayView(); 
             calendarView.setPrefHeight(400);
-            calendarView.setVisibleHours(4);
-        
-            
-            //for each course
-            for (Course course : user_courses){
-                //create a calendar
-                Calendar<String> courseCal = new Calendar<>(course.getCourseName());
+            calendarView.setVisibleHours(12);
 
-                //add entries to calendar
-                calendarManager.addEntry(courseCal, course);
+            if (user_courses != null){
+                //for each course
+                for (Course course : user_courses){ 
+                    //add entries to calendar
+                    calendarManager.addEntry(course);  
+                }   
 
-
-                //TODO: set color, user select color for course in course form
-                courseCal.setStyle(Style.STYLE1); //replace
-
-                //add to calendar source 
-                calendarManager.getCalendarSource().getCalendars().addAll(courseCal);
-
-                
-            }        
+            }
+             
 
             //add to calendarView
             calendarView.getCalendarSources().addAll(calendarManager.getCalendarSource());
 
-            //TODO: edit calendarView
+            //update calendar thread
+            calendarView.setRequestedTime(LocalTime.now());
+
+            Thread updateTimeThread = new Thread("Calendar: Update Time Thread"){
+                @Override
+                public void run(){
+                    while(true){
+                        Platform.runLater(()-> {
+                            calendarView.setToday(LocalDate.now());
+                            calendarView.setTime(LocalTime.now());
+                            
+                        });
+                        try {
+                            sleep(10000);
+                            
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+
+            //thread settings
+            updateTimeThread.setPriority(Thread.MIN_PRIORITY);
+            updateTimeThread.setDaemon(true);
+            updateTimeThread.start();
            
 
             //add to FXML
@@ -122,21 +146,52 @@ public class HomePageController {
 
     }
 
-    public void addNewCourse(){
+    public void addNewCourseForm(){
 
         //load and show couse form
-        //TODO: should be a pop-up window 
         try {
-
+            
+            // load the FXML
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/courseForm.fxml"));
             Parent formNode = loader.load();
 
-            //get access to form's controller
-            createCourseFormController = loader.getController();
+            // get access to form's controller
+            CreateCourseFormController createCourseFormController = loader.getController();
+            createCourseFormController.setHomePageController(this);
 
-            //add form to course page 
-            add_course_form_vbox.getChildren().add(formNode);
+            //callback to update UI
+            createCourseFormController.setOnCourseCreated(course -> {
+                 //remove no course text
+                if(courseNode != null && courseNode.isVisible()){
+                    coursesContainer.getChildren().remove(courseNode);
 
+                }
+                //update course box
+                addCourseToHBox(course);
+
+                //add schedule to calendar 
+                calendarManager.addEntry(course);
+
+                //print color
+                System.out.println(course.getCourseStyle());
+
+
+            });
+
+
+            // create new window
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Add New Course");
+
+            // make stage modal(block other windows)
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+
+            // set scene and show
+            Scene scene = new Scene(formNode, Region.USE_COMPUTED_SIZE , 100);
+            popupStage.setScene(scene);
+            popupStage.showAndWait();;
+
+            
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,6 +199,7 @@ public class HomePageController {
 
         
     }
+
 
 
 

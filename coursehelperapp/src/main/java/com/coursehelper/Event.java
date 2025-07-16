@@ -29,26 +29,27 @@ public class Event {
         //seperate days by comma
         String[] days = classDays.split(",");
         for (String day : days) {
+            day = day.trim();
             switch (day) {
-                case "MONDAY":
+                case "Monday":
                     class_day_list.add("MO");
                     break;
-                case "TUESDAY":
+                case "Tuesday":
                     class_day_list.add("TU");
                     break;
-                case "WEDNESDAY":
+                case "Wednesday":
                     class_day_list.add("WE");
                     break;
-                case "THURSDAY":
+                case "Thursday":
                     class_day_list.add("TH");
                     break;
-                case "FRIDAY":
+                case "Friday":
                     class_day_list.add("FR");
                     break;
-                case "SATURDAY":
+                case "Saturday":
                     class_day_list.add("SA");
                     break;
-                case "SUNDAY":
+                case "Sunday":
                     class_day_list.add("SU");
                     break;
                 default:
@@ -72,17 +73,19 @@ public class Event {
     public LocalDateTime getStartLocalDateTime(){
 
         //create LocalTime 
-        LocalTime time;
         String[] hour_min = start_time.split(":");
         int hour = Integer.parseInt(hour_min[0]);
         int min = Integer.parseInt(hour_min[1].substring(0,2));
         String meridiem = hour_min[1].substring(2);
 
+        
         if (meridiem.equals("AM")){
-            time = LocalTime.of(hour, min);
+            if(hour == 12) hour = 0;
         } else {
-            time = LocalTime.of(hour + 12, min);
+            if (hour != 12) hour += 12;
         }
+
+        LocalTime time = LocalTime.of(hour, min);
 
         //retunr LocalDateTime
         return LocalDateTime.of(this.start_date, time);
@@ -94,17 +97,18 @@ public class Event {
     public LocalDateTime getEndLocalDateTime(){
 
         //create LocalTime 
-        LocalTime time;
         String[] hour_min = end_time.split(":");
         int hour = Integer.parseInt(hour_min[0]);
         int min = Integer.parseInt(hour_min[1].substring(0,2));
         String meridiem = hour_min[1].substring(2);
 
         if (meridiem.equals("AM")){
-            time = LocalTime.of(hour, min);
+            if(hour == 12) hour = 0;
         } else {
-            time = LocalTime.of(hour + 12, min);
+            if (hour != 12) hour += 12;
         }
+
+        LocalTime time = LocalTime.of(hour, min);
 
         //return LocalDateTime
         return LocalDateTime.of(this.start_date, time);

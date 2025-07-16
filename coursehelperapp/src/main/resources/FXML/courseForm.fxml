@@ -8,7 +8,7 @@
 <?import java.lang.*?>
 
 
-<HBox spacing="10" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.CreateCourseFormController">
+<HBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.CreateCourseFormController">
 
     <TextField fx:id="course_name" promptText="course name"/>
     <ComboBox fx:id="semester_combo" promptText="semester" prefWidth= "125" maxWidth="125">
@@ -55,7 +55,6 @@
                 <String fx:value="9:00PM" />
                 <String fx:value="10:00PM" />
                 <String fx:value="11:00PM" />
-                <String fx:value="12:00PM" />
             </FXCollections>
         </items>
     </ComboBox>
@@ -91,9 +90,10 @@
         </items>
     </ComboBox>
     <CheckComboBox fx:id="select_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
-    <HBox spacing="5">
+    <ComboBox fx:id="style_comboBox" />
+    <HBox spacing="5" alignment="CENTER">
         <Button fx:id="add_course_button" text="add" prefWidth= "50" maxWidth="50" onAction="#addCourse"/>
-        <Button fx:id="cancel_course_button" text="cancel" prefWidth= "75" maxWidth="75"/>
+        <Button fx:id="cancel_course_button" text="cancel" prefWidth= "75" maxWidth="75" onAction="#cancelCourse"/>
     </HBox>
 
     

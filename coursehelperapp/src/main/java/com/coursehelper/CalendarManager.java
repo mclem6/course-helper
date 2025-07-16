@@ -22,35 +22,46 @@ public class CalendarManager{
         userSession =  UserSession.getInstance();
     }
 
-    public void addEntry(Calendar courseCal, Course course){
+    public void addEntry(Course course){
 
         //add entries to calendar
-                //get events in event table belonging to user and course_id
-                List<Event> courseEvents = eventDAO.getEventsByCourse(userSession.getUserId(), course.getCourseId());
 
-                for (Event event : courseEvents){
+        //create a calendar
+            Calendar<String> courseCal = new Calendar<>(course.getCourseName());
+            
+            //get events in event table belonging to user and course_id
+            List<Event> courseEvents = eventDAO.getEventsByCourse(userSession.getUserId(), course.getCourseId());
 
-                    //create entry 
-                    Entry<String> entry = new Entry<>(event.getTitle());
-                    //set time
-                    entry.setInterval(event.getStartLocalDateTime(),event.getEndLocalDateTime());
+            for (Event event : courseEvents){
 
-                    //check if event is class, add frequency
-                    if(event.getEventType() == "class"){
-                        //get class days
-                        List class_days_list = event.getClassDays();
-                        String class_days_string = String.join(",", class_days_list);
-                        entry.setRecurrenceRule("RRULE:FREQ=WEEKLY;BYDAY=" + class_days_string);
+                //create entry 
+                Entry<String> entry = new Entry<>(event.getTitle());
+                //set time
+                entry.setInterval(event.getStartLocalDateTime(),event.getEndLocalDateTime());
 
-
-                    }
-
-                    //add entry
-                    courseCal.addEntry(entry);
-
-
-
+                //check if event is class, add frequency
+                if(event.getEventType().equals("class")){
+                    //get class days
+                    List<String> class_days_list = event.getClassDays();
+                    //convert class days list to string
+                    String class_days_string = String.join(",", class_days_list);
+                    //set recurrence rule
+                    entry.setRecurrenceRule("RRULE:FREQ=WEEKLY;BYDAY=" + class_days_string);
+                
                 }
+
+                //add entry
+                courseCal.addEntry(entry);
+
+
+
+            }
+
+            // set color, user select color for course in course form
+            courseCal.setStyle(Calendar.Style.valueOf(course.getCourseStyle())); 
+
+            //add to calendar source 
+            calendarSource.getCalendars().addAll(courseCal);
 
 
     }

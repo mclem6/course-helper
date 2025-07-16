@@ -2,8 +2,6 @@ package com.coursehelper.controllers;
 
 import java.util.List;
 
-import com.calendarfx.model.Calendar;
-import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.CalendarView;
 import com.coursehelper.CalendarManager;
 import com.coursehelper.Course;
@@ -55,32 +53,21 @@ public class CalendarPageController {
     private void createCalendars(List<Course> user_courses){
 
             //create calendar view
+            //TODO: edit calendarView
             CalendarView calendarView = new CalendarView(); 
             // calendarView.setPrefHeight(400);
 
     
             //for each course
             for (Course course : user_courses){
-                //create a calendar
-                Calendar<String> courseCal = new Calendar<>(course.getCourseName());
-
+                
                 //add entries to calendar
-                calendarManager.addEntry(courseCal, course);
-
-
-                //TODO: set color, user select color for course in course form
-                courseCal.setStyle(Style.STYLE1); //replace
-
-                //add to calendar source 
-                calendarManager.getCalendarSource().getCalendars().addAll(courseCal);
-
+                calendarManager.addEntry(course);
                 
             }        
 
             //add to calendarView
             calendarView.getCalendarSources().addAll(calendarManager.getCalendarSource());
-
-            //TODO: edit calendarView
            
 
             //add to FXML

@@ -13,10 +13,13 @@ import java.util.List;
 import com.coursehelper.Course;
 import com.coursehelper.Database;
 
+
 public class CourseDAO {
 
     public static int COURSE_ADD_SUCCESSFULL = 1;
     public static int COURSE_ADD_ERROR = -1;
+    public static int COURSE_DELETE_SUCCESSFUL = 1;
+    public static int COURSE_DELETE_ERROR = -1;
     public static List<Course> NO_COURSES_FOUND = null;
 
     private static CourseDAO instance;
@@ -46,7 +49,7 @@ public class CourseDAO {
 
     private void createCourseTableIfNotExists(){
 
-        final String sql = "CREATE TABLE IF NOT EXISTS courses (course_id INTEGER PRIMARY KEY AUTOINCREMENT, course_name TEXT, semester TEXT NOT NULL, year INTEGER, start_date DATE, start_time TEXT NOT NULL, end_time TEXT, class_days STRING, user_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+        final String sql = "CREATE TABLE IF NOT EXISTS courses (course_id INTEGER PRIMARY KEY AUTOINCREMENT, course_name TEXT, semester TEXT NOT NULL, year INTEGER, start_date DATE, start_time TEXT NOT NULL, end_time TEXT, class_days STRING, course_style STRING, user_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 
          try(Connection conn = Database.getConnection()){
             //create user table if doesn't exist
@@ -60,10 +63,10 @@ public class CourseDAO {
     }
 
     //add course // returns course ID
-    public int addCourse(String course_name, String semester, int year, LocalDate start_date, String start_time, String end_time, String class_days, int user_id){
+    public int addCourse(String course_name, String semester, int year, LocalDate start_date, String start_time, String end_time, String class_days, String style, int user_id){
 
         //create sql query string
-        String sql = "INSERT INTO courses (course_name, semester, year, start_date, start_time, end_time, class_days, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO courses (course_name, semester, year, start_date, start_time, end_time, class_days, course_style, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         //connect to database
          try(Connection conn = Database.getConnection()){
@@ -80,7 +83,8 @@ public class CourseDAO {
                 psmt.setString(5, start_time); 
                 psmt.setString(6, end_time); 
                 psmt.setString(7, class_days); 
-                psmt.setInt(8, user_id); 
+                psmt.setString(8, style); 
+                psmt.setInt(9, user_id); 
                 
                 //execute statement and check if successful
                 if(psmt.executeUpdate() == 1){
@@ -113,6 +117,30 @@ public class CourseDAO {
     //edit course
 
     //delete course
+    public int deleteCourse(int user_id, int course_id) {
+        String sql = "DELETE FROM courses WHERE user_id = ? AND course_id = ?";
+
+        try (Connection conn = Database.getConnection()) {
+            if (conn != null) {
+                PreparedStatement psmt = conn.prepareStatement(sql);
+                psmt.setInt(1, user_id);
+                psmt.setInt(2, course_id);
+
+                int rowsDeleted = psmt.executeUpdate();
+                if (rowsDeleted > 0) {
+                    System.out.println("course deleted");
+                    return COURSE_DELETE_SUCCESSFUL;
+                } else {
+                    System.out.println("no course found to delete");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+
+        return COURSE_DELETE_ERROR;
+    }
+
 
     //get user's courses by id
     public List<Course> getCoursesByUser(int user_id){
@@ -137,7 +165,7 @@ public class CourseDAO {
                 //go through all rows
                 while(rs.next()){
                     //create course object
-                    Course course = new Course(rs.getInt("course_id"), rs.getString("course_name"));
+                    Course course = new Course(rs.getInt("course_id"), rs.getString("course_name"), rs.getString("course_style"));
                     courses_ids_list.add(course);
                 }
                 
