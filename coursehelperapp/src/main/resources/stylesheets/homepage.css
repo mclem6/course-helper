@@ -8,7 +8,6 @@
     -fx-padding: 50 20 20 20; 
     -fx-min-width: 200px;
 
-
 }
 
 .middle-pane {
@@ -16,6 +15,7 @@
     -fx-border-width: 1px;        /* Thickness of the border */
     -fx-border-style: solid;      /* Border style (optional) */
     /* -fx-padding: 10px;   */
+    -fx-min-width: 400px;
 
     
 }

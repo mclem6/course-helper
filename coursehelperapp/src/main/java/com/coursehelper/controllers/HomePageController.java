@@ -15,8 +15,11 @@ import com.coursehelper.dao.EventDAO;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -28,10 +31,13 @@ import javafx.stage.Stage;
 public class HomePageController {
 
     @FXML
-    HBox coursesContainer;
+    FlowPane coursesContainer;
 
     @FXML
     VBox calendarContainer;
+
+    @FXML
+    DetailedDayView calendarView;
 
     public CalendarManager calendarManager;
 
@@ -87,16 +93,20 @@ public class HomePageController {
     public void addCourseToHBox(Course course){
         Text courseTitle = new Text(course.getCourseName());
         HBox courseHBox = new HBox();
+        courseHBox.setPrefWidth(200);
+        courseHBox.setPrefHeight(125);
+        courseHBox.setAlignment(Pos.BOTTOM_CENTER);
+        courseHBox.setPadding(new Insets(20));
         courseHBox.getChildren().add(courseTitle);
         courseHBox.setStyle("-fx-background-color: " + course.getCourseStyleHex());
-        coursesContainer.getChildren().add(courseHBox);
+        coursesContainer.getChildren().add(0, courseHBox);
     }
 
     private void createCalendars(List<Course> user_courses){
 
             //create calendar view
-            DetailedDayView calendarView = new DetailedDayView(); 
-            calendarView.setPrefHeight(400);
+            // calendarView = new DetailedDayView(); 
+            calendarView.setPrefHeight(600);
             calendarView.setVisibleHours(12);
 
             if (user_courses != null){
@@ -141,7 +151,7 @@ public class HomePageController {
            
 
             //add to FXML
-            calendarContainer.getChildren().add(calendarView);
+            // calendarContainer.getChildren().add(calendarView);
 
 
     }
