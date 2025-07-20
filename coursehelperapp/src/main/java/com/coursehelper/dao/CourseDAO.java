@@ -49,8 +49,20 @@ public class CourseDAO {
 
     private void createCourseTableIfNotExists(){
 
-        final String sql = "CREATE TABLE IF NOT EXISTS courses (course_id INTEGER PRIMARY KEY AUTOINCREMENT, course_name TEXT, semester TEXT NOT NULL, year INTEGER, start_date DATE, start_time TEXT NOT NULL, end_time TEXT, class_days STRING, course_style STRING, user_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
-
+    final String sql = "CREATE TABLE IF NOT EXISTS courses (" +
+                    "course_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "course_name TEXT, " +
+                    "semester TEXT NOT NULL, " +
+                    "year INTEGER, " +
+                    "start_date DATE, " +
+                    "start_time TEXT NOT NULL, " +
+                    "end_time TEXT, " +
+                    "class_days TEXT, " +            // was STRING
+                    "course_style TEXT, " +          // was STRING
+                    "user_id INTEGER NOT NULL, " +   // was INT
+                    "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE" +
+                    ");";
          try(Connection conn = Database.getConnection()){
             //create user table if doesn't exist
             Statement stmt = conn.createStatement();
@@ -128,7 +140,6 @@ public class CourseDAO {
 
                 int rowsDeleted = psmt.executeUpdate();
                 if (rowsDeleted > 0) {
-                    System.out.println("course deleted");
                     return COURSE_DELETE_SUCCESSFUL;
                 } else {
                     System.out.println("no course found to delete");
