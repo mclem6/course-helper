@@ -82,7 +82,8 @@ public class CreateCourseFormController {
         select_days_checkComboBox.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
 
         //add placeholder
-        select_days_checkComboBox.setTitle("Select Days");
+        select_days_checkComboBox.setTitle("");
+        
         select_days_checkComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) c -> {
             if (select_days_checkComboBox.getCheckModel().getCheckedItems().isEmpty()) {
                 select_days_checkComboBox.setTitle("Select Days"); // Acts like a placeholder

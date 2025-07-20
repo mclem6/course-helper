@@ -17,11 +17,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -91,16 +95,68 @@ public class HomePageController {
     }
 
     public void addCourseToHBox(Course course){
+        //create course title and menu button
         Text courseTitle = new Text(course.getCourseName());
-        HBox courseHBox = new HBox();
+        Button menuButton = new Button("...");
+        menuButton.setStyle("-fx-background-color: transparent; -fx-font-size: 18px;");
+
+        //add to course title and button to box
+        HBox courseHBox = new HBox(courseTitle, menuButton);
+
+        //set ID for later access/deletion
+        courseHBox.setId("course-" + course.getCourseId());
+
+        courseHBox.setSpacing(10);
         courseHBox.setPrefWidth(200);
-        courseHBox.setPrefHeight(125);
+        courseHBox.setPrefHeight(150);
         courseHBox.setAlignment(Pos.BOTTOM_CENTER);
-        courseHBox.setPadding(new Insets(20));
-        courseHBox.getChildren().add(courseTitle);
-        courseHBox.setStyle("-fx-background-color: " + course.getCourseStyleHex());
+        courseHBox.setPadding(new Insets(20, 0 , 20 , 20));
+        courseHBox.setStyle("-fx-background-color: " + course.getCourseStyleHex() + "; -fx-border-radius: 10; -fx-background-radius: 10;");
+        
+
+        //add context menu on button
+        ContextMenu menu = createContextMenu(course);
+        menuButton.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                menu.show(menuButton, event.getScreenX(), event.getSceneY());
+            }
+        });
+
+        // add to UI container 
         coursesContainer.getChildren().add(0, courseHBox);
+
+
     }
+
+    private ContextMenu createContextMenu(Course course){
+        MenuItem edit = new MenuItem("Edit");
+        MenuItem delete = new MenuItem("Delete");
+
+        edit.setOnAction(e -> handleEdit(course));
+        delete.setOnAction(e -> handleDelete(course));
+
+        return new ContextMenu(edit, delete);
+        
+    }
+
+    private void handleEdit(Course course){
+        //TODO: create edit popup or go to course page?
+    }
+
+    private void handleDelete(Course course){
+
+        Node node = coursesContainer.lookup("#course-" + course.getCourseId());
+        //remove from DB
+        courseDAO.deleteCourse(userSession.getUserId(), course.getCourseId());
+        //remove coursebox
+        coursesContainer.getChildren().remove(node);
+       
+        //delete course calendar
+        calendarManager.deleteCalendar(course);
+
+    }
+
+
 
     private void createCalendars(List<Course> user_courses){
 
@@ -113,7 +169,7 @@ public class HomePageController {
                 //for each course
                 for (Course course : user_courses){ 
                     //add entries to calendar
-                    calendarManager.addEntry(course);  
+                    calendarManager.addCourseCalendar(course);  
                 }   
 
             }
@@ -180,7 +236,7 @@ public class HomePageController {
                 addCourseToHBox(course);
 
                 //add schedule to calendar 
-                calendarManager.addEntry(course);
+                calendarManager.addCourseCalendar(course);
 
                 //print color
                 System.out.println(course.getCourseStyle());
@@ -195,9 +251,10 @@ public class HomePageController {
 
             // make stage modal(block other windows)
             popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setResizable(false);
 
             // set scene and show
-            Scene scene = new Scene(formNode, Region.USE_COMPUTED_SIZE , 100);
+            Scene scene = new Scene(formNode, 400 , 450);
             popupStage.setScene(scene);
             popupStage.showAndWait();;
 

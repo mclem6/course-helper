@@ -62,7 +62,7 @@ public class CalendarPageController {
             for (Course course : user_courses){
                 
                 //add entries to calendar
-                calendarManager.addEntry(course);
+                calendarManager.addCourseCalendar(course);
                 
             }        
 

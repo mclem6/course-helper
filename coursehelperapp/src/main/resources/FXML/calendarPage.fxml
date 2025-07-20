@@ -10,7 +10,7 @@
 <BorderPane  styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.CalendarPageController">
 
     <left>
-        <VBox styleClass="vbox">
+        <VBox styleClass="vbox, left-pane">
             <fx:include source="navigation.fxml" />
         </VBox>
     </left>
@@ -27,7 +27,7 @@
     </center>
 
     <right>
-        <VBox styleClass="vbox">
+        <VBox styleClass="vbox, right-pane">
             <Text text="right dashboard content"/>
         </VBox>
     </right>

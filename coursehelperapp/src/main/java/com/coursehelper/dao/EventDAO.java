@@ -40,7 +40,19 @@ public class EventDAO{
 
     private void createEventTableIfNotExists(){
 
-        String sql = "CREATE TABLE IF NOT EXISTS events (event_id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INT NOT NULL, course_id INT NOT NULL, title TEXT, event_type TEXT NOT NULL, start_date DATE , start_time TEXT NOT NULL, end_time TEXT, days TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+        final String sql = "CREATE TABLE IF NOT EXISTS events (" +
+             "event_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+             "user_id INTEGER NOT NULL, " +
+             "course_id INTEGER NOT NULL, " +
+             "title TEXT, " +
+             "event_type TEXT NOT NULL, " +
+             "start_date DATE, " +
+             "start_time TEXT NOT NULL, " +
+             "end_time TEXT, " +
+             "days TEXT, " +
+             "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+             "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE" +
+             ");";
 
          try(Connection conn = Database.getConnection()){
             //create user table if doesn't exist
