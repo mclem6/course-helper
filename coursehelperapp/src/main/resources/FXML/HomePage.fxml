@@ -41,7 +41,7 @@
                     </padding>
                     <DetailedDayView fx:id="calendarView" minWidth="400" HBox.hgrow="ALWAYS"/>
                 <!-- TODO: add task list -->
-                <VBox minWidth="200" prefWidth="300" HBox.hgrow="SOMETIMES">
+                <VBox minWidth="200" prefWidth="300" HBox.hgrow="ALWAYS">
                     <padding>
                         <Insets top="10" right="20" bottom="20" left="20"/>
                     </padding>
