@@ -24,9 +24,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
+import javafx.stage.Popup;
 
-public class CreateCourseFormController {
+public class AddCourseFormController {
 
     @FXML
     Button add_course_button;
@@ -68,6 +68,8 @@ public class CreateCourseFormController {
     CalendarManager calendarManager;
 
     HomePageController homePageController;
+
+    Popup popup;
 
     private Consumer<Course> onCourseCreated;
 
@@ -167,8 +169,8 @@ public class CreateCourseFormController {
         eventDAO.addEvent(userSession.getUserId(), new_course_name, EventDAO.EVENT_CLASS, course_id, new_course_start_date, new_course_start_time, new_course_end_time, new_course_days);
 
         //TODO: remove // close form 
-        Stage stage = (Stage) add_course_button.getScene().getWindow();
-        stage.close();
+        popup.hide();
+        
 
 
         //update UI
@@ -176,18 +178,15 @@ public class CreateCourseFormController {
             onCourseCreated.accept(course);
         }
 
-
-
-
     }
 
+    @FXML
     public void cancelCourse(){
         //close window
-        Stage stage = (Stage) cancel_course_button.getScene().getWindow();
-        stage.close();
-
+        popup.hide();
     }
 
+    @FXML
     private void loadCourses(){
         List<Course> updatedCourse = courseDAO.getCoursesByUser(userSession.getUserId());
 
@@ -195,6 +194,10 @@ public class CreateCourseFormController {
 
     public void setHomePageController(HomePageController controller){
         this.homePageController = controller;
+    }
+
+    public void setPopup(Popup popup){
+        this.popup = popup;
     }
 
 

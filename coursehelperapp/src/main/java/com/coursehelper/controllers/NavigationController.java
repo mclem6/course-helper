@@ -37,12 +37,12 @@ public class NavigationController {
         sceneManager.switchScene("/FXML/calendarPage.fxml", "/stylesheets/calendarPage.css");
     }
 
-    // @FXML
-    // private void goToCoursesPage(){
+    @FXML
+    private void goToTasksPage(){
         
-    //     //load user's homepage
-    //     sceneManager.switchScene("/FXML/coursesPage.fxml", "/stylesheets/coursesPage.css");
-    // }
+        //load user's homepage
+        sceneManager.switchScene("/FXML/tasksPage.fxml", "/stylesheets/tasksPage.css");
+    }
 
 
     

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import org.controlsfx.control.CheckComboBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+
+
+<VBox styleClass="root" spacing="15" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.AddEventFormController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Assignment Name -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Assignment:" prefWidth="100" minWidth="100"/>
+        <TextField fx:id="assignment_name" prefWidth="200"/>
+    </HBox>
+
+    <!-- Assigment's Course  -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Course:" prefWidth="100" minWidth="100"/>
+        <TextField fx:id="assignment_course" prefWidth="200"/>
+    </HBox>
+    
+   
+    <!-- Due Date -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Due Date:" prefWidth="100" minWidth="100"/>
+        <DatePicker fx:id="date_picker" prefWidth= "150" maxWidth="150"/>
+    </HBox>
+    
+    <!-- Due Time -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Due Time:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="start_time_combo" prefWidth= "150" maxWidth="150">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="12:00AM" />
+                    <String fx:value="1:00AM" />
+                    <String fx:value="2:00AM" />
+                    <String fx:value="3:00AM" />
+                    <String fx:value="4:00AM" />
+                    <String fx:value="5:00AM" />
+                    <String fx:value="6:00AM" />
+                    <String fx:value="7:00AM" />
+                    <String fx:value="8:00AM" />
+                    <String fx:value="9:00AM" />
+                    <String fx:value="10:00AM" />
+                    <String fx:value="11:00AM" />
+                    <String fx:value="12:00PM" />
+                    <String fx:value="1:00PM" />
+                    <String fx:value="2:00PM" />
+                    <String fx:value="3:00PM" />
+                    <String fx:value="4:00PM" />
+                    <String fx:value="5:00PM" />
+                    <String fx:value="6:00PM" />
+                    <String fx:value="7:00PM" />
+                    <String fx:value="8:00PM" />
+                    <String fx:value="9:00PM" />
+                    <String fx:value="10:00PM" />
+                    <String fx:value="11:00PM" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+    </HBox>
+
+
+    <!-- Submit and Cancel Buttons -->
+    <HBox spacing="5" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button fx:id="add_event_button" text="add" prefWidth= "80" maxWidth="80" onAction="#addEvent" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button fx:id="cancel_event_button" text="cancel" prefWidth= "80" maxWidth="80" onAction="#cancelEvent" style="-fx-background-color: #F44336; -fx-text-fill: white;"/>
+    </HBox>
+
+    
+</VBox>
