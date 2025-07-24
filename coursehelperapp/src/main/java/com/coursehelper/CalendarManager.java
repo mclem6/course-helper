@@ -59,6 +59,11 @@ public class CalendarManager{
 
         }
 
+        // public void addEvent(){
+
+
+        // }
+
         // set color, user select color for course in course form
         courseCal.setStyle(Calendar.Style.valueOf(course.getCourseStyle())); 
 

@@ -17,29 +17,31 @@
 
     <center>
         <VBox styleClass="vbox, middle-pane">
-            <ScrollPane fitToWidth="true" minViewportHeight="175" prefViewportHeight="200">
+            <ScrollPane styleClass="scrollpane" fitToWidth="true" minViewportHeight="175" prefViewportHeight="200">
                      <padding>
                         <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
                     <FlowPane fx:id="coursesContainer" orientation="horizontal" hgap="20" vgap="20">
                         <!-- for course boxes  -->
                         <HBox >
-                            <Button styleClass="round-button" fx:id="add_new_course_btn" text="+" onAction="#addNewCourseForm" wrapText="true"/>
+                            <Button styleClass="round-button" fx:id="add_new_course_button" text="+" onAction="#addNewCourseForm" />
                         </HBox>
                     </FlowPane>
             </ScrollPane>
 
-            <Label text="Today" style="-fx-font-size: 18px; -fx-font-weight: bold;">
-                <padding>
-                    <Insets top="30" right="25" bottom="5" left="20"/>
-                </padding>
-            </Label>
+            <HBox spacing="50">
+                <Label text="Today" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Button styleClass="round-button" fx:id="add_new_event_button" text="+" onAction="#addNewEventForm"/>    
+                    <padding>
+                        <Insets top="20" right="25" bottom="10" left="20"/>
+                    </padding>
+            </HBox>
 
             <HBox fx:id="bodyContainer" spacing="20">
                     <padding>
                         <Insets top="0" right="20" bottom="20" left="20"/>
                     </padding>
-                    <DetailedDayView fx:id="calendarView" minWidth="400" HBox.hgrow="ALWAYS"/>
+                    <DetailedDayView fx:id="calendarDetailedDayView" minWidth="400" HBox.hgrow="ALWAYS"/>
                 <!-- TODO: add task list -->
                 <VBox minWidth="200" prefWidth="300" HBox.hgrow="ALWAYS">
                     <padding>

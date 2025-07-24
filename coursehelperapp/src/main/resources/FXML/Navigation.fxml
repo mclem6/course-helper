@@ -8,7 +8,8 @@
     <Text fx:id= "welcomeText"/>
     <Hyperlink text="Home" onAction="#goToHomePage"/>
     <Hyperlink text="My Calendar" onAction="#goToCalendarPage"/>
-    <Hyperlink text="My Tasks"/>
+    <Hyperlink text="My Tasks" onAction="#goToTasksPage"/>
+    <Hyperlink text="My Courses"/>
     <!-- <Hyperlink text="Courses" onAction="#goToCoursesPage"/> -->
     <Hyperlink text="Setting"/>
 </VBox >

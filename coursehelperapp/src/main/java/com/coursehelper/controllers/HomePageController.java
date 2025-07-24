@@ -16,20 +16,21 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.stage.Popup;
 
 
 public class HomePageController {
@@ -41,7 +42,13 @@ public class HomePageController {
     VBox calendarContainer;
 
     @FXML
-    DetailedDayView calendarView;
+    Button add_new_course_button;
+
+    @FXML
+    Button add_new_event_button;
+
+    @FXML
+    DetailedDayView calendarDetailedDayView;
 
     public CalendarManager calendarManager;
 
@@ -123,7 +130,7 @@ public class HomePageController {
         });
 
         // add to UI container 
-        coursesContainer.getChildren().add(0, courseHBox);
+        coursesContainer.getChildren().add(coursesContainer.getChildren().size() - 1, courseHBox);
 
 
     }
@@ -160,10 +167,48 @@ public class HomePageController {
 
     private void createCalendars(List<Course> user_courses){
 
-            //create calendar view
-            // calendarView = new DetailedDayView(); 
-            calendarView.setPrefHeight(600);
-            calendarView.setVisibleHours(12);
+            //customize DetailedDayView
+            calendarDetailedDayView.setPrefHeight(600);
+            calendarDetailedDayView.setVisibleHours(12);
+            
+            // DISABLE PopOver and drag-and-drop for now
+            //disable dragging/resizing
+            calendarDetailedDayView.setEntryEditPolicy(param -> false); 
+            //diable context menu
+            calendarDetailedDayView.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
+                event.consume();
+            });
+            //disable left click and double click?
+            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+                if(e.getButton() == MouseButton.PRIMARY){
+                    e.consume();
+                }
+            });
+            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+                if(e.getButton() == MouseButton.PRIMARY){
+                    e.consume();
+                }
+            });
+             //disable right click and double click?
+            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+                if(e.getButton() == MouseButton.SECONDARY){
+                    e.consume();
+                }
+            });
+            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+                if(e.getButton() == MouseButton.SECONDARY){
+                    e.consume();
+                }
+            });
+
+            //disable hover
+            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> e.consume());
+            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_MOVED, e -> e.consume());
+            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_EXITED, e -> e.consume());
+
+        
+
+
 
             if (user_courses != null){
                 //for each course
@@ -176,18 +221,18 @@ public class HomePageController {
              
 
             //add to calendarView
-            calendarView.getCalendarSources().addAll(calendarManager.getCalendarSource());
+            calendarDetailedDayView.getCalendarSources().addAll(calendarManager.getCalendarSource());
 
             //update calendar thread
-            calendarView.setRequestedTime(LocalTime.now());
+            calendarDetailedDayView.setRequestedTime(LocalTime.now());
 
             Thread updateTimeThread = new Thread("Calendar: Update Time Thread"){
                 @Override
                 public void run(){
                     while(true){
                         Platform.runLater(()-> {
-                            calendarView.setToday(LocalDate.now());
-                            calendarView.setTime(LocalTime.now());
+                            calendarDetailedDayView.setToday(LocalDate.now());
+                            calendarDetailedDayView.setTime(LocalTime.now());
                             
                         });
                         try {
@@ -220,13 +265,15 @@ public class HomePageController {
             // load the FXML
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/courseForm.fxml"));
             Parent formNode = loader.load();
+            formNode.getStylesheets().add(getClass().getResource("/stylesheets/courseForm.css").toExternalForm());
+
 
             // get access to form's controller
-            CreateCourseFormController createCourseFormController = loader.getController();
-            createCourseFormController.setHomePageController(this);
+            AddCourseFormController addCourseFormController = loader.getController();
+            addCourseFormController.setHomePageController(this);
 
             //callback to update UI
-            createCourseFormController.setOnCourseCreated(course -> {
+            addCourseFormController.setOnCourseCreated(course -> {
                  //remove no course text
                 if(courseNode != null && courseNode.isVisible()){
                     coursesContainer.getChildren().remove(courseNode);
@@ -238,25 +285,36 @@ public class HomePageController {
                 //add schedule to calendar 
                 calendarManager.addCourseCalendar(course);
 
-                //print color
-                System.out.println(course.getCourseStyle());
-
-
             });
 
+            //wrap formNode in Popup
+            Popup popup = new Popup();
+            addCourseFormController.setPopup(popup);
+            popup.getContent().add(formNode);
+            // popup.setAutoHide(true); // closes when user clicks elsewhere
+            popup.setAutoFix(true); // repositions if near edge
 
-            // create new window
-            Stage popupStage = new Stage();
-            popupStage.setTitle("Add New Course");
+            //show form on right click 
+            Point2D point = add_new_course_button.localToScreen(0, add_new_course_button.getHeight());
 
-            // make stage modal(block other windows)
-            popupStage.initModality(Modality.APPLICATION_MODAL);
-            popupStage.setResizable(false);
+            popup.show(add_new_course_button, point.getX(), point.getY());
 
-            // set scene and show
-            Scene scene = new Scene(formNode, 400 , 450);
-            popupStage.setScene(scene);
-            popupStage.showAndWait();;
+
+
+            // // create new window
+            // Stage popupStage = new Stage();
+            // popupStage.setTitle("Add New Course");
+
+            // // make stage modal(block other windows)
+            // popupStage.initModality(Modality.APPLICATION_MODAL);
+            // popupStage.setResizable(false);
+            // popupStage.setFullScreen(false);
+            // popupStage.initOwner(App.primaryStage);
+
+            // // set scene and show
+            // Scene scene = new Scene(formNode, 400 , 450);
+            // popupStage.setScene(scene);
+            // popupStage.showAndWait();
 
             
             
@@ -264,6 +322,43 @@ public class HomePageController {
             e.printStackTrace();
         }
 
+        
+    }
+
+    public void addNewEventForm(){
+
+         //load and show event form in custom context-menu form 
+        try {
+            
+            // load the FXML
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/eventForm.fxml"));
+            Parent formNode = loader.load();
+            formNode.getStylesheets().add(getClass().getResource("/stylesheets/eventForm.css").toExternalForm());
+
+
+            // get access to form's controller
+            AddEventFormController addEventFormController = loader.getController();
+            addEventFormController.setHomePageController(this);
+
+            //wrap formNode in Popup
+            Popup popup = new Popup();
+            popup.getContent().add(formNode);
+            // popup.setAutoHide(true); // closes when user clicks elsewhere
+            popup.setAutoFix(true); // repositions if near edge
+
+            //show form on right click 
+            Point2D point = add_new_event_button.localToScreen(0, add_new_event_button.getHeight());
+
+            popup.show(add_new_event_button, point.getX(), point.getY());
+
+            
+
+
+
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
     }
 
