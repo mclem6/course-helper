@@ -13,7 +13,7 @@
 .app-name {
     -fx-font-size: 30px;
     -fx-font-family: "Jost Light";
-    -fx-color: #454545;
+    -fx-text-fill: #454545;
     -fx-display: flex;
     -fx-width: 300px;
     -fx-height: 50px;
@@ -22,7 +22,7 @@
 }
 
 .hbox {
-    /* find what this is */
+    /* left alone for now */
 }
 
 .login-button {

@@ -1,0 +1,57 @@
+@font-face{
+    -fx-font-family: "Jost Light";
+    src: url("/stylesheets/fonts/Jost-Light.ttf");
+}
+
+.root{
+    -fx-background-image: url("/images/gradientBackground.png");
+    -fx-background-size: 264px 555px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: #000000;
+
+}
+
+.app-name {
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+    -fx-font-family: "Jost Light";
+    -fx-display: flex;
+    -fx-width: 300px;
+    -fx-height: 50px;
+    -fx-flex-direction: column;
+    -fx-justify-content: center;
+}
+
+.hbox {
+    /* left alone for now */
+}
+
+.login-button {
+    -fx-pref-width: 147px;
+    -fx-pref-height: 35px;
+    -fx-background-color: #FFB8B9;
+    -fx-background-radius: 15px;
+    -fx-text-fill: #454545;
+    /* add font size after removing create account button */
+    /* -fx-font-size: 14px; */ 
+}
+
+.access-container {
+    -fx-padding: 20 20 0 20;      
+    -fx-pref-width: 250px;
+    -fx-max-height: 300px;
+}
+
+.un-pw-text {
+    -fx-padding: 13px 0 0 10px;
+    -fx-text-fill: #ffffff;
+}
+
+.text-field {
+    -fx-padding: 3px 0 3px 9px;
+    -fx-pref-width: 250;
+    -fx-pref-height: 35;
+    -fx-background-radius: 12;
+    -fx-border: 1px solid #E6E6E6;
+    -fx-background: #FFF;
+}

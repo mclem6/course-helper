@@ -19,7 +19,7 @@
             <Insets top="150" right="142" bottom="0" left="0"/>
          </BorderPane.margin>
          <VBox alignment="center">
-            <Text styleClass="app-name" text="Course Helper" />
+            <Label styleClass="app-name" text="Course Helper" />
          </VBox>
          
          <VBox spacing="15" styleClass="access-container">
