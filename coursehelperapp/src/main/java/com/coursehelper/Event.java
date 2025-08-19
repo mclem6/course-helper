@@ -8,56 +8,60 @@ import java.util.List;
 
 public class Event {
     
-    private String title, event_type, start_day, start_time, end_time , classDays;
+    private String title, event_type, start_day, start_time, end_time , recurringDays;
     LocalDate start_date;
-    int courseId;
+    int event_id, courseId;
+    Boolean is_recurring;
     
-    public Event(int courseID, String title, String event_type, LocalDate start_date, String start_time, String end_time , String classDays){
-        this.courseId = courseId;
+    public Event(int event_id, int courseID, String title, String event_type, LocalDate start_date, String start_time, String end_time , Boolean is_recurring, String recurringDays){
         this.title = title;
         this.event_type = event_type;
         this.start_date = start_date;
         this.start_time = start_time;
         this.end_time = end_time;
-        this.classDays = classDays;
+        this.is_recurring = is_recurring;
+        this.recurringDays = recurringDays;
+        this.courseId = courseId;
+        this.event_id = event_id;
+
     }
 
-    public List<String> getClassDays(){
+    public List<String> getLectureDays(){
 
-        List<String> class_day_list = new ArrayList<>();
+        List<String> lecture_day_list = new ArrayList<>();
 
         //seperate days by comma
-        String[] days = classDays.split(",");
+        String[] days = recurringDays.split(",");
         for (String day : days) {
             day = day.trim();
             switch (day) {
                 case "Monday":
-                    class_day_list.add("MO");
+                    lecture_day_list.add("MO");
                     break;
                 case "Tuesday":
-                    class_day_list.add("TU");
+                    lecture_day_list.add("TU");
                     break;
                 case "Wednesday":
-                    class_day_list.add("WE");
+                    lecture_day_list.add("WE");
                     break;
                 case "Thursday":
-                    class_day_list.add("TH");
+                    lecture_day_list.add("TH");
                     break;
                 case "Friday":
-                    class_day_list.add("FR");
+                    lecture_day_list.add("FR");
                     break;
                 case "Saturday":
-                    class_day_list.add("SA");
+                    lecture_day_list.add("SA");
                     break;
                 case "Sunday":
-                    class_day_list.add("SU");
+                    lecture_day_list.add("SU");
                     break;
                 default:
                     break;
             }
         }
 
-        return class_day_list;
+        return lecture_day_list;
         
     }
 
@@ -67,6 +71,10 @@ public class Event {
 
     public String getTitle(){
         return title;
+    }
+
+    public Boolean isRecurring(){
+        return is_recurring;
     }
 
     //convert start_date and start_time to LocalDateTime
@@ -113,6 +121,10 @@ public class Event {
         //return LocalDateTime
         return LocalDateTime.of(this.start_date, time);
 
+    }
+
+    public int getEventId(){
+        return this.event_id;
     }
 
 

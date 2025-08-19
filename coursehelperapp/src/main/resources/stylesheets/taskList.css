@@ -1,0 +1,17 @@
+
+.round-button {
+  -fx-background-radius: 50%; 
+  -fx-min-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-width: 20px;
+  -fx-pref-height: 20px;
+  -fx-font-size: 9px;
+  /* -fx-background-color: #4CAF50; */
+ 
+}
+
+.taskListView{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+

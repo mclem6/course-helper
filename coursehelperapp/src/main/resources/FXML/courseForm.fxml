@@ -60,84 +60,25 @@
     <!-- Start Time -->
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="Start Time:" prefWidth="100" minWidth="100"/>
-        <ComboBox fx:id="start_time_combo" prefWidth= "150" maxWidth="150">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="12:00AM" />
-                    <String fx:value="1:00AM" />
-                    <String fx:value="2:00AM" />
-                    <String fx:value="3:00AM" />
-                    <String fx:value="4:00AM" />
-                    <String fx:value="5:00AM" />
-                    <String fx:value="6:00AM" />
-                    <String fx:value="7:00AM" />
-                    <String fx:value="8:00AM" />
-                    <String fx:value="9:00AM" />
-                    <String fx:value="10:00AM" />
-                    <String fx:value="11:00AM" />
-                    <String fx:value="12:00PM" />
-                    <String fx:value="1:00PM" />
-                    <String fx:value="2:00PM" />
-                    <String fx:value="3:00PM" />
-                    <String fx:value="4:00PM" />
-                    <String fx:value="5:00PM" />
-                    <String fx:value="6:00PM" />
-                    <String fx:value="7:00PM" />
-                    <String fx:value="8:00PM" />
-                    <String fx:value="9:00PM" />
-                    <String fx:value="10:00PM" />
-                    <String fx:value="11:00PM" />
-                </FXCollections>
-            </items>
-        </ComboBox>
+        <ComboBox fx:id="start_time_combo" prefWidth= "150" maxWidth="150"/>
     </HBox>
 
     <!-- End Time -->
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="End Time:" prefWidth="100" minWidth="100"/>
-        <ComboBox fx:id="end_time_combo" prefWidth= "150" maxWidth="150">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="12:00AM" />
-                    <String fx:value="1:00AM" />
-                    <String fx:value="2:00AM" />
-                    <String fx:value="3:00AM" />
-                    <String fx:value="4:00AM" />
-                    <String fx:value="5:00AM" />
-                    <String fx:value="6:00AM" />
-                    <String fx:value="7:00AM" />
-                    <String fx:value="8:00AM" />
-                    <String fx:value="9:00AM" />
-                    <String fx:value="10:00AM" />
-                    <String fx:value="11:00AM" />
-                    <String fx:value="12:00PM" />
-                    <String fx:value="1:00PM" />
-                    <String fx:value="2:00PM" />
-                    <String fx:value="3:00PM" />
-                    <String fx:value="4:00PM" />
-                    <String fx:value="5:00PM" />
-                    <String fx:value="6:00PM" />
-                    <String fx:value="7:00PM" />
-                    <String fx:value="8:00PM" />
-                    <String fx:value="9:00PM" />
-                    <String fx:value="10:00PM" />
-                    <String fx:value="11:00PM" />
-                    <String fx:value="12:00PM" />
-                </FXCollections>
-            </items>
-        </ComboBox>
+        <ComboBox fx:id="end_time_combo" prefWidth= "150" maxWidth="150"/>
     </HBox>
 
     <!-- Class Days -->
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Class Days:" prefWidth="100" minWidth="100"/>
+        <Label text="Lecture Days:" prefWidth="100" minWidth="100"/>
         <CheckComboBox fx:id="select_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
     </HBox>
 
     <!-- Course Style(color) -->
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="Color:" prefWidth="100" minWidth="100"/>
-        <ComboBox fx:id="style_comboBox" />
+        <ComboBox fx:id="style_combo" />
     </HBox>
 
     <!-- Submit and Cancel Buttons -->

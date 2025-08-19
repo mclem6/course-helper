@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing = "10"
+            fx:controller="com.coursehelper.controllers.TaskListController"
+            stylesheets="@../stylesheets/taskList.css">
+    <ListView styleClass="taskListView" fx:id="taskListView"  prefHeight="0" VBox.vgrow="ALWAYS"/>
+</VBox>
