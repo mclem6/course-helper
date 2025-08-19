@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import org.controlsfx.control.CheckComboBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+
+
+<VBox fx:id="popup" styleClass="root" xmlns:fx="http://javafx.com/fxml" fx:controller="com.coursehelper.controllers.AddEventPopupController" spacing="10">
+    <HBox spacing="10">
+        <Button fx:id="assignmentTab" text="Assignment" onAction="#addNewAssignmentForm"/>
+        <Button fx:id="eventTab" text="Event" onAction="#addNewEventForm"/>
+    </HBox>
+    
+    <StackPane fx:id="formContainer" />
+</VBox>

@@ -16,6 +16,7 @@ import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
 
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -34,7 +35,6 @@ public class AddCourseFormController {
     @FXML
     Button cancel_course_button;
     
-
     @FXML
     CheckComboBox<String> select_days_checkComboBox;
 
@@ -51,7 +51,8 @@ public class AddCourseFormController {
     ComboBox<String> end_time_combo;
 
     @FXML
-    ComboBox<Calendar.Style> style_comboBox;
+    ComboBox<Calendar.Style> style_combo;
+
 
     @FXML
     TextField course_name;
@@ -83,12 +84,12 @@ public class AddCourseFormController {
         //add select_days options
         select_days_checkComboBox.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
 
-        //add placeholder
+        //add empty placeholder
         select_days_checkComboBox.setTitle("");
         
         select_days_checkComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) c -> {
             if (select_days_checkComboBox.getCheckModel().getCheckedItems().isEmpty()) {
-                select_days_checkComboBox.setTitle("Select Days"); // Acts like a placeholder
+                select_days_checkComboBox.setTitle(""); // Acts like a placeholder
             } else {
 
                 //get selected options
@@ -102,10 +103,10 @@ public class AddCourseFormController {
         });
 
         // add course color selection
-        style_comboBox.getItems().addAll(Calendar.Style.values());
+        style_combo.getItems().addAll(Calendar.Style.values());
 
         //define colors in dropdown list 
-        style_comboBox.setCellFactory(lv -> new ListCell<>() {
+        style_combo.setCellFactory(lv -> new ListCell<>() {
             private final Rectangle rect = new Rectangle(15, 15);
 
             @Override
@@ -124,7 +125,7 @@ public class AddCourseFormController {
         });
 
         //show selected color in cell
-        style_comboBox.setButtonCell(new ListCell<>() {
+        style_combo.setButtonCell(new ListCell<>() {
             private final Rectangle rect = new Rectangle( 15, 15);
 
             @Override
@@ -140,16 +141,24 @@ public class AddCourseFormController {
                 }
             }
         });
+    }
 
+    public void setHomePageController(HomePageController controller){
+        this.homePageController = controller;
 
-        //TODO:add start and end time options
-    
+        //create time options then add to start and end combos
+        ObservableList<String> timeOptions = this.homePageController.timeOptions();
+        start_time_combo.setItems(timeOptions);
+        end_time_combo.setItems(timeOptions);
     
     }
 
      //add course handler
     @FXML
     private void addCourse() throws IOException{
+
+        //check if course name already exists in database
+        
         //get user input from form fields
         String new_course_name = course_name.getText();
         String new_course_semester = semester_combo.getValue();
@@ -158,7 +167,7 @@ public class AddCourseFormController {
         String new_course_end_time = end_time_combo.getValue();
         String new_course_days = select_days_checkComboBox.getTitle();
         LocalDate new_course_start_date = date_picker.getValue();
-        String style = style_comboBox.getValue().name();
+        String style = style_combo.getValue().name();
 
 
         //add course to course database
@@ -166,7 +175,7 @@ public class AddCourseFormController {
         Course course = new Course(course_id, new_course_name, style);
 
         //add schedule to event database
-        eventDAO.addEvent(userSession.getUserId(), new_course_name, EventDAO.EVENT_CLASS, course_id, new_course_start_date, new_course_start_time, new_course_end_time, new_course_days);
+        eventDAO.addEvent(userSession.getUserId(), new_course_name, EventDAO.EVENT_LECTURE, course_id, new_course_start_date, new_course_start_time, new_course_end_time, true,new_course_days, courseDAO.SOURCE_TYPE, course_id);
 
         //TODO: remove // close form 
         popup.hide();
@@ -192,9 +201,6 @@ public class AddCourseFormController {
 
     }
 
-    public void setHomePageController(HomePageController controller){
-        this.homePageController = controller;
-    }
 
     public void setPopup(Popup popup){
         this.popup = popup;
@@ -220,7 +226,5 @@ public class AddCourseFormController {
     }
 
     
-
-
     
 }

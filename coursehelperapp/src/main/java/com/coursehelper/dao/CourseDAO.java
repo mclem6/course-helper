@@ -22,6 +22,8 @@ public class CourseDAO {
     public static int COURSE_DELETE_ERROR = -1;
     public static List<Course> NO_COURSES_FOUND = null;
 
+    public static String SOURCE_TYPE = "course";
+
     private static CourseDAO instance;
 
 
@@ -29,16 +31,9 @@ public class CourseDAO {
         createCourseTableIfNotExists();
     }
 
-
-    public static void init(){
-        if(instance == null) {
-            instance = new CourseDAO();
-        }
-    }
-
     public static CourseDAO getInstance() {
          if (instance == null) {
-            throw new IllegalStateException("CourseDAO not initialised—call init() first");
+            instance = new CourseDAO();
         }
         return instance;
     }
@@ -57,9 +52,10 @@ public class CourseDAO {
                     "start_date DATE, " +
                     "start_time TEXT NOT NULL, " +
                     "end_time TEXT, " +
-                    "class_days TEXT, " +            // was STRING
-                    "course_style TEXT, " +          // was STRING
-                    "user_id INTEGER NOT NULL, " +   // was INT
+                    "reccuring BOOLEAN Default 1, " +
+                    "lecture_days TEXT, " +            
+                    "course_style TEXT, " +          
+                    "user_id INTEGER NOT NULL, " +   
                     "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE" +
                     ");";
@@ -75,10 +71,10 @@ public class CourseDAO {
     }
 
     //add course // returns course ID
-    public int addCourse(String course_name, String semester, int year, LocalDate start_date, String start_time, String end_time, String class_days, String style, int user_id){
+    public int addCourse(String course_name, String semester, int year, LocalDate start_date, String start_time, String end_time, String lecture_days, String style, int user_id){
 
         //create sql query string
-        String sql = "INSERT INTO courses (course_name, semester, year, start_date, start_time, end_time, class_days, course_style, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO courses (course_name, semester, year, start_date, start_time, end_time, lecture_days, course_style, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         //connect to database
          try(Connection conn = Database.getConnection()){
@@ -94,7 +90,7 @@ public class CourseDAO {
                 psmt.setDate(4, Date.valueOf(start_date)); 
                 psmt.setString(5, start_time); 
                 psmt.setString(6, end_time); 
-                psmt.setString(7, class_days); 
+                psmt.setString(7, lecture_days); 
                 psmt.setString(8, style); 
                 psmt.setInt(9, user_id); 
                 
@@ -192,6 +188,22 @@ public class CourseDAO {
         return NO_COURSES_FOUND;
         
     }
+
+
+
+    public Course findCourseByName(String course_name, int user_id){
+
+        List<Course> userCourses = getCoursesByUser(user_id);
+        for (Course course : userCourses){
+            if (course.getCourseName().equals(course_name)){
+                return course;
+            }
+        }
+
+        return null;
+    }
+
+    
 
 
 

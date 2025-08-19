@@ -175,7 +175,7 @@ public class AccessScreenController {
 
 
         //set style sheet of homepage
-        root.getStylesheets().add(getClass().getResource("/stylesheets/homepage.css").toExternalForm());
+        root.getStylesheets().add(getClass().getResource("/stylesheets/homePage.css").toExternalForm());
        
         //set scene
         Scene scene = new Scene(root, 1275, bounds.getHeight());

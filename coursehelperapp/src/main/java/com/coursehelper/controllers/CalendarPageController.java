@@ -26,14 +26,10 @@ public class CalendarPageController {
     EventDAO eventDAO;
 
     public void initialize(){
-        //initizialize course data access object
-        CourseDAO.init();
-        EventDAO.init();
-
         //get DAO instances 
         courseDAO = CourseDAO.getInstance();
         eventDAO = EventDAO.getInstance();
-        calendarManager = new CalendarManager();
+        calendarManager = CalendarManager.getInstance();
 
         
         //get user's courses
