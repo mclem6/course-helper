@@ -1,36 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
+<?import com.calendarfx.view.DetailedDayView?>
 
 <BorderPane  styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.HomePageController">
    
     <left>
-        <VBox styleClass="vbox">
+        <VBox styleClass="vbox, left-pane">
             <fx:include source="navigation.fxml" />
         </VBox>
     </left>
 
     <center>
         <VBox styleClass="vbox, middle-pane">
-            <VBox alignment="TOP_CENTER">
-                <Text text="home page"/>
-            </VBox>
-            <HBox fx:id="coursesContainer" spacing="20">
-                <!-- for course boxes  -->
+            <ScrollPane styleClass="scrollpane" fitToWidth="true" minViewportHeight="175" prefViewportHeight="200">
+                     <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <FlowPane fx:id="coursesContainer" orientation="horizontal" hgap="20" vgap="20">
+                        <!-- for course boxes  -->
+                        <HBox >
+                            <Button styleClass="round-button" fx:id="add_new_course_button" text="+" onAction="#addNewCourseForm" />
+                        </HBox>
+                    </FlowPane>
+            </ScrollPane>
+
+            <HBox spacing="40">
+                <Label text="Today" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Button styleClass="round-button" fx:id="add_new_event_button" text="+" onAction="#addNewPopup"/>    
+                    <padding>
+                        <Insets top="20" right="25" bottom="10" left="20"/>
+                    </padding>
             </HBox>
-            <VBox fx:id="calendarContainer">
-                <!-- for calendar  -->
-            </VBox>
+
+            <HBox fx:id="bodyContainer" spacing="0">
+                    <padding>
+                        <Insets top="0" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <DetailedDayView fx:id="calendarDetailedDayView" minWidth="400" HBox.hgrow="ALWAYS"/>
+                <!-- TODO: add task list -->
+                <VBox minWidth="200" prefWidth="300" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets top="20" right="10" bottom="20" left="10"/>
+                    </padding>
+                    <HBox spacing="10">
+                        <Text text="To-Do"/>
+                        <Button styleClass="round-button" fx:id="add_new_task_button" text="+" onAction="#addNewTask" />
+                    </HBox>
+                    <fx:include source="taskList.fxml" fx:id="taskList"/>
+                    <AnchorPane fx:id="addTaskForm" />
+                </VBox>
+            </HBox>
         </VBox>
     </center>
 
     <right>
-        <VBox styleClass="vbox">
+        <VBox styleClass="vbox, right-pane">
             <Text text="right dashboard content"/>
         </VBox>
     </right>

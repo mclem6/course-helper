@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import org.controlsfx.control.CheckComboBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+
+
+<VBox spacing="15" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.AddEventFormController">
+
+    <!-- Popup Title -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Add New Event" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+        <padding>
+            <Insets top="0" right="20" bottom="20" left="0"/>
+        </padding>
+    </HBox>
+
+    <!-- Event Name -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Title:" prefWidth="100" minWidth="100"/>
+        <TextField fx:id="event_title" prefWidth="200"/>
+    </HBox> 
+
+    <!-- Event Type  -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Type:" prefWidth="100" minWidth="100"/>
+         <ComboBox fx:id="sourceType" prefWidth= "125" maxWidth="125">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="quiz"/>
+                    <String fx:value="exam"/>
+                    <String fx:value="other"/>
+                </FXCollections>
+            </items>
+         </ComboBox>
+    </HBox>
+
+    <!-- Event's Course  -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Course:" prefWidth="100" minWidth="100"/>
+         <ComboBox fx:id="course_combo" prefWidth= "125" maxWidth="125"/>
+    </HBox>
+      
+
+    <!-- Start Date -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Start Date:" prefWidth="100" minWidth="100"/>
+        <DatePicker fx:id="date_picker" prefWidth= "150" maxWidth="150"/>
+    </HBox>
+    
+    <!-- Start Time -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Start Time:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="start_time_combo" prefWidth= "150" maxWidth="150"/>  
+    </HBox>
+
+    <!-- End Time -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="End Time:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="end_time_combo" prefWidth= "150" maxWidth="150"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <CheckBox fx:id="recurring_checkbox" text="Recurring Event" onAction="#handleRecurringToggle"/>
+        <ComboBox fx:id="recurrence_combo" visible="false" prefWidth="150" onAction="#handleRecurrenceSelection"/>
+    </HBox>
+     <!-- Custom Days -->
+    <HBox fx:id="recurrence_hbox" spacing="10" alignment="CENTER_LEFT" visible="false">
+        <Label text="Repeat on:" prefWidth="100" minWidth="100"/>
+        <CheckComboBox fx:id="repeat_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
+    </HBox>
+
+
+    <!-- Reoccurence Days -->
+    <!-- <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Class Days:" prefWidth="100" minWidth="100"/>
+        <CheckComboBox fx:id="select_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
+    </HBox> -->
+
+
+    <!-- Submit and Cancel Buttons -->
+    <HBox spacing="5" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button fx:id="add_event_button" text="add" prefWidth= "80" maxWidth="80" onAction="#addEvent" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button fx:id="cancel_event_button" text="cancel" prefWidth= "80" maxWidth="80" onAction="#cancelEvent" style="-fx-background-color: #F44336; -fx-text-fill: white;"/>
+    </HBox> 
+
+    
+</VBox>

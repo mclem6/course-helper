@@ -7,21 +7,22 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.CoursesPageController">
-   
+<BorderPane  styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.CalendarPageController">
+
     <left>
-        <VBox styleClass="vbox,left-pane">
+        <VBox styleClass="vbox, left-pane">
             <fx:include source="navigation.fxml" />
         </VBox>
     </left>
 
     <center>
-        <VBox styleClass="vbox, middle-pane" alignment="TOP_CENTER" spacing="20">
-            <Text text="course page"/>
-            <Button fx:id="add_new_course_btn" text="Add New Course" onAction="#addNewCourse"/>
-            <VBox fx:id="add_course_form_vbox">
+        <VBox styleClass="vbox, middle-pane">
+            <VBox alignment="TOP_CENTER">
+                <Text text="calendar page"/>
             </VBox>
-
+            <VBox fx:id="calendarContainer">
+                <!-- for calendar  -->
+            </VBox>
         </VBox>
     </center>
 
@@ -30,4 +31,5 @@
             <Text text="right dashboard content"/>
         </VBox>
     </right>
+
 </BorderPane>

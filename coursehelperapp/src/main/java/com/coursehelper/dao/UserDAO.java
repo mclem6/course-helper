@@ -35,7 +35,7 @@ public class UserDAO {
 
     //register user
     public int registerUser(String username, String password){
-        //connect to datase, create if doesn't exist
+        //connect to database 
         try(Connection conn = Database.getConnection()){
             //connection successful
             if (conn != null){

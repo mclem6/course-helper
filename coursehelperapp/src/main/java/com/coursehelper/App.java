@@ -18,6 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        //load access screen
         primaryStage = stage;
         scene = new Scene(loadFXML("accessScreen"), 800, 555);
         scene.getStylesheets().add(getClass().getResource("/stylesheets/DarkMode/accessPageDark.css").toExternalForm());

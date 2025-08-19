@@ -175,10 +175,10 @@ public class AccessScreenController {
 
 
         //set style sheet of homepage
-        root.getStylesheets().add(getClass().getResource("/stylesheets/homepage.css").toExternalForm());
+        root.getStylesheets().add(getClass().getResource("/stylesheets/homePage.css").toExternalForm());
        
         //set scene
-        Scene scene = new Scene(root, (bounds.getWidth() - 200), bounds.getHeight());
+        Scene scene = new Scene(root, 1275, bounds.getHeight());
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setResizable(true);

@@ -6,94 +6,86 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.*?>
 <?import java.lang.*?>
+<?import javafx.geometry.Insets?>
 
 
-<HBox spacing="10" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.CreateCourseFormController">
+<VBox styleClass="root" spacing="15" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.AddCourseFormController">
 
-    <TextField fx:id="course_name" promptText="course name"/>
-    <ComboBox fx:id="semester_combo" promptText="semester" prefWidth= "125" maxWidth="125">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-            <String fx:value="FALL" />
-            <String fx:value="SPRING" />
-            <String fx:value="SUMMER" />
-            </FXCollections>
-        </items>
-    </ComboBox>
-    <ComboBox fx:id="year_combo" promptText="year" prefWidth= "100" maxWidth="100" >
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-            <String fx:value="2025" />
-            </FXCollections>
-        </items>
-    </ComboBox>
-    <ComboBox fx:id="start_time_combo" promptText="start" prefWidth= "100" maxWidth="100">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="12:00AM" />
-                <String fx:value="1:00AM" />
-                <String fx:value="2:00AM" />
-                <String fx:value="3:00AM" />
-                <String fx:value="4:00AM" />
-                <String fx:value="5:00AM" />
-                <String fx:value="6:00AM" />
-                <String fx:value="7:00AM" />
-                <String fx:value="8:00AM" />
-                <String fx:value="9:00AM" />
-                <String fx:value="10:00AM" />
-                <String fx:value="11:00AM" />
-                <String fx:value="12:00PM" />
-                <String fx:value="1:00PM" />
-                <String fx:value="2:00PM" />
-                <String fx:value="3:0PM" />
-                <String fx:value="4:00PM" />
-                <String fx:value="5:00PM" />
-                <String fx:value="6:00PM" />
-                <String fx:value="7:00PM" />
-                <String fx:value="8:00PM" />
-                <String fx:value="9:00PM" />
-                <String fx:value="10:00PM" />
-                <String fx:value="11:00PM" />
-                <String fx:value="12:00PM" />
-            </FXCollections>
-        </items>
-    </ComboBox>
-     <ComboBox fx:id="end_time_combo" promptText="end" prefWidth= "100" maxWidth="100">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                 <String fx:value="12:00AM" />
-                <String fx:value="1:00AM" />
-                <String fx:value="2:00AM" />
-                <String fx:value="3:00AM" />
-                <String fx:value="4:00AM" />
-                <String fx:value="5:00AM" />
-                <String fx:value="6:00AM" />
-                <String fx:value="7:00AM" />
-                <String fx:value="8:00AM" />
-                <String fx:value="9:00AM" />
-                <String fx:value="10:00AM" />
-                <String fx:value="11:00AM" />
-                <String fx:value="12:00PM" />
-                <String fx:value="1:00PM" />
-                <String fx:value="2:00PM" />
-                <String fx:value="3:0PM" />
-                <String fx:value="4:00PM" />
-                <String fx:value="5:00PM" />
-                <String fx:value="6:00PM" />
-                <String fx:value="7:00PM" />
-                <String fx:value="8:00PM" />
-                <String fx:value="9:00PM" />
-                <String fx:value="10:00PM" />
-                <String fx:value="11:00PM" />
-                <String fx:value="12:00PM" />
-            </FXCollections>
-        </items>
-    </ComboBox>
-    <CheckComboBox fx:id="select_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
-    <HBox spacing="5">
-        <Button fx:id="add_course_button" text="add" prefWidth= "50" maxWidth="50" onAction="#addCourse"/>
-        <Button fx:id="cancel_course_button" text="cancel" prefWidth= "75" maxWidth="75"/>
+    <!-- Popup Title -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Add New Course" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+        <padding>
+            <Insets top="0" right="20" bottom="20" left="0"/>
+        </padding>
+    </HBox>
+
+    <!-- Course Name -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Course Name:" prefWidth="100" minWidth="100"/>
+        <TextField fx:id="course_name" prefWidth="200"/>
+    </HBox>
+    
+    <!-- Semester -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Semester:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="semester_combo" prefWidth= "125" maxWidth="125">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                <String fx:value="FALL" />
+                <String fx:value="SPRING" />
+                <String fx:value="SUMMER" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+    </HBox>
+    
+    <!-- Year -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+    <Label text="Year:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="year_combo" prefWidth= "100" maxWidth="100" >
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                <String fx:value="2025" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+    </HBox>
+
+    <!-- Start Date -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Start Date:" prefWidth="100" minWidth="100"/>
+        <DatePicker fx:id="date_picker" prefWidth= "150" maxWidth="150"/>
+    </HBox>
+    
+    <!-- Start Time -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Start Time:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="start_time_combo" prefWidth= "150" maxWidth="150"/>
+    </HBox>
+
+    <!-- End Time -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="End Time:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="end_time_combo" prefWidth= "150" maxWidth="150"/>
+    </HBox>
+
+    <!-- Class Days -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Lecture Days:" prefWidth="100" minWidth="100"/>
+        <CheckComboBox fx:id="select_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
+    </HBox>
+
+    <!-- Course Style(color) -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Color:" prefWidth="100" minWidth="100"/>
+        <ComboBox fx:id="style_combo" />
+    </HBox>
+
+    <!-- Submit and Cancel Buttons -->
+    <HBox spacing="5" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button fx:id="add_course_button" text="add" prefWidth= "80" maxWidth="80" onAction="#addCourse" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button fx:id="cancel_course_button" text="cancel" prefWidth= "80" maxWidth="80" onAction="#cancelCourse" style="-fx-background-color: #F44336; -fx-text-fill: white;"/>
     </HBox>
 
     
-</HBox>
+</VBox>

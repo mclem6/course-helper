@@ -24,7 +24,7 @@ public class CoursesPageController {
     @FXML
     Button add_new_course_btn;
 
-    CreateCourseFormController createCourseFormController;
+    AddCourseFormController createCourseFormController;
 
 
     public void addNewCourse(){
