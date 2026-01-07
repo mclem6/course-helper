@@ -27,7 +27,7 @@ public class UserDAO {
         try(Connection conn = Database.getConnection()){
             //create user table if doesn't exist
             Statement stmt = conn.createStatement();
-            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, name TEXT)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, name TEXT, theme TEXT DEFAULT 'LightMode')");
         } catch(SQLException e){
             System.out.println("Database error: " + e.getMessage());
         }

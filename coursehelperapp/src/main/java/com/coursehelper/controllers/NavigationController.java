@@ -27,21 +27,21 @@ public class NavigationController {
     private void goToHomePage(){
         
         //load user's homepage
-        sceneManager.switchScene("/FXML/homePage.fxml", "/stylesheets/homePage.css");
+        sceneManager.switchScene("/FXML/homePage.fxml");
     }
 
     @FXML
     private void goToCalendarPage(){
         
         //load user's homepage
-        sceneManager.switchScene("/FXML/calendarPage.fxml", "/stylesheets/calendarPage.css");
+        sceneManager.switchScene("/FXML/calendarPage.fxml");
     }
 
     @FXML
     private void goToTasksPage(){
         
         //load user's homepage
-        sceneManager.switchScene("/FXML/tasksPage.fxml", "/stylesheets/tasksPage.css");
+        sceneManager.switchScene("/FXML/tasksPage.fxml");
     }
 
 

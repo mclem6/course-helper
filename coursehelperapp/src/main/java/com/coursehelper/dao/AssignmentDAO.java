@@ -53,9 +53,9 @@ public class AssignmentDAO {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
                 System.out.println("Assignments table initialized");
-        } catch(SQLException e){
+         } catch(SQLException e){
             System.out.println("Database error: " + e.getMessage());
-        }
+         }
 
 
     }

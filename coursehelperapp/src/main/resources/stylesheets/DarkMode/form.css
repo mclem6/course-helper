@@ -1,0 +1,8 @@
+.root{
+    -fx-background-color: black;      /* Background color */
+    -fx-background-radius: 10;          /* Rounded corners */
+    -fx-border-width: .5;
+    -fx-border-color: white;   /* Optional border color */
+    -fx-border-radius: 10;             /* Border radius matches background radius */
+    -fx-padding: 40;  
+}

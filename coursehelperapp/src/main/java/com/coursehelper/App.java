@@ -2,6 +2,8 @@ package com.coursehelper;
 
 import java.io.IOException;
 
+import com.coursehelper.theme.ThemeManager;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,8 +22,11 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         //load access screen
         primaryStage = stage;
+        ThemeManager.initializeGuest();
         scene = new Scene(loadFXML("accessScreen"), 800, 555);
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/DarkMode/accessPageDark.css").toExternalForm());
+        
+        
+        scene.getStylesheets().add(getClass().getResource("/stylesheets/" + ThemeManager.getCurrentTheme() + "/accessPage.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

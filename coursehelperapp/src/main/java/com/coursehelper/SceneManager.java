@@ -1,5 +1,7 @@
 package com.coursehelper;
 
+import com.coursehelper.theme.ThemeManager;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,15 +13,17 @@ public class SceneManager {
 
     public SceneManager(Stage stage){
         this.stage = stage;
+        
     }
 
-    public void switchScene(String fxmlPath, String styleSheetPath){
+    public void switchScene(String fxmlPath){
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            //set style sheet of homepage
-            root.getStylesheets().add(getClass().getResource(styleSheetPath).toExternalForm());
+            //set stylesheet for path
+            ThemeManager.setTheme(root, ThemeManager.getCurrentTheme());
+        
 
             //use prev scene
             Scene currentScene = stage.getScene();

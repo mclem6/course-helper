@@ -55,3 +55,20 @@
     -fx-border: 1px solid #E6E6E6;
     -fx-background: #FFF;
 }
+
+/* theme toggle button unselected (LightMode) */
+.theme-toggle {
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+}
+.theme-toggle:selected {
+    /* Selected state (Dark mode) */
+    -fx-background-color: #ffff00;
+    -fx-text-fill: black;
+}
+
+.navigation-pane {
+    -fx-text-fill: #ffffff;  /* or white for DarkMode */
+}

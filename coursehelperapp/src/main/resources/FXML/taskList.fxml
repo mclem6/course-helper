@@ -8,7 +8,6 @@
 
 
 <VBox xmlns:fx="http://javafx.com/fxml" spacing = "10"
-            fx:controller="com.coursehelper.controllers.TaskListController"
-            stylesheets="@../stylesheets/taskList.css">
+            fx:controller="com.coursehelper.controllers.TaskListController">
     <ListView styleClass="taskListView" fx:id="taskListView"  prefHeight="0" VBox.vgrow="ALWAYS"/>
 </VBox>

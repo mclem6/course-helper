@@ -1,0 +1,63 @@
+.root {
+    /* -fx-padding: 0 10 0 10; top right bottom left */
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.theme-text {
+    -fx-fill:black; 
+}
+
+.vbox {
+    -fx-padding: 30 10 10 10; 
+    -fx-alignment: top-center;
+}
+
+.scrollPane {
+    -fx-background-color: white;
+
+}
+.scrollPane .viewport {
+    -fx-background-color: #ffffff;
+}
+
+.flowPane {
+    -fx-background-color: white;
+}
+
+.left-pane{
+    -fx-min-width: 150px;
+    -fx-max-width: 150px;
+}
+
+.middle-pane {
+    -fx-alignment: none;
+    -fx-border-color: transparent black transparent black;      /* Border color */
+    -fx-border-width: 1px;        /* Thickness of the border */
+    -fx-border-style: solid;      /* Border style (optional) */
+    -fx-min-width: 500px;
+}
+
+.right-pane{
+    -fx-min-width: 350px;
+    -fx-max-width: 350px;
+}
+
+.course-container-hbox {
+    -fx-pref-width: 150px;
+    -fx-max-width: 150px;
+    -fx-pref-height: 150px;
+    -fx-max-height: 150px;
+}
+
+.round-button {
+  -fx-background-radius: 50%; 
+  -fx-min-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-width: 20px;
+  -fx-pref-height: 20px;
+  -fx-font-size: 9px;
+  /* -fx-background-color: #4CAF50; */
+ 
+}
+

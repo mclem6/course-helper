@@ -15,6 +15,7 @@ import com.coursehelper.Course;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
+import com.coursehelper.theme.ThemeManager;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -31,10 +32,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -43,6 +46,12 @@ import javafx.stage.Popup;
 
 
 public class HomePageController {
+
+    @FXML
+    BorderPane root;
+
+    @FXML
+    ToggleButton themeToggle;
 
     @FXML
     FlowPane coursesContainer;
@@ -118,8 +127,23 @@ public class HomePageController {
 
         }
 
-        
-        
+
+        //set up theme toggle button
+        boolean isDarkMode = ThemeManager.isDarkMode();
+        System.out.println(isDarkMode);
+
+        themeToggle.setSelected(isDarkMode);
+        themeToggle.setText(isDarkMode ? "LightMode" : "DarkMode");
+
+    }
+
+    @FXML
+    private void onToggleTheme(){
+        String newTheme = themeToggle.isSelected() ? "DarkMode" : "LightMode";
+        ThemeManager.setTheme(root, newTheme);
+        ThemeManager.saveThemePreference(newTheme);
+        themeToggle.setText(!themeToggle.isSelected() ? "DarkMode" : "LightMode");
+
     }
 
     public void addCourseToHBox(Course course){
@@ -354,7 +378,7 @@ public class HomePageController {
             // load the FXML
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/courseForm.fxml"));
             Parent formNode = loader.load();
-            formNode.getStylesheets().add(getClass().getResource("/stylesheets/form.css").toExternalForm());
+            formNode.getStylesheets().add(getClass().getResource("/stylesheets/" + ThemeManager.getCurrentTheme() +"/form.css").toExternalForm());
 
 
             // get access to form's controller
@@ -407,7 +431,7 @@ public class HomePageController {
             // load the FXML
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/addEventPopup.fxml"));
             Parent popupNode = loader.load();
-            popupNode.getStylesheets().add(getClass().getResource("/stylesheets/newEventPopup.css").toExternalForm());
+            popupNode.getStylesheets().add(getClass().getResource("/stylesheets/"+ ThemeManager.getCurrentTheme() +"/newEventPopup.css").toExternalForm());
 
 
             //get controller and pass homepage controller
@@ -467,7 +491,7 @@ public class HomePageController {
             // load the FXML
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/taskForm.fxml"));
             Parent formNode = loader.load();
-            formNode.getStylesheets().add(getClass().getResource("/stylesheets/form.css").toExternalForm());
+            formNode.getStylesheets().add(getClass().getResource("/stylesheets/" + ThemeManager.getCurrentTheme() + "/form.css").toExternalForm());
 
 
 
@@ -476,24 +500,6 @@ public class HomePageController {
             
             //Pass TaskList Controller
             addTaskFormController.setTaskListController(taskListController);
-
-            addTaskForm.getChildren().add(formNode);
-
-            //callback to update UI
-            // addCourseFormController.setOnCourseCreated(course -> {
-            //      //remove no course text
-            //     if(courseNode != null && courseNode.isVisible()){
-            //         coursesContainer.getChildren().remove(courseNode);
-
-            //     }
-            //     //update course box
-            //     addCourseToHBox(course);
-
-            //     //add schedule to calendar 
-            //     calendarManager.addCourseCalendar(course);
-
-            // });
-
 
             //wrap formNode in Popup
             Popup popup = new Popup();

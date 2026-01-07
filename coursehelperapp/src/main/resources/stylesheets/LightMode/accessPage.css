@@ -7,6 +7,7 @@
     -fx-background-image: url("/images/gradientBackground.png");
     -fx-background-size: 264px 555px;
     -fx-background-repeat: no-repeat;
+    -fx-background-color: #ffffff;
 
 }
 
@@ -43,6 +44,7 @@
 
 .un-pw-text {
     -fx-padding: 13px 0 0 10px;
+    -fx-text-fill: black;
 }
 
 .text-field {
@@ -52,4 +54,21 @@
     -fx-background-radius: 12;
     -fx-border: 1px solid #E6E6E6;
     -fx-background: #FFF;
+}
+
+/* theme toggle button unselected (LightMode) */
+.theme-toggle {
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+}
+.theme-toggle:selected {
+    /* Selected state (Dark mode) */
+    -fx-background-color: #ffff00;
+    -fx-text-fill: black;
+}
+
+.navigation-pane {
+    -fx-text-fill: #000000;  /* or white for DarkMode */
 }

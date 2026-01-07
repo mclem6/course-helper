@@ -6,6 +6,7 @@ import com.coursehelper.App;
 import com.coursehelper.User;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.UserDAO;
+import com.coursehelper.theme.ThemeManager;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -14,19 +15,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class AccessScreenController {
+     
+    @FXML
+    HBox root;
 
     @FXML
-    Button createAccountButton;
-
-    @FXML
-    Button login;
+    ToggleButton themeToggle;
 
     @FXML
     TextField username;
@@ -41,6 +43,26 @@ public class AccessScreenController {
     
 
     User user;
+
+    public void initialize(){
+        //set up theme toggle button
+        boolean isDarkMode = ThemeManager.isDarkMode();
+        System.out.println(isDarkMode);
+
+        themeToggle.setSelected(isDarkMode);
+        themeToggle.setText(isDarkMode ? "LightMode" : "DarkMode");
+
+    }
+
+    @FXML
+    private void onToggleTheme(){
+        String newTheme = themeToggle.isSelected() ? "DarkMode" : "LightMode";
+        ThemeManager.setAccessScreenTheme(root, newTheme);
+        ThemeManager.saveLocalThemePreference(newTheme);
+        themeToggle.setText(!themeToggle.isSelected() ? "DarkMode" : "LightMode");
+
+    }
+
 
 
     @FXML
@@ -169,13 +191,14 @@ public class AccessScreenController {
         //get dimensions
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
+        ThemeManager.initialize(user.getId());
+        
         //get homepage controller
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/homePage.fxml"));
         Parent root = loader.load();
 
-
-        //set style sheet of homepage
-        root.getStylesheets().add(getClass().getResource("/stylesheets/homePage.css").toExternalForm());
+        //load user's preference 
+        ThemeManager.setTheme(root, ThemeManager.getCurrentTheme());
        
         //set scene
         Scene scene = new Scene(root, 1275, bounds.getHeight());

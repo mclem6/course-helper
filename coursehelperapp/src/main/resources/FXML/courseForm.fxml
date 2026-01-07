@@ -45,7 +45,7 @@
         <ComboBox fx:id="year_combo" prefWidth= "100" maxWidth="100" >
             <items>
                 <FXCollections fx:factory="observableArrayList">
-                <String fx:value="2025" />
+                <String fx:value="2026" />
                 </FXCollections>
             </items>
         </ComboBox>

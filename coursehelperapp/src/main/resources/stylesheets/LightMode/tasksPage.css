@@ -1,6 +1,8 @@
 .root {
     /* -fx-padding: 0 10 0 10; top right bottom left */
+    -fx-background-color: #ffffff;
 }
+
 
 .vbox {
     -fx-padding: 30 10 10 10; 
