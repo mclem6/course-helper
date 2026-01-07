@@ -1,8 +1,10 @@
-# course-helper
-Java desktop application for students to manage class schedules and assignments. Integration with Google Calendar and AI to assist with studying and deadline reminders.
+
+*Vision Statement*
+CourseHelper centralizes all of a student’s course-related resources in a single, intuitive interface. By unifying notes, schedules, and tasks, it minimizes the time and effort spent searching for information, helping students focus on learning, stay organized, and retain more knowledge.
+
 
 ## Project Overview:
-A Java desktop application designed to help students manage their coursework. The key features will include:
+A Java desktop application designed to eliminate fragmentation, reducing the time wasted on switching between student learning and scheduling resources. The key features will include:
 
 - Calendar Creation and Management.
 - Dedicated sections for today's tasks, upcoming deadlines, plans, and study tools (flashcards, lecture refreshers...)
@@ -22,7 +24,7 @@ A Java desktop application designed to help students manage their coursework. Th
 
 
 ### Database:
-- Use SQLite or H2 Database for local database storage of user data, courses, assignments, and other details.
+- SQLite for mvp
 
 ### Authentication & Google Integration:
 - Use OAuth 2.0 to allow Google authentication (signing in with Google account) and Google Calendar API for syncing data with Google Calendar.
@@ -52,7 +54,7 @@ A Java desktop application designed to help students manage their coursework. Th
 - Alternatively, integrate via REST API calls to an external chatbot service and display the responses in the JavaFX application.
 
 
-## Database Design (SQLite or H2 Database):
+## Database Design:
 
 ### Model:
 - User: Stores user profile information (name, email, Google account data).
@@ -62,8 +64,7 @@ A Java desktop application designed to help students manage their coursework. Th
 
 ### Relationships:
 - One User can have many Courses and Assignments.
-- Use JDBC or JPA (Java Persistence API) for database interaction.
-
+- Use JDBC.
 
 ## Phase 1: 
 
@@ -77,13 +78,3 @@ A Java desktop application designed to help students manage their coursework. Th
 - upcoming deadline widget
 - fun widget (motivational quote, streak recorder, countdowns...)
 
-
-
-TODO: 
-1. create class diagram
-2. design UI
-3. set up project code (maven build, create pom file)
-
-
-
-This is just a skeleton for app objectives and possible technologies to use. The learning objective is to master full-stack development utilizing Java technologies, become familiar with the full software development process, and learn to design products for specific pain points. 
