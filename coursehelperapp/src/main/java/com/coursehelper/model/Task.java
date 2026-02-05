@@ -1,4 +1,4 @@
-package com.coursehelper;
+package com.coursehelper.model;
 
 public class Task {
 

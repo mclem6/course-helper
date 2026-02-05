@@ -1,12 +1,12 @@
-package com.coursehelper;
+package com.coursehelper.model;
 
 //model class for holding user data
 
 public class User {
 
-    int id;
-    String name;
-    String username;
+    public int id;
+    public String name;
+    public String username;
     
     public User(int id, String name, String username){
         this.id = id;

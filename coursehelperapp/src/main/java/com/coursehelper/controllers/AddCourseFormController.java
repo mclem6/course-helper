@@ -10,10 +10,10 @@ import org.controlsfx.control.CheckComboBox;
 
 import com.calendarfx.model.Calendar;
 import com.coursehelper.CalendarManager;
-import com.coursehelper.Course;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
+import com.coursehelper.model.Course;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

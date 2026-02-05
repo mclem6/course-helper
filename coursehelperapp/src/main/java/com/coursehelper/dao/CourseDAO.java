@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.coursehelper.Course;
 import com.coursehelper.Database;
+import com.coursehelper.model.Course;
 
 
 public class CourseDAO {

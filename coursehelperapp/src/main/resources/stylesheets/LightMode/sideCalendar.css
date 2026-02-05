@@ -1,0 +1,7 @@
+.day-view .hour-line {
+    -fx-stroke-width: 0;
+}
+
+.day-view .minor-hour-line {
+    -fx-stroke-width: 0;
+}

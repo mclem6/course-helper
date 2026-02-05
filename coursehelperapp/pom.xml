@@ -66,6 +66,13 @@
             <version>11.12.7</version>
         </dependency>
 
+        <!-- GSON: conversio between JSON string and POJO -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version> 
+        </dependency>
+
 
      </dependencies>
 

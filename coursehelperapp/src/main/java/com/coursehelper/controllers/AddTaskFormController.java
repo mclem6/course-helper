@@ -3,11 +3,11 @@ package com.coursehelper.controllers;
 import java.util.List;
 
 import com.coursehelper.CalendarManager;
-import com.coursehelper.Course;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.AssignmentDAO;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
+import com.coursehelper.model.Course;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;

@@ -1,17 +1,21 @@
 package com.coursehelper;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
+import com.calendarfx.view.DayViewBase;
 import com.coursehelper.dao.EventDAO;
+import com.coursehelper.model.Course;
+import com.coursehelper.model.Event;
 
 public class CalendarManager{
 
     private CalendarSource calendarSource;
-    private List<Calendar> calendars;
+    private List<Calendar<Integer>> calendars;
     EventDAO eventDAO;
     UserSession userSession;
 
@@ -34,6 +38,26 @@ public class CalendarManager{
     }
 
 
+
+    //populate calendar for given view
+    public void populateCalendar(List<Course> user_courses, DayViewBase view){
+
+        if (user_courses != null){
+            //for each course
+            for (Course course : user_courses){ 
+                //add entries to calendar
+                addCourseCalendar(course);  
+            }   
+
+        }
+            
+        //add to calendar source
+        view.getCalendarSources().addAll(getCalendarSource());
+
+    }
+    
+
+
     //add course class days entyr to calendar 
     public void addCourseCalendar(Course course){
 
@@ -42,7 +66,7 @@ public class CalendarManager{
         }
 
         //create a calendar
-        Calendar<String> courseCal = new Calendar<>(course.getCourseName());
+        Calendar<Integer> courseCal = new Calendar<>(course.getCourseName());
         //add calendar to calendars list
         calendars.add(courseCal);
         
@@ -96,7 +120,7 @@ public class CalendarManager{
 
 
         //find calendar
-        Calendar courseCal = findCourseCalendar(course);
+        Calendar<Integer> courseCal = findCourseCalendar(course);
 
 
         //add entry
@@ -107,14 +131,14 @@ public class CalendarManager{
 
     }
 
-    public void deleteEntry(Entry entry){
+    public void deleteEntry(Entry<String> entry){
         //TODO: delete single calendar entry
 
     }
 
     public void deleteCalendar(Course course){
         //find calendar
-        Calendar calToDelete = findCourseCalendar(course);
+        Calendar<Integer> calToDelete = findCourseCalendar(course);
 
         //remove from souce
         calendarSource.getCalendars().remove(calToDelete);
@@ -126,17 +150,13 @@ public class CalendarManager{
         return calendarSource;
     }
 
-    public Calendar findCourseCalendar(Course course){
-        for (Calendar cal : calendars){
+    public Calendar<Integer> findCourseCalendar(Course course){
+        for (Calendar<Integer> cal : calendars){
             if(course.getCourseName().equals(cal.getName())){
                 return cal;
             }
         }
         return null;
-
     }
-    
-
-
 
 }

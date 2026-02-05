@@ -1,23 +1,25 @@
 package com.coursehelper.controllers;
 
-import java.time.LocalDate;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
-import com.calendarfx.model.Entry;
 import com.calendarfx.view.DetailedDayView;
-import com.calendarfx.view.EntryViewBase;
+import com.calendarfx.view.DetailedWeekView;
 import com.coursehelper.App;
 import com.coursehelper.CalendarManager;
-import com.coursehelper.Course;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
+import com.coursehelper.menu.CalendarEntryContextMenu;
+import com.coursehelper.model.Course;
+import com.coursehelper.model.Quote;
+import com.coursehelper.services.QuoteService;
+import com.coursehelper.skin.SidebarCalendarWeekViewSkin;
 import com.coursehelper.theme.ThemeManager;
+import com.coursehelper.ui.CalendarViewConfigurator;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,15 +29,12 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -57,7 +56,11 @@ public class HomePageController {
     FlowPane coursesContainer;
 
     @FXML
-    VBox calendarContainer;
+    Label quoteLabel;
+
+    @FXML
+    Label authorLabel;
+
 
     @FXML
     Button add_new_course_button;
@@ -73,6 +76,9 @@ public class HomePageController {
 
     @FXML
     DetailedDayView calendarDetailedDayView;
+
+    @FXML
+    DetailedWeekView calendarWeekView;
 
     @FXML
     private VBox taskList;
@@ -91,14 +97,23 @@ public class HomePageController {
 
     Popup addNewEventPopup;
 
+    private static QuoteService quoteService;
+
 
     
 
     public void initialize(){
+
         //get DAO instances 
         courseDAO = CourseDAO.getInstance();
         eventDAO = EventDAO.getInstance();
         calendarManager = CalendarManager.getInstance();
+
+
+        //init quote service and load quote 
+        quoteService = new QuoteService();
+        loadQuote();
+
 
         
         //get user's courses
@@ -130,11 +145,17 @@ public class HomePageController {
 
         //set up theme toggle button
         boolean isDarkMode = ThemeManager.isDarkMode();
-        System.out.println(isDarkMode);
 
         themeToggle.setSelected(isDarkMode);
         themeToggle.setText(isDarkMode ? "LightMode" : "DarkMode");
 
+    }
+
+    @FXML
+    public void loadQuote(){
+        Quote quote = quoteService.getNextQuote();
+        quoteLabel.setText(quote.getText());
+        authorLabel.setText(quote.getAuthor());
     }
 
     @FXML
@@ -212,160 +233,34 @@ public class HomePageController {
 
     private void createCalendars(List<Course> user_courses){
 
-            //customize DetailedDayView
-            calendarDetailedDayView.setPrefHeight(600);
-            calendarDetailedDayView.setVisibleHours(12);
-            
-           
-            // DISABLE PopOver and drag-and-drop for now
-            //------------------------------------------------------------------------------------------------
-            //disable dragging/resizing
-            calendarDetailedDayView.setEntryEditPolicy(param -> false); 
-            //diable context menu
-            calendarDetailedDayView.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
-                event.consume();
-            });
-            //disable left click and double click?
-            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-                if(e.getButton() == MouseButton.PRIMARY){
-                    e.consume();
-                }
-            });
-            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-                if(e.getButton() == MouseButton.PRIMARY){
-                    e.consume();
-                }
-            });
+        //configure size
+        CalendarViewConfigurator.configureSize(calendarDetailedDayView, 600, 8);
+        CalendarViewConfigurator.configureSize(calendarWeekView, 200, 4);
+        
+        //install entry context menu
+        CalendarEntryContextMenu.install(calendarDetailedDayView, eventDAO, userSession);
+        CalendarEntryContextMenu.install(calendarWeekView, eventDAO, userSession);
+
+        //diasbale interactive calendar 
+        CalendarViewConfigurator.configureReadOnly(calendarDetailedDayView);
+        CalendarViewConfigurator.configureReadOnly(calendarWeekView);
+
+        //set skin
+        calendarWeekView.setSkin(new SidebarCalendarWeekViewSkin(calendarWeekView));
+
+    
+        
+
+        //populate calendars for views
+        calendarManager.populateCalendar(user_courses, calendarDetailedDayView);
+        calendarManager.populateCalendar(user_courses, calendarWeekView);
+
+        //run time-lines
+        CalendarViewConfigurator.startClockUpdater(calendarDetailedDayView);
+        CalendarViewConfigurator.startClockUpdater(calendarWeekView);
 
 
-            //disable hover
-            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> e.consume());
-            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_MOVED, e -> e.consume());
-            calendarDetailedDayView.addEventFilter(MouseEvent.MOUSE_EXITED, e -> e.consume());
-
-            //------------------------------------------------------------------------------------------------
-
-            // CUSTOM CONTEXT MENU
-            calendarDetailedDayView.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
-                Node node = event.getPickResult().getIntersectedNode();
-
-                // Traverse up the node hierarchy to find the EntryViewBase
-                while (node != null && !(node instanceof EntryViewBase)) {
-                    node = node.getParent();
-                }
-
-                if (node instanceof EntryViewBase) {
-                    EntryViewBase<?> entryView = (EntryViewBase<?>) node;
-                    Entry<?> entry = entryView.getEntry();
-
-                    //get event's ID // should be same for recurring events 
-                    Integer eventId = (Integer)entry.getRecurrenceSourceEntry().getUserObject();
-
-                    // Create custom context menu
-                    ContextMenu contextMenu = new ContextMenu();
-
-                    MenuItem editItem = new MenuItem("Edit");
-                    editItem.setOnAction(e -> {
-                        // Replace this with your custom editing logic
-                        // showMyEditDialog(entry);
-                    });
-                    
-                    //Delete entry from database and calendar
-                    MenuItem deleteItem = new MenuItem("Delete");
-                    deleteItem.setOnAction(e -> {
-
-                        //if reoccuring event, ask if user wants to delete all or just single event
-                        if (entry.isRecurring()){
-
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                            alert.setTitle("Delete Recurring Event");
-                            alert.setHeaderText("This is a recurring event.");
-                            alert.setContentText("Deleting this event will delete all dates associated with this event.");
-
-                            ButtonType deleteAll = new ButtonType("Confirm Delete");
-                            ButtonType cancel = ButtonType.CANCEL;
-
-                            alert.getButtonTypes().setAll(deleteAll, cancel);
-
-                            Optional<ButtonType> result = alert.showAndWait();
-
-                            if(result.isPresent()){
-
-                                // delete event from calendar and delete from events table
-                                if (result.get() == deleteAll){
-                                    //delete event ftom events table 
-                                    eventDAO.deleteEvent(userSession.getUserId(), eventId);
-
-                                    //delete all entries from calendar 
-                                    entry.getRecurrenceSourceEntry().removeFromCalendar();
-
-                                }
-                            } 
-                        }
-                        //single event
-                        else {
-                            
-                            //delete from events table
-                            eventDAO.deleteEvent(userSession.getUserId(), eventId);
-
-                            //remove from calendar
-                            entry.removeFromCalendar();
-                        }
-         
-            
-                    });
-
-                    contextMenu.getItems().addAll(editItem, deleteItem);
-                    contextMenu.show(entryView, event.getScreenX(), event.getScreenY());
-
-                    event.consume(); // Prevent default context menu from appearing
-                }
-            });        
-
-            // CREATE CALENDAR FOR COURSES
-            if (user_courses != null){
-                //for each course
-                for (Course course : user_courses){ 
-                    //add entries to calendar
-                    calendarManager.addCourseCalendar(course);  
-                }   
-
-            }
-             
-
-            //add to calendarView
-            calendarDetailedDayView.getCalendarSources().addAll(calendarManager.getCalendarSource());
-
-            //update calendar thread
-            calendarDetailedDayView.setRequestedTime(LocalTime.now());
-
-            Thread updateTimeThread = new Thread("Calendar: Update Time Thread"){
-                @Override
-                public void run(){
-                    while(true){
-                        Platform.runLater(()-> {
-                            calendarDetailedDayView.setToday(LocalDate.now());
-                            calendarDetailedDayView.setTime(LocalTime.now());
-                            
-                        });
-                        try {
-                            sleep(10000);
-                            
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            };
-
-            //thread settings
-            updateTimeThread.setPriority(Thread.MIN_PRIORITY);
-            updateTimeThread.setDaemon(true);
-            updateTimeThread.start();
-           
-
-            //add to FXML
-            // calendarContainer.getChildren().add(calendarView);
+        
 
 
     }

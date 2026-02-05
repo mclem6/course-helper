@@ -1,5 +1,7 @@
 package com.coursehelper;
 
+import com.coursehelper.model.User;
+
 //singleton to save user info for session
 
 public class UserSession {

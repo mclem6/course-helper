@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.coursehelper.Database;
-import com.coursehelper.Event;
+import com.coursehelper.model.Event;
 
 //DAO for access event table in database 
 public class EventDAO{

@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
-<?import com.calendarfx.view.DetailedDayView?>
+<?import com.calendarfx.view.*?>
 
 <BorderPane  fx:id="root" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.controllers.HomePageController">
    
@@ -68,8 +68,21 @@
     </center>
 
     <right>
-        <VBox styleClass="vbox, right-pane">
-            <Text styleClass="theme-text" text="right dashboard content"/>
+        <VBox styleClass="vbox, right-pane" spacing="50">
+            <VBox spacing="10">
+                <Label fx:id="quoteLabel" styleClass="theme-text, quote-label" wrapText="true" text=""/>
+                <HBox alignment="CENTER_RIGHT">
+                    <Label fx:id="authorLabel" styleClass="theme-text, author-label" text=""/>
+                </HBox>
+            </VBox>
+            <VBox>
+                <!-- calendar dayview -->
+                <DetailedWeekView fx:id="calendarWeekView" prefHeight="200" prefWidth="300"/>
+            </VBox>
+            <VBox>
+                <Text text="bottom vbox text"/>
+            </VBox>
         </VBox>
+
     </right>
 </BorderPane>
