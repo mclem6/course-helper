@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.calendarfx.view.CalendarView;
 import com.coursehelper.CalendarManager;
-import com.coursehelper.Course;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
+import com.coursehelper.model.Course;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;

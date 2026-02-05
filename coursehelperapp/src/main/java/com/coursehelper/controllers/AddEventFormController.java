@@ -6,11 +6,11 @@ import java.util.List;
 import org.controlsfx.control.CheckComboBox;
 
 import com.coursehelper.CalendarManager;
-import com.coursehelper.Course;
-import com.coursehelper.Event;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.CourseDAO;
 import com.coursehelper.dao.EventDAO;
+import com.coursehelper.model.Course;
+import com.coursehelper.model.Event;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

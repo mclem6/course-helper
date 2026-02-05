@@ -4,9 +4,23 @@
     -fx-text-fill: #000000;
 }
 
+/* TEXT STYLES*/
+
 .theme-text {
     -fx-fill:black; 
 }
+
+
+.quote-label{
+    -fx-font-size: 25px;
+}
+
+.author-label{
+    -fx-font-size: 12px;
+}
+
+
+/**********/
 
 .vbox {
     -fx-padding: 30 10 10 10; 

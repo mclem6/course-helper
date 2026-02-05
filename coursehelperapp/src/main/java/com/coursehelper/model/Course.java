@@ -1,4 +1,4 @@
-package com.coursehelper;
+package com.coursehelper.model;
 
 import com.calendarfx.model.Calendar;
 import static com.calendarfx.model.Calendar.Style.STYLE1;

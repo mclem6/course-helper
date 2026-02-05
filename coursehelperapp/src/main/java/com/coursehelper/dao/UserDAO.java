@@ -9,7 +9,7 @@ import java.sql.Statement;
 import org.mindrot.jbcrypt.BCrypt; // Add this import
 
 import com.coursehelper.Database;
-import com.coursehelper.User;
+import com.coursehelper.model.User;
 
 //class for accessing database (Data Access Object)
 public class UserDAO {

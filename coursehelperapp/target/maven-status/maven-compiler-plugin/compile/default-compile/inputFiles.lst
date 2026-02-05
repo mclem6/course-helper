@@ -1,12 +1,9 @@
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/App.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/CalendarManager.java
-/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/Course.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/Database.java
-/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/Event.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/SceneManager.java
-/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/Task.java
-/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/User.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/UserSession.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/api/QuotesApiClient.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/AccessScreenController.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/AddAssignmentFormController.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/controllers/AddCourseFormController.java
@@ -24,4 +21,13 @@
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/dao/EventDAO.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/dao/TaskDAO.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/dao/UserDAO.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/menu/CalendarEntryContextMenu.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/model/Course.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/model/Event.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/model/Quote.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/model/Task.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/model/User.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/skin/SidebarCalendarWeekViewSkin.java
 /Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/theme/ThemeManager.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/ui/CalendarViewConfigurator.java
+/Users/mclem/Desktop/course-helper/coursehelperapp/src/main/java/com/coursehelper/ui/ToggleSwitch.java

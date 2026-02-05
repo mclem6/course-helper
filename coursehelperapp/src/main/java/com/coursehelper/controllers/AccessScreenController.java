@@ -3,9 +3,9 @@ package com.coursehelper.controllers;
 import java.io.IOException;
 
 import com.coursehelper.App;
-import com.coursehelper.User;
 import com.coursehelper.UserSession;
 import com.coursehelper.dao.UserDAO;
+import com.coursehelper.model.User;
 import com.coursehelper.theme.ThemeManager;
 
 import javafx.application.Platform;
@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
@@ -29,6 +30,12 @@ public class AccessScreenController {
 
     @FXML
     ToggleButton themeToggle;
+
+    @FXML
+    ToggleGroup authGroup;
+
+    @FXML
+    ToggleButton tab_login;
 
     @FXML
     TextField username;
@@ -51,6 +58,31 @@ public class AccessScreenController {
 
         themeToggle.setSelected(isDarkMode);
         themeToggle.setText(isDarkMode ? "LightMode" : "DarkMode");
+
+        //set up tab-toggle
+        //start on Login
+        tab_login.setSelected(true);
+        
+
+        //set up listener
+        authGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle != null){
+                ToggleButton selected = (ToggleButton) newToggle;
+                if(selected.getText().equals("Login")){
+                    
+                    //show only login button
+                    
+                } else if (selected.getText().equals("Sign Up")){
+                    
+                    //show only create account
+
+                }
+
+            }
+        });
+
+        
+
 
     }
 

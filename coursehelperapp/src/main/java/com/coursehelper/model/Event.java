@@ -1,4 +1,4 @@
-package com.coursehelper;
+package com.coursehelper.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Event {
     
-    private String title, event_type, start_day, start_time, end_time , recurringDays;
+    protected String title, event_type, start_day, start_time, end_time , recurringDays;
     LocalDate start_date;
     int event_id, courseId;
     Boolean is_recurring;
