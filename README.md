@@ -1,80 +1,11 @@
 
-*Vision Statement*
-CourseHelper centralizes all of a student’s course-related resources in a single, intuitive interface. By unifying notes, schedules, and tasks, it minimizes the time and effort spent searching for information, helping students focus on learning, stay organized, and retain more knowledge.
+A Java desktop application designed to help students manage course resources and schedules. Features are:
 
 
-## Project Overview:
-A Java desktop application designed to eliminate fragmentation, reducing the time wasted on switching between student learning and scheduling resources. The key features will include:
-
-- Calendar Creation and Management.
-- Dedicated sections for today's tasks, upcoming deadlines, plans, and study tools (flashcards, lecture refreshers...)
-- Integration with Google Calendar to sync deadlines and events.
+- Calendar creation and management
+- Task list creation and management
+- Deadline reminders
+- Dedicated page per course
 - AI-powered Chatbot to assist with studying and deadline reminders.
 
-## Set Up Project Structure:
-
-### Desktop Application Framework:
-- Use JavaFX to build the graphical user interface (GUI) for the desktop application.
-- JavaFX Scene Builder: A visual layout tool to design user interfaces quickly.
-- CalendarFX: to build and manage calendars. 
-
-### Back-End:
-- Use Spring Boot for the backend logic if needed (for managing Google Calendar integration, databases, or AI processing).
-- ** Alternatively, Java-based back-end logic can be implemented directly using Java Services for a pure Java desktop app. **
-
-
-### Database:
-- SQLite for mvp
-
-### Authentication & Google Integration:
-- Use OAuth 2.0 to allow Google authentication (signing in with Google account) and Google Calendar API for syncing data with Google Calendar.
-
-
-## Creating and Managing Coursework Calendars:
-
-### Calendar Interface (CalendarFx):
-- Build the calendar using Java'as CalendarFX.
-- Users can add, update, and delete course events, assignments, and exams.
-
-### Google Calendar Sync:
-- Integrate Google Calendar API for syncing coursework events.
-- Use Google API Client for Java to handle authentication and API interactions with Google Calendar (bi-directional sync).
-
-
-
-## Implementing the Study Assistance Chatbot:
-
-### Designing the Chatbot (AI Integration):
-- Use a cloud-based AI service (such as Dialogflow, IBM Watson, or Rasa) to build the chatbot.
-- Chatbot will assist with reminders, studying tips, and handling study-related questions.
-- Chatbot will provide personalized reminders and assistance based on users' coursework and deadlines, interacting with the Google Calendar integration.
-
-### Integrating the Chatbot:
-- Integrate the chatbot interface in the JavaFX application using a WebView component to load the chatbot's web-based interface (if using a cloud AI service).
-- Alternatively, integrate via REST API calls to an external chatbot service and display the responses in the JavaFX application.
-
-
-## Database Design:
-
-### Model:
-- User: Stores user profile information (name, email, Google account data).
-- Course: Stores course information (course name, professor, schedule).
-- Assignments/Exams: Stores information about assignments and exams, including deadlines and priority.
-- Chatbot Interaction: Log user-chatbot interactions for improvement (optional for study suggestions).
-
-### Relationships:
-- One User can have many Courses and Assignments.
-- Use JDBC.
-
-## Phase 1: 
-
-### build different calendar views (month, week, daily) 
-- month (blocking-schedule-like UI, see task details on hover), 
-- week (see details about tasks, on hover see task plan)
-- day (see plan of each task)
-
-### widgets
-- stats about tasks/schedule widget
-- upcoming deadline widget
-- fun widget (motivational quote, streak recorder, countdowns...)
 
