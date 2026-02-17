@@ -1,7 +1,7 @@
 # Course Helper App
 
 ## Project Summary
-**Course Helper App** is a desktop app built with JavaFX created to help students manage course resources and schedules, and enhanced with an AI assistant for personalized guidance. 
+**Course Helper App** is a desktop app built with JavaFX created to help students manage course resources and schedules, enhanced with an AI assistant for personalized guidance. 
 
 Features:
 - Calendar creation and management
