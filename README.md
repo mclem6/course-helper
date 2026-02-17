@@ -27,10 +27,10 @@ Features
 
 ## Tech Stack
 
-**Frontend:** JavaFX
-**Backend:** Spring Boot
-**Database:** PostgreSQL
-**AI Agent:** LLM
-**Tools**: Maven, CalendarFX
+- **Frontend:** JavaFX
+- **Backend:** Spring Boot
+- **Database:** PostgreSQL
+- **AI Agent:** TBD
+- **Tools**: Maven, CalendarFX
 
 
