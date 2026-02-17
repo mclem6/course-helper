@@ -23,6 +23,17 @@ Features
 
 
 
+## OverView
+Completed features:
+- sign up and authentication  
+- light/dark mode
+- add/delete course 
+- calendar management  
+    - create/delete events  
+    - add recurring events  
+- Quotes API
+    - new motivational quote on refresh, cached quote for offline/API issues
+  
 
 
 ## Tech Stack
@@ -31,6 +42,10 @@ Features
 **Backend:** Spring Boot  
 **Database:** PostgreSQL  
 **AI Agent:** TBD  
-**Tools**: Maven, CalendarFX  
+**Tools**: Maven, CalendarFX
+
+
+
+
 
 
