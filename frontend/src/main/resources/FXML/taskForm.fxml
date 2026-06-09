@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.controlsfx.control.CheckComboBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+
+
+<VBox styleClass="root-container" spacing="15" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.frontend.controllers.AddTaskFormController">
+
+    <!-- Popup Title -->
+    <HBox alignment="CENTER_LEFT">
+        <Label text="Add New Task" styleClass="section-title"/>
+    </HBox>
+
+    <VBox spacing="5">
+        <!-- Task Title -->
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Task:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <TextField fx:id="task_title" prefWidth="200"/>
+        </HBox>
+
+        <!-- Tasks's Course  -->
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Course:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <ComboBox fx:id="course_combo" prefWidth= "125" maxWidth="125"/>
+        </HBox>
+        
+    
+        <!-- Due Date -->
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Due Date:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <DatePicker fx:id="due_date_picker" prefWidth= "150" maxWidth="150"/>
+        </HBox>
+    </VBox>
+
+    <Label fx:id="errorLabel" style="-fx-text-fill: red;" />
+
+    <!-- Add Button/Cancel Buttons -->
+    <HBox spacing="5" alignment="CENTER">
+        <Button fx:id="add_task_button" text="add" prefWidth= "80" maxWidth="80" onAction="#addTask" styleClass="add-btn"/>
+        <Button fx:id="cancel_task_button" text="cancel" prefWidth= "80" maxWidth="80" onAction="#cancelTask" styleClass="cancel-btn"/>
+    </HBox> 
+
+    
+</VBox>

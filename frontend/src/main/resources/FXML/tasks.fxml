@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+
+
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.coursehelper.frontend.controllers.TasksController"
+      fx:id="taskContainer" 
+      spacing="10">
+
+        <!-- header -->
+        <HBox alignment="CENTER_LEFT">
+            <Label text="My Tasks" styleClass="section-title"/>
+        </HBox>
+        
+        <!-- container for tasks -->
+        <VBox fx:id="taskList" styleClass="task-list" spacing="10"/>
+        
+  </VBox>

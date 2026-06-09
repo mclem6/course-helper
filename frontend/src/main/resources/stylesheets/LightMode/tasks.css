@@ -1,0 +1,27 @@
+
+.round-button {
+  -fx-background-radius: 50%; 
+  -fx-min-width: 20px;
+  -fx-min-height: 20px;
+  -fx-pref-width: 20px;
+  -fx-pref-height: 20px;
+  -fx-font-size: 9px;
+  /* -fx-background-color: #4CAF50; */
+ 
+}
+
+.task-list{
+  
+}
+
+.task-container {
+  -fx-padding: 20 0 0 10;
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+}
+
+.form-label {
+  -fx-text-fill: black; 
+}
+
+

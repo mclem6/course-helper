@@ -2,6 +2,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BackendApplication",
+            "request": "launch",
+            "mainClass": "com.coursehelper.backend.BackendApplication",
+            "projectName": "backend",
+            "envFile": "${workspaceFolder}/backend/.env"
+        },
+        {
+            "type": "java",
             "name": "App",
             "request": "launch",
             "mainClass": "com.coursehelper/com.coursehelper.App",

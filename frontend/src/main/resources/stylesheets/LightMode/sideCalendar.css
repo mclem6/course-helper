@@ -1,0 +1,31 @@
+.day-view .full-hour-line {
+    -fx-stroke-width: 0;
+}
+
+.day-view .half-hour-line {
+    -fx-stroke-width: 0;
+}
+
+
+.week-view .weekday-separator
+{
+    -size: 1px;
+    -fx-pref-width: 1px;
+    -fx-min-width: 1px;
+    -fx-max-width: 1px;
+    -fx-background-color: lightgrey;
+
+}
+
+.day-view {
+    -fx-background-color: transparent;
+}
+
+.day-view.weekend-day {
+    -fx-background-color: transparent;
+}
+
+.day-view > .early-hours-region,
+.day-view > .late-hours-region {
+    -fx-background-color: transparent}
+

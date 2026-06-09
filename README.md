@@ -1,6 +1,6 @@
 
 *Vision Statement*
-CourseHelper centralizes all of a student’s course-related resources in a single, intuitive interface. By unifying notes, schedules, and tasks, it minimizes the time and effort spent searching for information, helping students focus on learning, stay organized, and retain more knowledge.
+CourseHelper centralizes all of a student’s course-related resources in a single, intuitive interface. Unifying notes, schedules, and tasks, minimizes the time and effort spent fetching these resources and looking up course logistics.
 
 
 ## Project Overview:
@@ -15,7 +15,6 @@ A Java desktop application designed to eliminate fragmentation, reducing the tim
 
 ### Desktop Application Framework:
 - Use JavaFX to build the graphical user interface (GUI) for the desktop application.
-- JavaFX Scene Builder: A visual layout tool to design user interfaces quickly.
 - CalendarFX: to build and manage calendars. 
 
 ### Back-End:

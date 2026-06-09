@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-padding: 30;"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.coursehelper.frontend.controllers.DocumentsPageController">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Text text="My Documents" styleClass="section-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="uploadButton"
+                text="Upload"
+                onAction="#openFileChooser"
+                style="-fx-background-color: #4A90D9;
+                       -fx-text-fill: white;
+                       -fx-background-radius: 8;
+                       -fx-padding: 8 16;"/>
+    </HBox>
+
+    <!-- Status label -->
+    <Label fx:id="statusLabel" text="" wrapText="true"
+           style="-fx-text-fill: #888888;"/>
+
+    <!-- Document list -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background: transparent;
+                       -fx-background-color: transparent;">
+        <VBox fx:id="documentList" spacing="8"/>
+    </ScrollPane>
+
+</VBox>
