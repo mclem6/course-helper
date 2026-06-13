@@ -21,6 +21,10 @@
 }
 
 
+.task-title {
+    -fx-fill: white;
+}
+
 .form-label {
-  -fx-text-fill: white; 
+    -fx-text-fill: white;
 }

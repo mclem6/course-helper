@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coursehelper.frontend.UserStore;
+import com.coursehelper.frontend.model.Course;
 import com.coursehelper.frontend.model.Task;
 import com.coursehelper.frontend.service.TaskService;
 
@@ -61,9 +62,17 @@ public class TasksController {
             ? task.getDueDate().format(DATE_FMT) : "");
         dueDate.setStyle("-fx-font-size: 10px;");
 
+        String courseColor = UserStore.getInstance().getCourses().stream()
+            .filter(c -> c.getId().equals(task.getCourseId()))
+            .map(Course::getStyleHex)
+            .findFirst()
+            .orElse("#888888");
+
         VBox item = new VBox(4, titleRow, dueDate, new Separator());
         VBox.setMargin(dueDate, new Insets(0, 0, 0, 28));
         item.getStyleClass().add("task-row");
+        item.setStyle("-fx-border-color: transparent transparent transparent " + courseColor
+            + "; -fx-border-width: 0 0 0 4; -fx-padding: 4 0 4 8;");
 
         checkBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
             taskTitle.setStrikethrough(isSelected);
@@ -102,7 +111,7 @@ public class TasksController {
     }
 
     private void fadeAndRemove(Node item) {
-        FadeTransition fade = new FadeTransition(Duration.millis(400), item);
+        FadeTransition fade = new FadeTransition(Duration.millis(1000), item);
         fade.setFromValue(1.0);
         fade.setToValue(0.0);
         fade.setOnFinished(e -> taskList.getChildren().remove(item));
