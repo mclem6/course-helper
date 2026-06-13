@@ -253,9 +253,11 @@ public class AccessScreenController {
                     Thread greetingThread = new Thread(() -> {
                         try {
                             String greeting = new AgentApiService(new ApiClient()).chat(
-                                "Greet the student by name, give them a summary of their day " +
-                                "(today's classes, upcoming incomplete assignments, incomplete tasks), " +
-                                "and end with something encouraging.");
+                                "Greet the student by name. Report only on incomplete assignments and tasks — never completed ones.\n" +
+                                "Structure your response in two short sections:\n" +
+                                "**Overdue:** Incomplete assignments or tasks already past due.\n" +
+                                "**Due Soon:** Upcoming incomplete assignments and tasks. List all of them — but if the total across both sections exceeds 5 items, only include items due within the next 3 days.\n" +
+                                "Only include the Overdue section if there are actually overdue items. End with one short encouraging sentence.");
                             UserSession.setPendingGreeting(greeting);
                         } catch (Exception e) {
                             UserSession.setPendingGreeting("Hi! How can I help you today?");

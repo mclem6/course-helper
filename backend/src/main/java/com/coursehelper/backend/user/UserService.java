@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.coursehelper.backend.auth.util.JwtUtil;
+import com.coursehelper.backend.exceptions.InvalidCredentialsException;
 import com.coursehelper.backend.exceptions.UsernameAlreadyExistsException;
 import com.coursehelper.backend.user.dto.RegisterRequest;
 
@@ -51,11 +52,25 @@ public class UserService {
     }
 
     public User findByUserId(Long userId){
-
-        User user = userRepository.findById(userId) .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        return user;
+        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    
+    public void changeUsername(Long userId, String newUsername) {
+        if (userRepository.findByUsername(newUsername).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username already taken.");
+        }
+        User user = findByUserId(userId);
+        user.setUsername(newUsername);
+        userRepository.save(user);
+    }
+
+    public void changePassword(Long userId, String currentPassword, String newPassword) {
+        User user = findByUserId(userId);
+        if (!encoder.matches(currentPassword, user.getPassword())) {
+            throw new InvalidCredentialsException("Current password is incorrect.");
+        }
+        user.changePassword(encoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
 }

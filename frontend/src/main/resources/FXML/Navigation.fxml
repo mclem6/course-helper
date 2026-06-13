@@ -17,22 +17,22 @@
 
 
     <VBox spacing="20" alignment="center">
-        <Hyperlink fx:id="homeLink" onAction="#goToHomePage">
+        <Hyperlink fx:id="homeLink" onAction="#goToHomePage" styleClass="nav-btn">
             <graphic>
-                <FontAwesomeIconView glyphName="HOME" size="30" styleClass="nav-glyph"/>
+                <FontAwesomeIconView glyphName="HOME" size="26" styleClass="nav-glyph"/>
             </graphic>
         </Hyperlink>
-    
-        <Hyperlink fx:id="documentsLink" onAction="#goToDocumentsPage">
+
+        <Hyperlink fx:id="documentsLink" onAction="#goToDocumentsPage" styleClass="nav-btn">
             <graphic>
-                <FontAwesomeIconView glyphName="FILE" size="25" styleClass="nav-glyph"/>
+                <FontAwesomeIconView glyphName="FILE" size="22" styleClass="nav-glyph"/>
             </graphic>
         </Hyperlink>
 
 
-        <Hyperlink fx:id="tasksLink" onAction="#goToSettingsPage">
+        <Hyperlink fx:id="tasksLink" onAction="#goToSettingsPage" styleClass="nav-btn">
             <graphic>
-                <FontAwesomeIconView glyphName="GEARS" size="25" styleClass="nav-glyph"/>
+                <FontAwesomeIconView glyphName="GEARS" size="22" styleClass="nav-glyph"/>
             </graphic>
         </Hyperlink>
     </VBox>

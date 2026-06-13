@@ -20,3 +20,30 @@
 .hyperlink:visited {
     -fx-border-color: transparent;
 }
+
+.nav-btn:visited {
+    -fx-border-color: black;
+}
+
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 0.2;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-padding: 10;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #ABAAFF;
+}
+
+.nav-btn:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.15);
+}

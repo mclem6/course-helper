@@ -2,6 +2,8 @@ package com.coursehelper.frontend.service;
 
 import java.io.File;
 
+import com.coursehelper.frontend.dto.ChangePasswordRequestDto;
+import com.coursehelper.frontend.dto.ChangeUsernameRequestDto;
 import com.coursehelper.frontend.dto.LoginRequestDto;
 import com.coursehelper.frontend.dto.LoginResponseDto;
 import com.coursehelper.frontend.dto.RegisterRequestDto;
@@ -71,6 +73,24 @@ public class UserService {
         } catch (ApiException e) {
             throw e.getStatus() == 503
                 ? new ApiException("Failed to fetch picture. Check connection.", 503) : e;
+        }
+    }
+
+    public void changeUsername(String newUsername) {
+        try {
+            apiClient.patch("/users/username", new ChangeUsernameRequestDto(newUsername), String.class);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Failed to update username. Check connection.", 503) : e;
+        }
+    }
+
+    public void changePassword(String currentPassword, String newPassword) {
+        try {
+            apiClient.patch("/users/password", new ChangePasswordRequestDto(currentPassword, newPassword), String.class);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Failed to update password. Check connection.", 503) : e;
         }
     }
 }

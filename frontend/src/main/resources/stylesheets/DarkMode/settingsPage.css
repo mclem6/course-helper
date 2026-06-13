@@ -7,7 +7,7 @@
 .component-hbox{
     -fx-padding: 20;
     -fx-border-width: 0 0 .2 0;
-    -fx-border-color: black;
+    -fx-border-color: rgb(226, 226, 226);
 }
 
 .edit-btn {
