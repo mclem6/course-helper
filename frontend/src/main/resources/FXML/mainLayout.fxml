@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.transform.Scale?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+
+
+
+
+<StackPane fx:id="root"     
+           styleClass="root"
+           xmlns="http://javafx.com/javafx/8.0.171" 
+           xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="com.coursehelper.frontend.controllers.MainLayoutController">
+
+
+    <!-- scrollable layout -->
+    <ScrollPane fitToWidth="true" 
+                fitToHeight="true"
+                hbarPolicy="AS_NEEDED"
+                vbarPolicy="NEVER"
+                styleClass="main-scroll">
+        <BorderPane fx:id="borderPane">
+            
+            <left>
+                <VBox styleClass="vbox, left-pane">
+
+                    <fx:include fx:id="navigation" source="Navigation.fxml"  />
+                    <Region VBox.vgrow="ALWAYS"/>
+                    
+                    <VBox fx:id="toggle" alignment="CENTER">
+                
+                        <StackPane fx:id="themeToggle" 
+                                    styleClass="toggle-track" 
+                                    prefWidth="50" prefHeight="20" 
+                                    onMouseClicked="#onToggleTheme"
+                                    >
+                            <children>
+                                <Circle fx:id="toggleThumb" styleClass="toggle-thumb" radius="8"/>
+                            </children>
+                        </StackPane>
+                    
+                    </VBox>
+
+                </VBox>
+
+            </left>
+
+            <center>
+                <StackPane styleClass="vbox, middle-pane" fx:id="contentArea"/>
+            </center>
+
+            <right>
+                <VBox styleClass="vbox, right-pane" spacing="50">
+                    <fx:include fx:id="sidebar" source="Sidebar.fxml"/>
+                </VBox>
+            </right>
+
+            <bottom>
+                <Label text="© Maria Clement"
+                       maxWidth="Infinity"
+                       alignment="CENTER"
+                       style="-fx-font-size: 11px; -fx-text-fill: white; -fx-background-color: #1a3a6b; -fx-padding: 4 8 4 8;"/>
+            </bottom>
+
+        </BorderPane>
+
+    </ScrollPane>
+
+    <!-- Toggle chat button -->
+    <Button fx:id="chatToggleBtn"
+            styleClass="chat-toggle-btn"
+            onAction="#toggleChat"
+            StackPane.alignment="BOTTOM_RIGHT"
+            translateX="-20"
+            translateY="-40" >
+                <graphic>
+                     <FontAwesomeIconView glyphName="COMMENT" styleClass="chat-icon" size="30">
+                        <transforms>
+                            <Scale x="-1" y="1" pivotX="15"/>
+                        </transforms>
+                    </FontAwesomeIconView>
+                </graphic>
+    </Button>
+            
+
+    <!-- Chat Section -->
+    <VBox fx:id="chatPanel"
+          styleClass="chat-panel"
+          maxWidth="400"
+          maxHeight="500"
+          visible="true"
+          managed="true"
+          StackPane.alignment="BOTTOM_RIGHT"
+          translateX="-20"
+          translateY="-20">
+
+        <!-- header -->
+        <HBox styleClass="chat-header" spacing="8">
+
+            <Label 
+                styleClass="chat-title"
+                text="Course Helper Assistant"
+                HBox.hgrow="ALWAYS"
+                maxWidth="Infinity"/>
+
+            <Button styleClass="chat-close-btn" onAction="#toggleChat">
+                <graphic>
+                    <FontAwesomeIconView styleClass="arrow-glyph" glyphName="ANGLE_DOWN" size="20"/>
+                </graphic>
+            </Button>
+
+        </HBox>
+
+        <!-- Message list -->
+        <ScrollPane fx:id="chatScrollPane"
+                    styleClass="chat-scroll"
+                    fitToWidth="true"
+                    VBox.vgrow="ALWAYS">
+
+            <VBox fx:id="messageContainer" styleClass="message-container" spacing="8"/>
+    
+        </ScrollPane>
+
+        <!-- Input row -->
+        <HBox styleClass="chat-input-row" spacing="6" >
+
+            <TextField fx:id="chatInput"
+                       styleClass="chat-input"
+                       promptText="Ask your assistant..."
+                       HBox.hgrow="ALWAYS"/>
+
+            <Button fx:id="sendButton"
+                    styleClass="chat-send-btn"
+                    text="Send"
+                    onAction="#sendMessage"/>
+        </HBox>
+    </VBox>
+
+
+
+
+</StackPane>

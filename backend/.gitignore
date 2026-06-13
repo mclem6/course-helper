@@ -1,0 +1,12 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+
+### VS Code ###
+.vscode/
+
+### Secrets ###
+application.properties
+
+.env

@@ -1,0 +1,22 @@
+
+* {
+    -fx-text-fill: black;
+}
+
+.welcome {
+    -fx-font-size: 16;
+    -fx-fill: black;
+}
+
+.nav-glyph {
+    -fx-fill: black;
+}
+
+
+.hyperlink:focused {
+    -fx-border-color: transparent;
+}
+
+.hyperlink:visited {
+    -fx-border-color: transparent;
+}

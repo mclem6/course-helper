@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+
+
+
+<VBox  fx:id="settingsRoot"
+       styleClass="settings-root"
+       xmlns="http://javafx.com/javafx/8.0.171" 
+       xmlns:fx="http://javafx.com/fxml/1" 
+       fx:controller="com.coursehelper.frontend.controllers.SettingsPageController"
+       maxWidth="Infinity"
+       spacing="30"
+       >
+
+       <Label text="Settings" alignment="CENTER" styleClass="section-title" maxWidth="Infinity"/>
+
+       <VBox>
+              <!-- change display photo -->
+              <HBox styleClass="component-hbox" spacing="5" alignment="CENTER">
+                     <VBox fx:id="profilePhotoContainer" spacing="15" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <Label text="Profile picture" styleClass="form-label"/>
+                            <ImageView fx:id="profileImageView"
+                                   fitWidth="80" fitHeight="80"
+                                   preserveRatio="true"
+                                   style="-fx-cursor: hand;"/>
+                     </VBox>
+                     <Button>
+                            <graphic>
+                                   <FontAwesomeIconView styleClass="edit-btn" glyphName="TRASH" onMouseClicked="#deleteProfilePhoto"/>   
+                            </graphic>
+                     </Button>
+                     <Button text="Upload" styleClass="edit-btn" onMouseClicked="#uploadProfilePhoto"/>
+
+              </HBox>
+
+              <!-- change username  -->
+              <HBox styleClass="component-hbox" alignment="CENTER">
+                     <Label fx:id="usernameLabel" text="Username" styleClass="form-label"/>
+                     <Region HBox.hgrow="ALWAYS"/>
+                     <Button text="Change Username" styleClass="edit-btn"/>
+              </HBox>
+                     
+              <!-- change password -->
+              <HBox styleClass="component-hbox" alignment="CENTER">
+                     <Label text="Password" fx:id="passwordLabel" styleClass="form-label"/>
+                     <Region HBox.hgrow="ALWAYS"/>
+                     <Button text="Change Password" styleClass="edit-btn"/>
+              </HBox>
+                     
+
+
+              <!-- set current semester  -->
+              <VBox spacing="10" styleClass="component-hbox">
+                     <HBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                                   <Label text="Current Semester:" styleClass="form-label"/>
+                                   <ComboBox fx:id="semesterCombo" prefWidth="200" promptText="Select semester" disable="true">
+                                          <items>
+                                                 <FXCollections fx:factory="observableArrayList">
+                                                 <String fx:value="FALL" />
+                                                 <String fx:value="SPRING" />
+                                                 <String fx:value="SUMMER" />
+                                                 </FXCollections>
+                                          </items>
+                                   </ComboBox>
+                            </VBox>
+                            <Button text="Edit Semester Setting" fx:id="editSemesterBtn" styleClass="edit-btn" onAction="#editSaveSemester"/>
+                     </HBox>
+
+
+              
+                     <VBox spacing="5" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <Label text="Current Year" styleClass="form-label"/>
+                            <ComboBox fx:id="yearCombo" prefWidth="200" promptText="Select year" disable="true"/>  
+                     </VBox>
+              
+
+                     <VBox spacing="5" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <Label text="Current Semester Start" prefWidth="120" styleClass="form-label"/>
+                            <DatePicker fx:id="startDatePicker" prefWidth="200" disable="true"/>
+                     </VBox>
+              
+
+                     <VBox spacing="5" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                            <Label text="Current Semester End" styleClass="form-label"/>
+                            <DatePicker fx:id="endDatePicker" prefWidth="200" disable="true"/>
+                     </VBox>
+
+                     <Label fx:id="errorLabel" text="" style="-fx-text-fill: red;"/>
+       
+
+              </VBox>
+              
+
+       </VBox>
+
+
+
+</VBox>

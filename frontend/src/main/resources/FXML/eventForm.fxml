@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import org.controlsfx.control.CheckComboBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+
+
+<VBox spacing="15" styleClass="form-container" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursehelper.frontend.controllers.AddEventFormController">
+
+    <padding>
+            <Insets top="20" right="0" bottom="20" left="0"/>
+    </padding>
+
+    <!-- Popup Title -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Add New Event" styleClass="section-title"/>
+    </HBox>
+
+    <VBox spacing="5">
+
+        <!-- Event Name -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Title:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <TextField fx:id="event_title" prefWidth="200"/>
+        </HBox> 
+
+        <!-- Event Type  -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Type:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <ComboBox fx:id="sourceType" prefWidth= "125" maxWidth="125">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="quiz"/>
+                        <String fx:value="exam"/>
+                        <String fx:value="other"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </HBox>
+
+        <!-- Event's Course  -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Course:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <ComboBox fx:id="course_combo" prefWidth= "125" maxWidth="125"/>
+        </HBox>
+        
+
+        <!-- Start Date -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Start Date:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <DatePicker fx:id="date_picker" prefWidth= "150" maxWidth="150"/>
+        </HBox>
+        
+        <!-- Start Time -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Start Time:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <ComboBox fx:id="start_time_combo" prefWidth= "150" maxWidth="150"/>  
+        </HBox>
+
+        <!-- End Time -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="End Time:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <ComboBox fx:id="end_time_combo" prefWidth= "150" maxWidth="150"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <CheckBox fx:id="recurring_checkbox" text="Recurring" styleClass="form-label" onAction="#handleRecurringToggle"/>
+            <ComboBox fx:id="recurrence_combo" visible="false" prefWidth="150" onAction="#handleRecurrenceSelection"/>
+        </HBox>
+
+        <!-- Custom Days -->
+        <HBox fx:id="recurrence_hbox" spacing="10" alignment="CENTER_LEFT" visible="false">
+            <Label text="Repeat on:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <CheckComboBox fx:id="repeat_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
+        </HBox>
+
+
+        <!-- Reoccurence Days -->
+        <!-- <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Class Days:" prefWidth="100" minWidth="100"/>
+            <CheckComboBox fx:id="select_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
+        </HBox> -->
+    </VBox>
+
+
+    <!-- Error label -->
+    <Label fx:id="error_label" styleClass="error-label" visible="false" wrapText="true"/>
+
+    <!-- Submit and Cancel Buttons -->
+    <HBox spacing="5" alignment="CENTER">
+        <Button fx:id="add_event_button" text="add" prefWidth= "80" maxWidth="80" onAction="#addEvent" styleClass="add-btn"/>
+        <Button fx:id="cancel_event_button" text="cancel" prefWidth= "80" maxWidth="80" onAction="#cancelEvent" styleClass="cancel-btn"/>
+    </HBox>
+
+    
+</VBox>
