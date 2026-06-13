@@ -138,11 +138,14 @@ public class AgentService {
                 new tools.jackson.core.type.TypeReference<Map<String, Object>>() {});
             String query = (String) args.get("query");
 
+            String status    = (String) args.getOrDefault("status", "INCOMPLETE");
+            String completed = (String) args.getOrDefault("completed", "incomplete");
+
             return switch (toolName) {
                 case "search_resources" -> resourceRetrievalTool.search(query, userId);
                 case "get_schedule"     -> scheduleTool.search(query, userId);
-                case "get_assignments"  -> assignmentTool.search(query, userId);
-                case "get_tasks"        -> taskTool.search(query, userId);
+                case "get_assignments"  -> assignmentTool.search(query, userId, status);
+                case "get_tasks"        -> taskTool.search(query, userId, completed);
                 default -> "Unknown tool: " + toolName;
             };
 
@@ -200,13 +203,19 @@ public class AgentService {
                 "name", "get_assignments",
                 "description", "Get the student's assignments for the current semester. " +
                                "Returns title, course name, type (HOMEWORK/TEST/PROJECT/LAB), due date, and status. " +
-                               "Use when student asks about assignments, homework, tests, projects, or deadlines.",
+                               "Use when student asks about assignments, homework, tests, projects, or deadlines. " +
+                               "Default status is INCOMPLETE — only pass COMPLETED or ALL when explicitly asked.",
                 "parameters", Map.of(
                     "type", "object",
                     "properties", Map.of(
                         "query", Map.of(
                             "type", "string",
-                            "description", "Filter by course name, assignment type, status (INCOMPLETE/COMPLETED), or title. Pass empty string for all assignments."
+                            "description", "Filter by course name, assignment type, or title. Pass empty string for all."
+                        ),
+                        "status", Map.of(
+                            "type", "string",
+                            "enum", List.of("INCOMPLETE", "COMPLETED", "ALL"),
+                            "description", "Filter by completion status. Defaults to INCOMPLETE."
                         )
                     ),
                     "required", List.of("query")
@@ -220,13 +229,19 @@ public class AgentService {
                 "name", "get_tasks",
                 "description", "Get the student's tasks for the current semester. " +
                                "Returns title, course name, due date, and completion status. " +
-                               "Use when student asks about tasks or to-do items.",
+                               "Use when student asks about tasks or to-do items. " +
+                               "Default is incomplete tasks only — only pass 'completed' or 'all' when explicitly asked.",
                 "parameters", Map.of(
                     "type", "object",
                     "properties", Map.of(
                         "query", Map.of(
                             "type", "string",
-                            "description", "Filter by course name, title, or status (completed/incomplete). Pass empty string for all tasks."
+                            "description", "Filter by course name or title. Pass empty string for all."
+                        ),
+                        "completed", Map.of(
+                            "type", "string",
+                            "enum", List.of("incomplete", "completed", "all"),
+                            "description", "Filter by completion. Defaults to incomplete."
                         )
                     ),
                     "required", List.of("query")

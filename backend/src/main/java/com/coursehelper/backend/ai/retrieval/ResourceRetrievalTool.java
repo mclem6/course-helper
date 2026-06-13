@@ -24,15 +24,10 @@ public class ResourceRetrievalTool {
         // embed the query, return string 
         String vectorString  = embeddingService.embed(query);
 
-        System.out.println("Vector string preview: " + vectorString.substring(0, 50));
-        System.out.println("userId: " + userId);
-
-
-        // find top 5 most similar chunks 
+        // find top 5 most similar chunks
         try {
             List<DocumentChunk> chunks = documentChunkRepository
                     .findSimilarChunks(userId, vectorString, 5);
-            System.out.println("Chunks found: " + chunks.size());
 
 
         // if nothing found
@@ -45,9 +40,7 @@ public class ResourceRetrievalTool {
                 .map(chunk -> "From " + chunk.getFilename() + ":\n" + chunk.getContent())
                 .collect(Collectors.joining("\n\n---\n\n"));
 
-        }catch (Exception e) {
-            System.out.println("Query failed: " + e.getMessage());
-            e.printStackTrace();
+        } catch (Exception e) {
             return "Error searching documents";
         }
 

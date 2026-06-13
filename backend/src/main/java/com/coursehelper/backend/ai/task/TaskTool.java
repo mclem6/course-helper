@@ -29,7 +29,7 @@ public class TaskTool {
         this.settingsRepository = settingsRepository;
     }
 
-    public String search(String query, Long userId) {
+    public String search(String query, Long userId, String completed) {
         UserSettings settings = settingsRepository.findByUserId(userId).orElse(null);
         if (settings == null) {
             return "User settings not configured.";
@@ -46,7 +46,11 @@ public class TaskTool {
             .collect(Collectors.toMap(Course::getId, Course::getName));
         Set<Long> courseIds = courseNames.keySet();
 
-        List<Task> tasks = taskRepository.findByUserId(userId).stream()
+        List<Task> tasks = ("all".equalsIgnoreCase(completed)
+                ? taskRepository.findByUserId(userId)
+                : taskRepository.findByUserIdAndCompleted(userId,
+                    "completed".equalsIgnoreCase(completed)))
+            .stream()
             .filter(t -> courseIds.contains(t.getCourseId()))
             .collect(Collectors.toList());
 
@@ -56,9 +60,7 @@ public class TaskTool {
                 String courseName = courseNames.get(t.getCourseId()).toLowerCase();
                 return lower.isBlank()
                     || courseName.contains(lower)
-                    || t.getTitle().toLowerCase().contains(lower)
-                    || (lower.equals("completed") && Boolean.TRUE.equals(t.getCompleted()))
-                    || (lower.equals("incomplete") && Boolean.FALSE.equals(t.getCompleted()));
+                    || t.getTitle().toLowerCase().contains(lower);
             })
             .collect(Collectors.toList());
 

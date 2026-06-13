@@ -190,6 +190,19 @@ public class UserStore {
         return assignmentsByCourse.get(courseId);
     }
 
+    public void markAssignmentComplete(Long assignmentId) {
+        assignmentsByCourse.values().forEach(list ->
+            list.stream()
+                .filter(a -> a.getId().equals(assignmentId))
+                .findFirst()
+                .ifPresent(a -> a.setStatus("COMPLETED"))
+        );
+        upcomingAssignments.stream()
+            .filter(a -> a.getId().equals(assignmentId))
+            .findFirst()
+            .ifPresent(a -> a.setStatus("COMPLETED"));
+    }
+
      public List<Task> getTaskssByCourseId(Long courseId){
         return tasksByCourse.get(courseId);
     }

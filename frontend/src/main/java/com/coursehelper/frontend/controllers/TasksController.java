@@ -59,7 +59,7 @@ public class TasksController {
 
         Label dueDate = new Label(task.getDueDate() != null
             ? task.getDueDate().format(DATE_FMT) : "");
-        dueDate.setStyle("-fx-font-size: 10px; -fx-text-fill: #8B949E;");
+        dueDate.setStyle("-fx-font-size: 10px;");
 
         VBox item = new VBox(4, titleRow, dueDate, new Separator());
         VBox.setMargin(dueDate, new Insets(0, 0, 0, 28));

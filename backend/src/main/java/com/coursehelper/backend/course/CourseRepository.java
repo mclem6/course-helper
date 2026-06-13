@@ -18,11 +18,14 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
     List<Course> findByUserIdAndSemesterAndCourseYear(
        Long userId, String semester, int courseYear);
 
-    // search by day e.g. "Monday"
     @Query(value= "SELECT * FROM courses WHERE user_id = :userId " +
-           "AND LOWER(lecture_days) LIKE LOWER(CONCAT('%', :day, '%'))", 
+           "AND LOWER(lecture_days) LIKE LOWER(CONCAT('%', :day, '%')) " +
+           "AND semester = :semester AND course_year = :courseYear",
            nativeQuery = true)
-    List<Course> findByUserIdAndDay(@Param("userId") Long userId,
-                                    @Param("day") String day);
+    List<Course> findByUserIdAndDayAndSemesterAndCourseYear(
+        @Param("userId") Long userId,
+        @Param("day") String day,
+        @Param("semester") String semester,
+        @Param("courseYear") int courseYear);
  
 }

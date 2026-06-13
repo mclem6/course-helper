@@ -1,6 +1,5 @@
 package com.coursehelper.frontend.service;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,53 +31,41 @@ public class TaskService {
     public TaskResponseDto addTask(AddTaskRequestDto request) {
         try {
             return apiClient.post("/task", request, TaskResponseDto.class);
-        } catch (IOException e) {
-            throw new ApiException("Unable to create task. Check connection.", 503);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ApiException("Request interrupted.", 503);
-        } catch (RuntimeException e) {
-            throw new ApiException(e.getMessage(), 500);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Unable to create task. Check connection.", 503) : e;
         }
     }
 
     public void updateCompletion(Long taskId, boolean completed) {
         try {
             apiClient.patch("/task/" + taskId + "/complete?completed=" + completed, null, Void.class);
-        } catch (IOException e) {
-            throw new ApiException("Unable to update task. Check connection.", 503);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ApiException("Request interrupted.", 503);
-        } catch (RuntimeException e) {
-            throw new ApiException(e.getMessage(), 500);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Unable to update task. Check connection.", 503) : e;
         }
     }
 
     public void deleteTask(Long taskId) {
         try {
             apiClient.delete("/task/" + taskId);
-        } catch (IOException e) {
-            throw new ApiException("Unable to delete task. Check connection.", 503);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ApiException("Request interrupted.", 503);
-        } catch (RuntimeException e) {
-            throw new ApiException(e.getMessage(), 500);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Unable to delete task. Check connection.", 503) : e;
         }
     }
 
     public Map<Long, List<Task>> getAllTasks() {
         try {
-            Map<Long, List<TaskResponseDto>> taskResponseList = apiClient.get(
+            Map<Long, List<TaskResponseDto>> response = apiClient.get(
                 "/tasks", new TypeReference<Map<Long, List<TaskResponseDto>>>() {});
 
-            if (taskResponseList == null || taskResponseList.isEmpty() ||
-                taskResponseList.values().stream().allMatch(List::isEmpty)) {
+            if (response == null || response.isEmpty() ||
+                    response.values().stream().allMatch(List::isEmpty)) {
                 return Collections.emptyMap();
             }
 
-            return taskResponseList.entrySet().stream()
+            return response.entrySet().stream()
                 .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     entry -> entry.getValue().stream()
@@ -87,14 +74,9 @@ public class TaskService {
                             dto.getDueDate(), dto.getCompleted()))
                         .collect(Collectors.toList())
                 ));
-
-        } catch (IOException e) {
-            throw new ApiException("Unable to fetch tasks. Check connection.", 503);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ApiException("Request interrupted.", 503);
-        } catch (RuntimeException e) {
-            throw new ApiException(e.getMessage(), 500);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Unable to fetch tasks. Check connection.", 503) : e;
         }
     }
 }

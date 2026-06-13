@@ -37,6 +37,10 @@
     -fx-font-weight: bold;
 }
 
+.past-due-title {
+    -fx-text-fill: #c0392b;
+}
+
 .empty-state-label{
     -fx-text-fill: #3fae03;
     -fx-font-size: 14;

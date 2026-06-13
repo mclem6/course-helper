@@ -87,7 +87,7 @@ public class SettingsPageController {
 
         // fetch all events then filter to current courses
        userStore.setEvents(eventService.getAllEvents());
-       userStore.setAssignments(assignmentService.getAllAssignments());
+       userStore.setAssignments(assignmentService.getAllAssignments("INCOMPLETE"));
        userStore.filterDataByCurrentCourses();
 
 

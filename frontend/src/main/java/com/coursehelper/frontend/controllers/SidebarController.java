@@ -13,6 +13,7 @@ import com.coursehelper.frontend.UserStore;
 import com.coursehelper.frontend.model.Assignment;
 import com.coursehelper.frontend.model.Course;
 import com.coursehelper.frontend.model.Quote;
+import com.coursehelper.frontend.service.AssignmentService;
 import com.coursehelper.frontend.service.QuoteService;
 import com.coursehelper.frontend.skin.SidebarCalendarWeekViewSkin;
 import com.coursehelper.frontend.ui.CalendarViewConfigurator;
@@ -21,6 +22,7 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -33,29 +35,34 @@ public class SidebarController {
     @FXML private Label quoteLabel;
     @FXML private Label authorLabel;
     @FXML private DetailedWeekView calendarWeekView;
+    @FXML private VBox pastDuePanel;
+    @FXML private VBox pastDueList;
     @FXML private VBox dueSoonList;
 
 
     private MainLayoutController main;
-    private CalendarManager calendarManager; 
+    private CalendarManager calendarManager;
     private QuoteService quoteService;
     private UserStore userStore;
+    private AssignmentService assignmentService;
     
 
     public void initialize(){
         calendarManager = CalendarManager.getInstance();
         quoteService = new QuoteService();
         userStore = UserStore.getInstance();
+        assignmentService = AssignmentService.getInstance();
 
         setUpCalendars();
         loadQuote();
+        loadPastDue();
         loadDueDates();
 
-        //listener for due soon
         userStore.getUpcomingAssignments().addListener(
-            (ListChangeListener<Assignment>) change -> {
-                Platform.runLater(() -> loadDueDates());
-            }
+            (ListChangeListener<Assignment>) change -> Platform.runLater(() -> {
+                loadPastDue();
+                loadDueDates();
+            })
         );
 
     }
@@ -63,6 +70,38 @@ public class SidebarController {
 
     public void setMain(MainLayoutController main){
         this.main = main;
+    }
+
+    private void loadPastDue() {
+        Map<Long, List<Assignment>> assignmentsByCourse = userStore.getAssignments();
+
+        if (assignmentsByCourse == null || assignmentsByCourse.isEmpty()) {
+            pastDuePanel.setVisible(false);
+            pastDuePanel.setManaged(false);
+            return;
+        }
+
+        List<Assignment> overdue = assignmentsByCourse.entrySet().stream()
+            .flatMap(entry -> entry.getValue().stream())
+            .filter(a -> a.getDueDate() != null)
+            .filter(a -> a.getDueDate().isBefore(LocalDate.now()))
+            .filter(a -> "INCOMPLETE".equals(a.getStatus()))
+            .sorted(Comparator.comparing(Assignment::getDueDate))
+            .collect(Collectors.toList());
+
+        if (overdue.isEmpty()) {
+            pastDuePanel.setVisible(false);
+            pastDuePanel.setManaged(false);
+            return;
+        }
+
+        pastDueList.getChildren().clear();
+        for (Assignment assignment : overdue) {
+            Course course = userStore.getCourseById(assignment.getCourseId());
+            pastDueList.getChildren().add(buildAssignmentRow(assignment, course));
+        }
+        pastDuePanel.setVisible(true);
+        pastDuePanel.setManaged(true);
     }
 
     private void loadDueDates(){
@@ -105,10 +144,10 @@ public class SidebarController {
         dueSoonList.getChildren().setAll(empty);
     }
 
-    private HBox buildAssignmentRow(Assignment assignment, Course course){
-
+    private HBox buildAssignmentRow(Assignment assignment, Course course) {
         String courseColor = course.getStyleHex();
         Circle circle = new Circle(5, Paint.valueOf(courseColor));
+
         String dateDisplay;
         if (assignment.getDueDate().equals(LocalDate.now())) {
             dateDisplay = "Today";
@@ -119,20 +158,34 @@ public class SidebarController {
                 .format(DateTimeFormatter.ofPattern("MM/d"));
         }
 
-        Label title_date = new Label(assignment.getTitle() + " - "+ dateDisplay);
+        Label titleDate = new Label(assignment.getTitle() + " - " + dateDisplay);
 
-        HBox row = new HBox(8,circle, title_date);
+        CheckBox checkBox = new CheckBox();
+        checkBox.setOnAction(e -> {
+            checkBox.setDisable(true);
+            new Thread(() -> {
+                try {
+                    assignmentService.markComplete(assignment.getId());
+                    userStore.markAssignmentComplete(assignment.getId());
+                    Platform.runLater(() -> {
+                        loadPastDue();
+                        loadDueDates();
+                    });
+                } catch (Exception ex) {
+                    Platform.runLater(() -> checkBox.setDisable(false));
+                }
+            }).start();
+        });
+
+        HBox row = new HBox(8, checkBox, circle, titleDate);
         row.setAlignment(Pos.CENTER_LEFT);
-
-
         return row;
-
     }
 
 
 
     public void refreshDueSoon(){
-        dueSoonList.getChildren().clear();
+        loadPastDue();
         loadDueDates();
     }
 

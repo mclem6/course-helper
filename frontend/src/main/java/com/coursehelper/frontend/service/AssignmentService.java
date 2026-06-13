@@ -1,9 +1,8 @@
 package com.coursehelper.frontend.service;
 
-import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 import com.coursehelper.frontend.service.api.ApiClient;
@@ -33,27 +32,33 @@ public class AssignmentService {
     public AssignmentCreatedResponseDto addAssignment(AddAssignmentRequestDto request) {
         try {
             return apiClient.post("/assignment", request, AssignmentCreatedResponseDto.class);
-        } catch (IOException e) {
-            throw new ApiException("Unable to create assignment. Check connection.", 503);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ApiException("Request interrupted.", 503);
-        } catch (RuntimeException e) {
-            throw new ApiException(e.getMessage(), 500);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Unable to create assignment. Check connection.", 503) : e;
         }
     }
 
-    public Map<Long, List<Assignment>> getAllAssignments() {
+    public void markComplete(Long assignmentId) {
         try {
-            Map<Long, List<AssignmentResponseDto>> assignmentResponseList = apiClient.get(
-                "/assignments", new TypeReference<Map<Long, List<AssignmentResponseDto>>>() {});
+            apiClient.patch("/assignment/" + assignmentId + "/complete", null, Void.class);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Unable to update assignment. Check connection.", 503) : e;
+        }
+    }
 
-            if (assignmentResponseList == null || assignmentResponseList.isEmpty() ||
-                assignmentResponseList.values().stream().allMatch(List::isEmpty)) {
+    public Map<Long, List<Assignment>> getAllAssignments(String status) {
+        try {
+            String url = status != null ? "/assignments?status=" + status : "/assignments";
+            Map<Long, List<AssignmentResponseDto>> response = apiClient.get(
+                url, new TypeReference<Map<Long, List<AssignmentResponseDto>>>() {});
+
+            if (response == null || response.isEmpty() ||
+                    response.values().stream().allMatch(List::isEmpty)) {
                 return Collections.emptyMap();
             }
 
-            return assignmentResponseList.entrySet().stream()
+            return response.entrySet().stream()
                 .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     entry -> entry.getValue().stream()
@@ -63,14 +68,9 @@ public class AssignmentService {
                             dto.getAssignmentType()))
                         .collect(Collectors.toList())
                 ));
-
-        } catch (IOException e) {
-            throw new ApiException("Unable to fetch assignments. Check connection.", 503);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ApiException("Request interrupted.", 503);
-        } catch (RuntimeException e) {
-            throw new ApiException(e.getMessage(), 500);
+        } catch (ApiException e) {
+            throw e.getStatus() == 503
+                ? new ApiException("Unable to fetch assignments. Check connection.", 503) : e;
         }
     }
 }

@@ -17,6 +17,12 @@
         <DetailedWeekView fx:id="calendarWeekView" prefHeight="200" prefWidth="300"/>
     </VBox>
 
+    <!-- Past Due section (hidden when empty) -->
+    <VBox fx:id="pastDuePanel" spacing="8" visible="false" managed="false">
+        <Label styleClass="section-title, past-due-title" text="Past Due"/>
+        <VBox fx:id="pastDueList" styleClass="due-soon-vbox" spacing="6"/>
+    </VBox>
+
     <!-- Due Soon section-->
     <VBox fx:id="dueDatePanel" spacing="8">
         <Label styleClass="section-title" text="Due Soon"/>

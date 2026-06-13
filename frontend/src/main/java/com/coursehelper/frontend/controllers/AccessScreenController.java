@@ -235,7 +235,7 @@ public class AccessScreenController {
                         try {
                             List<Course> courses = courseService.getUserSemesterCourses(settings.getSemester(), settings.getYear());
                             Map<Long, List<Event>> events = eventService.getAllEvents();
-                            Map<Long, List<Assignment>> assignments = assignmentService.getAllAssignments();
+                            Map<Long, List<Assignment>> assignments = assignmentService.getAllAssignments("INCOMPLETE");
                             Map<Long, List<Task>> tasks = taskService.getAllTasks();
                             byte[] profilePicture = userService.getProfilePicture();
 
@@ -254,7 +254,7 @@ public class AccessScreenController {
                         try {
                             String greeting = new AgentApiService(new ApiClient()).chat(
                                 "Greet the student by name, give them a summary of their day " +
-                                "(today's classes, upcoming assignments, incomplete tasks), " +
+                                "(today's classes, upcoming incomplete assignments, incomplete tasks), " +
                                 "and end with something encouraging.");
                             UserSession.setPendingGreeting(greeting);
                         } catch (Exception e) {

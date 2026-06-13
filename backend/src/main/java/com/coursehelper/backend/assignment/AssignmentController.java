@@ -3,6 +3,8 @@ package com.coursehelper.backend.assignment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coursehelper.backend.assignment.dto.AddAssignmentRequestDto;
 import com.coursehelper.backend.assignment.dto.AssignmentCreatedResponseDto;
+import com.coursehelper.backend.assignment.dto.AssignmentResponseDto;
 import com.coursehelper.backend.auth.CustomUserPrincipal;
 import com.coursehelper.backend.event.Event;
 import com.coursehelper.backend.event.EventService;
@@ -53,22 +56,27 @@ public class AssignmentController {
         
     }
     
+    @PatchMapping("/assignment/{id}/complete")
+    public ResponseEntity<AssignmentResponseDto> markComplete(@PathVariable Long id, Authentication auth) {
+        CustomUserPrincipal user = (CustomUserPrincipal) auth.getPrincipal();
+        return ResponseEntity.ok(assignmentService.markComplete(id, user.getUserId()));
+    }
+
     @GetMapping("/assignments")
-    public ResponseEntity<?> getAssignments (@RequestParam(required = false) Long courseId, Authentication auth){
+    public ResponseEntity<?> getAssignments(
+            @RequestParam(required = false) Long courseId,
+            @RequestParam(required = false) String status,
+            Authentication auth) {
 
-        CustomUserPrincipal user = 
-            (CustomUserPrincipal) auth.getPrincipal();
+        Long userId = ((CustomUserPrincipal) auth.getPrincipal()).getUserId();
 
-        Long userId = user.getUserId();
-    
         if (courseId != null) {
             return ResponseEntity.ok(
-                assignmentService.getUserAssignmentsByCourseId(userId, courseId)
+                assignmentService.getUserAssignmentsByCourseId(userId, courseId, status)
             );
-
         } else {
             return ResponseEntity.ok(
-                assignmentService.getUserAssignmentsAllCourses(userId)
+                assignmentService.getUserAssignmentsAllCourses(userId, status)
             );
         }
 

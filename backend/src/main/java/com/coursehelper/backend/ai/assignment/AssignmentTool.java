@@ -29,7 +29,7 @@ public class AssignmentTool {
         this.settingsRepository = settingsRepository;
     }
 
-    public String search(String query, Long userId) {
+    public String search(String query, Long userId, String status) {
         UserSettings settings = settingsRepository.findByUserId(userId).orElse(null);
         if (settings == null) {
             return "User settings not configured.";
@@ -46,7 +46,11 @@ public class AssignmentTool {
             .collect(Collectors.toMap(Course::getId, Course::getName));
         Set<Long> courseIds = courseNames.keySet();
 
-        List<Assignment> assignments = assignmentRepository.findByUserId(userId).stream()
+        List<Assignment> assignments = ("ALL".equalsIgnoreCase(status)
+                ? assignmentRepository.findByUserId(userId)
+                : assignmentRepository.findByUserIdAndStatus(userId,
+                    "COMPLETED".equalsIgnoreCase(status) ? "COMPLETED" : "INCOMPLETE"))
+            .stream()
             .filter(a -> courseIds.contains(a.getCourseId()))
             .collect(Collectors.toList());
 

@@ -195,7 +195,6 @@ public class MainLayoutController {
 
             try {
                 String response = agentApiService.chat(message);
-                System.out.println("5. got response: " + response);
 
                 Platform.runLater(() -> {
                     addMessage(response, false);
@@ -204,9 +203,8 @@ public class MainLayoutController {
                     chatInput.requestFocus();
                 });
             } catch (Exception e) {
-                System.out.println("ERROR: " + e.getMessage());
                 Platform.runLater(() -> {
-                    addMessage("Error: " + e.getMessage(), false);
+                    addMessage(e.getMessage(), false);
                     chatInput.setDisable(false);
                     sendButton.setDisable(false);
                 });

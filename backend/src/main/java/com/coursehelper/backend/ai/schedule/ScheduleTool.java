@@ -7,59 +7,69 @@ import org.springframework.stereotype.Component;
 
 import com.coursehelper.backend.course.Course;
 import com.coursehelper.backend.course.CourseRepository;
+import com.coursehelper.backend.userSettings.SettingsRepository;
+import com.coursehelper.backend.userSettings.UserSettings;
 
 
 @Component
 public class ScheduleTool {
 
-
     private final CourseRepository courseRepository;
+    private final SettingsRepository settingsRepository;
 
-    public ScheduleTool(CourseRepository courseRepository) {
+    public ScheduleTool(CourseRepository courseRepository,
+                        SettingsRepository settingsRepository) {
         this.courseRepository = courseRepository;
+        this.settingsRepository = settingsRepository;
     }
 
     public String search(String query, Long userId) {
+        UserSettings settings = settingsRepository.findByUserId(userId).orElse(null);
+        if (settings == null) {
+            return "User settings not configured.";
+        }
 
-        // try to find courses matching the query as a name or day
-        List<Course> courses = findRelevantCourses(query, userId);
+        String semester = settings.getCurrentSemester();
+        int year = settings.getCurrentYear();
+
+        List<Course> courses = findRelevantCourses(query, userId, semester, year);
 
         if (courses.isEmpty()) {
-            return "No courses found matching: " + query;
+            return "No courses found" + (query != null && !query.isBlank() ? " matching: " + query : ".");
         }
 
         return formatCourses(courses);
     }
 
-    private List<Course> findRelevantCourses(String query, Long userId) {
-        String lower = query.toLowerCase();
+    private List<Course> findRelevantCourses(String query, Long userId, String semester, int year) {
+        String lower = query != null ? query.toLowerCase() : "";
 
-        // return courses for current semester 
         List<String> days = List.of("monday", "tuesday", "wednesday",
                                      "thursday", "friday", "saturday", "sunday");
 
         for (String day : days) {
             if (lower.contains(day)) {
-                return courseRepository.findByUserIdAndDay(userId, day);
+                return courseRepository.findByUserIdAndDayAndSemesterAndCourseYear(userId, day, semester, year);
             }
         }
 
-        // otherwise search by course name
-        List<Course> byName = courseRepository
-                .findByUserIdAndNameContainingIgnoreCase(userId, query);
+        List<Course> semesterCourses = courseRepository
+                .findByUserIdAndSemesterAndCourseYear(userId, semester, year);
 
-        if (!byName.isEmpty()) {
-            return byName;
+        if (!lower.isBlank()) {
+            List<Course> byName = semesterCourses.stream()
+                .filter(c -> c.getName().toLowerCase().contains(lower))
+                .collect(Collectors.toList());
+            if (!byName.isEmpty()) return byName;
         }
 
-        // fallback — return all courses for the user
-        return courseRepository.findAllByUserId(userId);
+        return semesterCourses;
     }
 
     private String formatCourses(List<Course> courses) {
         return courses.stream()
                 .map(c -> String.format(
-                    "Course: %s\nDays: %s\nTime: %s - %s\nSemester: %s %s\nStart Date: ",
+                    "Course: %s\nDays: %s\nTime: %s - %s\nSemester: %s %s\nStart Date: %s",
                     c.getName(),
                     c.getLectureDays(),
                     c.getStartTime(),
@@ -70,6 +80,4 @@ public class ScheduleTool {
                 ))
                 .collect(Collectors.joining("\n\n---\n\n"));
     }
-    
-
 }
