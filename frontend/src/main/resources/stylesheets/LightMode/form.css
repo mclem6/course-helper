@@ -28,5 +28,10 @@
 }
 
 .form-label {
-  -fx-text-fill: black; 
+  -fx-text-fill: black;
+}
+
+.error-label {
+    -fx-text-fill: #c0392b;
+    -fx-font-size: 12px;
 }

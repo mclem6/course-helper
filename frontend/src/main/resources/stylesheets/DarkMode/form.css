@@ -27,5 +27,10 @@
 }
 
 .form-label {
-  -fx-text-fill: white; 
+    -fx-text-fill: white;
+}
+
+.error-label {
+    -fx-text-fill: #e05555;
+    -fx-font-size: 12px;
 }

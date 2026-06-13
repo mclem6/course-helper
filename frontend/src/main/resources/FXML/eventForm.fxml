@@ -87,11 +87,14 @@
     </VBox>
 
 
+    <!-- Error label -->
+    <Label fx:id="error_label" styleClass="error-label" visible="false" wrapText="true"/>
+
     <!-- Submit and Cancel Buttons -->
     <HBox spacing="5" alignment="CENTER">
         <Button fx:id="add_event_button" text="add" prefWidth= "80" maxWidth="80" onAction="#addEvent" styleClass="add-btn"/>
         <Button fx:id="cancel_event_button" text="cancel" prefWidth= "80" maxWidth="80" onAction="#cancelEvent" styleClass="cancel-btn"/>
-    </HBox> 
+    </HBox>
 
     
 </VBox>
