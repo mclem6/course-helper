@@ -1,8 +1,14 @@
 package com.coursehelper.frontend.controllers;
 
+import com.coursehelper.frontend.App;
 import com.coursehelper.frontend.UserSession;
 import com.coursehelper.frontend.UserStore;
+import com.coursehelper.frontend.theme.ThemeManager;
 import com.coursehelper.frontend.util.AvatarUtils;
+
+import javafx.application.Platform;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
@@ -26,16 +32,25 @@ public class NavigationController {
 
     public void initialize(){
         setWelcomeMessage(UserSession.getUser().getUsername());
-
-        //get user profile photo
         loadProfilePicture();
 
-        userStore.profilePictureProperty().addListener((obs, oldBytes, newBytes) -> {
-        profileImageView.setImage( 
-            AvatarUtils.getProfileImage(newBytes, UserSession.getUser().getUsername())
+        userStore.profilePictureProperty().addListener((obs, oldBytes, newBytes) ->
+            profileImageView.setImage(
+                AvatarUtils.getProfileImage(newBytes, UserSession.getUser().getUsername())
+            )
         );
-    });
+    }
 
+    public void setActivePage(String fxmlPath) {
+        Hyperlink active = switch (fxmlPath) {
+            case "/FXML/DocumentsPage.fxml" -> documentsLink;
+            case "/FXML/SettingsPage.fxml"  -> tasksLink;
+            default                          -> homeLink;
+        };
+        for (Hyperlink link : new Hyperlink[]{homeLink, documentsLink, tasksLink}) {
+            link.getStyleClass().remove("nav-btn-active");
+        }
+        if (active != null) active.getStyleClass().add("nav-btn-active");
     }
 
     public void setMain(MainLayoutController main){
@@ -82,6 +97,25 @@ public class NavigationController {
         homeLink.setDisable(!enabled);
         documentsLink.setDisable(!enabled);
         tasksLink.setDisable(!enabled);
+    }
+
+    @FXML
+    public void logout() {
+        UserSession.clear();
+        UserStore.getInstance().clear();
+        try {
+            Parent accessRoot = App.loadFXML("accessScreen");
+            String css = ThemeManager.getThemeStyleSheet(ThemeManager.getCurrentTheme(), "accessPage.css");
+            Scene scene = new Scene(accessRoot, 800, 555);
+            if (css != null) scene.getStylesheets().add(css);
+            App.primaryStage.setScene(scene);
+            App.primaryStage.setWidth(800);
+            App.primaryStage.setHeight(555);
+            App.primaryStage.setResizable(false);
+            App.primaryStage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadProfilePicture() { 

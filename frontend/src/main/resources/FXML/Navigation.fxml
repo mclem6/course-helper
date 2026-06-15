@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 
 
 
@@ -17,24 +19,34 @@
 
 
     <VBox spacing="20" alignment="center">
-        <Hyperlink fx:id="homeLink" onAction="#goToHomePage">
+        <VBox.margin><Insets top="10"/></VBox.margin>
+        <Hyperlink fx:id="homeLink" onAction="#goToHomePage" styleClass="nav-btn">
             <graphic>
-                <FontAwesomeIconView glyphName="HOME" size="30" styleClass="nav-glyph"/>
+                <FontAwesomeIconView glyphName="HOME" size="26" styleClass="nav-glyph"/>
             </graphic>
         </Hyperlink>
-    
-        <Hyperlink fx:id="documentsLink" onAction="#goToDocumentsPage">
+
+        <Hyperlink fx:id="documentsLink" onAction="#goToDocumentsPage" styleClass="nav-btn">
             <graphic>
-                <FontAwesomeIconView glyphName="FILE" size="25" styleClass="nav-glyph"/>
+                <FontAwesomeIconView glyphName="FILE" size="22" styleClass="nav-glyph"/>
             </graphic>
         </Hyperlink>
 
 
-        <Hyperlink fx:id="tasksLink" onAction="#goToSettingsPage">
+        <Hyperlink fx:id="tasksLink" onAction="#goToSettingsPage" styleClass="nav-btn">
             <graphic>
-                <FontAwesomeIconView glyphName="GEARS" size="25" styleClass="nav-glyph"/>
+                <FontAwesomeIconView glyphName="GEARS" size="22" styleClass="nav-glyph"/>
             </graphic>
         </Hyperlink>
     </VBox>
+
+    <Region VBox.vgrow="ALWAYS"/>
+
+    <Hyperlink onAction="#logout" styleClass="nav-btn-logout">
+        <graphic>
+            <FontAwesomeIconView glyphName="SIGN_OUT" size="22" styleClass="nav-glyph"/>
+        </graphic>
+        <VBox.margin><Insets bottom="20"/></VBox.margin>
+    </Hyperlink>
 
 </VBox>

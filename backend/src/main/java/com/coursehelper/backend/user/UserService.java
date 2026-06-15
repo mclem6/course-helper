@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.coursehelper.backend.auth.util.JwtUtil;
 import com.coursehelper.backend.exceptions.FileProcessingException;
+import com.coursehelper.backend.exceptions.InvalidCredentialsException;
 import com.coursehelper.backend.exceptions.ResourceNotFoundException;
 import com.coursehelper.backend.exceptions.UsernameAlreadyExistsException;
 import com.coursehelper.backend.user.dto.RegisterRequest;
@@ -42,10 +43,10 @@ public class UserService {
 
     }
 
-    public String generateToken(User user){   
+    public String generateToken(User user){
 
         return jwtUtil.generateToken(user);
-        
+
     }
 
     public User findByUsername(String username) {
@@ -70,6 +71,24 @@ public class UserService {
 
     public byte[] getProfilePicture(Long userId) {
         return findByUserId(userId).getProfilePicture();
+    }
+
+    public void changeUsername(Long userId, String newUsername) {
+        if (userRepository.findByUsername(newUsername).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username already taken.");
+        }
+        User user = findByUserId(userId);
+        user.setUsername(newUsername);
+        userRepository.save(user);
+    }
+
+    public void changePassword(Long userId, String currentPassword, String newPassword) {
+        User user = findByUserId(userId);
+        if (!encoder.matches(currentPassword, user.getPassword())) {
+            throw new InvalidCredentialsException("Current password is incorrect.");
+        }
+        user.changePassword(encoder.encode(newPassword));
+        userRepository.save(user);
     }
 
 }

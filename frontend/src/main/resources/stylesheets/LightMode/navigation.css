@@ -1,5 +1,4 @@
-
-* {
+.nav-root * {
     -fx-text-fill: black;
 }
 
@@ -12,11 +11,47 @@
     -fx-fill: black;
 }
 
-
 .hyperlink:focused {
     -fx-border-color: transparent;
 }
 
-.hyperlink:visited {
-    -fx-border-color: transparent;
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 0.2;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-padding: 10;
+    -fx-opacity: 1.0;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #ABAAFF;
+}
+
+.nav-btn:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.15);
+}
+
+.nav-btn-active {
+    -fx-background-color: #ABAAFF;
+}
+
+.nav-btn-logout {
+    -fx-background-color: #F44336;
+    -fx-border-color: #F44336;
+}
+
+.nav-btn-logout .nav-glyph {
+    -fx-fill: white;
+}
+
+.nav-btn-logout:hover {
+    -fx-background-color: #e53935;
 }

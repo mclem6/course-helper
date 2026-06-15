@@ -24,7 +24,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -36,7 +40,21 @@ public class SettingsPageController {
     @FXML private DatePicker endDatePicker;
     @FXML private Label errorLabel;
     @FXML private Button editSemesterBtn;
+    @FXML private VBox semesterEditSection;
     @FXML private ImageView profileImageView;
+
+    @FXML private Label usernameLabel;
+    @FXML private Button changeUsernameBtn;
+    @FXML private HBox usernameEditRow;
+    @FXML private TextField newUsernameField;
+    @FXML private Label usernameError;
+
+    @FXML private Button changePasswordBtn;
+    @FXML private VBox passwordEditSection;
+    @FXML private PasswordField currentPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private PasswordField confirmPasswordField;
+    @FXML private Label passwordError;
 
 
     private MainLayoutController mainLayoutController;
@@ -53,13 +71,21 @@ public class SettingsPageController {
 
         loadProfilePicture();
 
-        //set initial values if they exist
+        usernameLabel.setText("Username: " + UserSession.getUser().getUsername());
+
         UserSettings settings = userStore.getSettings();
-        if (settings != null){
+        if (settings != null) {
             semesterCombo.setValue(settings.getSemester());
             yearCombo.setValue(settings.getYear());
             startDatePicker.setValue(settings.getStartDate());
             endDatePicker.setValue(settings.getEndDate());
+        } else {
+            // not yet configured — show all fields enabled so user can fill them in
+            semesterCombo.setDisable(false);
+            yearCombo.setDisable(false);
+            semesterEditSection.setVisible(true);
+            semesterEditSection.setManaged(true);
+            editSemesterBtn.setDisable(true);
         }
 
         
@@ -98,33 +124,30 @@ public class SettingsPageController {
     }
 
     private Boolean validateSemesterInput(){
-        //check for errors
-        if(semesterCombo.getValue() == null){
-            errorLabel.setText("* select semester");
-            return false;
-        } 
-        if(yearCombo.getValue() == null){
-            errorLabel.setText("* select year");
-            return false;
-        } 
+        String error = null;
 
-        if(startDatePicker.getValue() == null){
-            errorLabel.setText("* select start date");
-            return false;
-        } 
-        
-        if(endDatePicker.getValue() == null){
-            errorLabel.setText("* select end date");
-            return false;
-        } 
+        if (semesterCombo.getValue() == null) {
+            error = "* select semester";
+        } else if (yearCombo.getValue() == null) {
+            error = "* select year";
+        } else if (startDatePicker.getValue() == null) {
+            error = "* select start date";
+        } else if (endDatePicker.getValue() == null) {
+            error = "* select end date";
+        } else if (!startDatePicker.getValue().isBefore(endDatePicker.getValue())) {
+            error = "Start date must be before end date";
+        }
 
-         // validate start is before end
-        if (!startDatePicker.getValue().isBefore(endDatePicker.getValue())) {
-            errorLabel.setText("Start date must be before end date");
+        if (error != null) {
+            errorLabel.setText(error);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
             return false;
         }
 
         errorLabel.setText("");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
         return true;
     }
 
@@ -165,60 +188,171 @@ public class SettingsPageController {
         }).start();
     }
 
-    @FXML
-    public void deleteProfilePhoto() {}
 
     @FXML
-    public void editSaveSemester(){
+    public void toggleUsernameEdit() {
+        usernameEditRow.setVisible(true);
+        usernameEditRow.setManaged(true);
+        usernameError.setVisible(false);
+        usernameError.setManaged(false);
+        changeUsernameBtn.setDisable(true);
+    }
 
-        if (editSemesterBtn.getText().equals("Edit Semester Setting")){
+    @FXML
+    public void cancelUsernameEdit() {
+        usernameEditRow.setVisible(false);
+        usernameEditRow.setManaged(false);
+        usernameError.setVisible(false);
+        usernameError.setManaged(false);
+        newUsernameField.clear();
+        changeUsernameBtn.setDisable(false);
+    }
 
-            editSemesterBtn.setText("Save Semester Setting");
-            semesterCombo.setDisable(false);
-            yearCombo.setDisable(false);
-            startDatePicker.setDisable(false);
-            endDatePicker.setDisable(false);
-
-
-        } else {
-
-            if(!validateSemesterInput()){
-                return;
-            }
-
-            //get user input
-            String semester = semesterCombo.getValue();
-            int year = yearCombo.getValue();
-            LocalDate startDate = startDatePicker.getValue();
-            LocalDate endDate = endDatePicker.getValue();
-
-
-            new Thread(() -> {
-                try {
-
-                    saveSemesterSettings(semester, year, startDate, endDate);
-
-                    Platform.runLater(() -> {
-            
-                        editSemesterBtn.setText("Edit Semester Setting");
-                        semesterCombo.setDisable(true);
-                        yearCombo.setDisable(true);
-                        startDatePicker.setDisable(true);
-                        endDatePicker.setDisable(true);
-
-                        // re-enable navigation
-                        // need reference to MainLayoutController
-                        CalendarManager.getInstance().initialize();
-                        mainLayoutController.enableNavigation();
-                        mainLayoutController.loadPage("/FXML/HomePage.fxml");
-                    });
-                } catch (ApiException e) {
-                    Platform.runLater(() -> 
-                        errorLabel.setText(e.getMessage())); // ← show to user
-                }
-            }).start();
+    @FXML
+    public void saveUsername() {
+        String newUsername = newUsernameField.getText().trim();
+        if (newUsername.isEmpty()) {
+            showUsernameError("Username cannot be empty.");
+            return;
         }
+        new Thread(() -> {
+            try {
+                userService.changeUsername(newUsername);
+                Platform.runLater(() -> {
+                    UserSession.getUser().setUsername(newUsername);
+                    usernameLabel.setText("Username: " + newUsername);
+                    mainLayoutController.updateWelcomeMessage(newUsername);
+                    cancelUsernameEdit();
+                });
+            } catch (ApiException e) {
+                Platform.runLater(() -> showUsernameError(e.getMessage()));
+            }
+        }).start();
+    }
 
+    @FXML
+    public void togglePasswordEdit() {
+        passwordEditSection.setVisible(true);
+        passwordEditSection.setManaged(true);
+        passwordError.setVisible(false);
+        passwordError.setManaged(false);
+        changePasswordBtn.setDisable(true);
+    }
+
+    @FXML
+    public void cancelPasswordEdit() {
+        passwordEditSection.setVisible(false);
+        passwordEditSection.setManaged(false);
+        passwordError.setVisible(false);
+        passwordError.setManaged(false);
+        clearPasswordFields();
+        changePasswordBtn.setDisable(false);
+    }
+
+    @FXML
+    public void savePassword() {
+        String current = currentPasswordField.getText();
+        String newPw = newPasswordField.getText();
+        String confirm = confirmPasswordField.getText();
+        if (current.isEmpty() || newPw.isEmpty() || confirm.isEmpty()) {
+            showPasswordError("All fields are required.");
+            return;
+        }
+        if (!newPw.equals(confirm)) {
+            showPasswordError("New passwords do not match.");
+            return;
+        }
+        if (newPw.length() < 6) {
+            showPasswordError("Password must be at least 6 characters.");
+            return;
+        }
+        new Thread(() -> {
+            try {
+                userService.changePassword(current, newPw);
+                Platform.runLater(this::cancelPasswordEdit);
+            } catch (ApiException e) {
+                Platform.runLater(() -> showPasswordError(e.getMessage()));
+            }
+        }).start();
+    }
+
+    private void showUsernameError(String msg) {
+        usernameError.setText(msg);
+        usernameError.setVisible(true);
+        usernameError.setManaged(true);
+    }
+
+    private void showPasswordError(String msg) {
+        passwordError.setText(msg);
+        passwordError.setVisible(true);
+        passwordError.setManaged(true);
+    }
+
+    private void clearPasswordFields() {
+        currentPasswordField.clear();
+        newPasswordField.clear();
+        confirmPasswordField.clear();
+    }
+
+    @FXML
+    public void toggleSemesterEdit() {
+        semesterCombo.setDisable(false);
+        yearCombo.setDisable(false);
+        semesterEditSection.setVisible(true);
+        semesterEditSection.setManaged(true);
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+        editSemesterBtn.setDisable(true);
+    }
+
+    @FXML
+    public void saveSemester() {
+        if (!validateSemesterInput()) return;
+
+        String semester = semesterCombo.getValue();
+        int year = yearCombo.getValue();
+        LocalDate startDate = startDatePicker.getValue();
+        LocalDate endDate = endDatePicker.getValue();
+
+        new Thread(() -> {
+            try {
+                saveSemesterSettings(semester, year, startDate, endDate);
+                Platform.runLater(() -> {
+                    collapseSemesterEdit();
+                    CalendarManager.getInstance().initialize();
+                    mainLayoutController.enableNavigation();
+                    mainLayoutController.loadPage("/FXML/HomePage.fxml");
+                });
+            } catch (ApiException e) {
+                Platform.runLater(() -> {
+                    errorLabel.setText(e.getMessage());
+                    errorLabel.setVisible(true);
+                    errorLabel.setManaged(true);
+                });
+            }
+        }).start();
+    }
+
+    @FXML
+    public void cancelSemesterEdit() {
+        UserSettings settings = userStore.getSettings();
+        if (settings != null) {
+            semesterCombo.setValue(settings.getSemester());
+            yearCombo.setValue(settings.getYear());
+            startDatePicker.setValue(settings.getStartDate());
+            endDatePicker.setValue(settings.getEndDate());
+        }
+        collapseSemesterEdit();
+    }
+
+    private void collapseSemesterEdit() {
+        semesterCombo.setDisable(true);
+        yearCombo.setDisable(true);
+        semesterEditSection.setVisible(false);
+        semesterEditSection.setManaged(false);
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+        editSemesterBtn.setDisable(false);
     }
 
     private void loadProfilePicture() { 

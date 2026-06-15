@@ -13,7 +13,7 @@
       fx:controller="com.coursehelper.frontend.controllers.HomePageController"
       spacing="5">
     
-    <HBox>
+    <HBox spacing="20">
         <ScrollPane styleClass="scrollPane" fitToWidth="true" minViewportHeight="175" prefViewportHeight="200"  HBox.hgrow="ALWAYS">
                 <padding>
                     <Insets top="0" right="20" bottom="20" left="20"/>

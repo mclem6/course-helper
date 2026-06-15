@@ -73,9 +73,15 @@
         </HBox>
 
         <!-- Custom Days -->
-        <HBox fx:id="recurrence_hbox" spacing="10" alignment="CENTER_LEFT" visible="false">
+        <HBox fx:id="recurrence_hbox" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
             <Label text="Repeat on:" styleClass="form-label" prefWidth="100" minWidth="100"/>
             <CheckComboBox fx:id="repeat_days_checkComboBox" prefWidth= "125" maxWidth="125"/>
+        </HBox>
+
+        <!-- Recurring end date (semester end, read-only) -->
+        <HBox fx:id="end_date_hbox" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
+            <Label text="Ends on:" styleClass="form-label" prefWidth="100" minWidth="100"/>
+            <DatePicker fx:id="end_date_picker" prefWidth="150" maxWidth="150"/>
         </HBox>
 
 

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.coursehelper.backend.auth.CustomUserPrincipal;
 import com.coursehelper.backend.auth.dto.LoginResponseDto;
+import com.coursehelper.backend.user.dto.ChangePasswordRequest;
+import com.coursehelper.backend.user.dto.ChangeUsernameRequest;
 import com.coursehelper.backend.user.dto.RegisterRequest;
 
 @RestController
@@ -44,5 +47,19 @@ public class UserController {
     public ResponseEntity<byte[]> getUserProfilePicture(Authentication auth) {
         Long userId = ((CustomUserPrincipal) auth.getPrincipal()).getUserId();
         return ResponseEntity.ok(userService.getProfilePicture(userId));
+    }
+
+    @PatchMapping("/users/username")
+    public ResponseEntity<String> changeUsername(@RequestBody ChangeUsernameRequest request, Authentication auth) {
+        Long userId = ((CustomUserPrincipal) auth.getPrincipal()).getUserId();
+        userService.changeUsername(userId, request.getNewUsername());
+        return ResponseEntity.ok("Username updated.");
+    }
+
+    @PatchMapping("/users/password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request, Authentication auth) {
+        Long userId = ((CustomUserPrincipal) auth.getPrincipal()).getUserId();
+        userService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.ok("Password updated.");
     }
 }

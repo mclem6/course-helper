@@ -193,7 +193,7 @@ public class HomePageController {
             Popup popup = new Popup();
             addCourseFormController.setPopup(popup);
             popup.getContent().add(formNode);
-            popup.setAutoHide(true); // closes when user clicks elsewhere
+            popup.setAutoHide(false);
             popup.setAutoFix(true); // repositions if near edge
 
             //show form on right click 
@@ -240,7 +240,7 @@ public class HomePageController {
             addNewEventPopup.getContent().add(popupNode);
 
             //settings
-            addNewEventPopup.setAutoHide(true);
+            addNewEventPopup.setAutoHide(false);
             addNewEventPopup.setAutoFix(true);
 
             //set popup location
@@ -291,7 +291,7 @@ public class HomePageController {
             Popup popup = new Popup();
             addTaskFormController.setPopup(popup);
             popup.getContent().add(formNode);
-            popup.setAutoHide(true); // closes when user clicks elsewhere
+            popup.setAutoHide(false);
             popup.setAutoFix(true); // repositions if near edge
 
             //show form on right click 

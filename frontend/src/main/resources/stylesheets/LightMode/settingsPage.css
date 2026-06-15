@@ -10,3 +10,43 @@
     -fx-border-color: black;
 }
 
+.edit-btn {
+    -fx-background-color: #FFB8B9;
+    -fx-text-fill: #454545;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 12px;
+}
+
+.edit-btn:hover {
+    -fx-background-color: #ffa0a2;
+}
+
+.edit-btn:disabled {
+    -fx-opacity: 0.45;
+}
+
+.settings-root .combo-box:disabled {
+    -fx-opacity: 1.0;
+}
+
+.save-btn {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.save-btn:hover {
+    -fx-background-color: #43a047;
+}
+
+.cancel-edit-btn {
+    -fx-background-color: #F44336;
+    -fx-text-fill: white;
+}
+
+.cancel-edit-btn:hover {
+    -fx-background-color: #e53935;
+}
+

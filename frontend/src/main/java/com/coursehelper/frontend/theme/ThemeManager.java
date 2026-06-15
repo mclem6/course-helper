@@ -62,11 +62,9 @@ public class ThemeManager {
     }
 
 
-    //save user's preference 
+    //save user's preference
     public static void saveThemePreference(String theme){
-
-        //TODO save to database, make method in userService
-    
+        saveLocalThemePreference(theme);
     }
 
     //set theme on all sheets  
