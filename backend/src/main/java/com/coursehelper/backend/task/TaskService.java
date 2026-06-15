@@ -46,7 +46,7 @@ public class TaskService {
 
 
     public TaskResponseDto toResponse(Task task){
-        return new TaskResponseDto(task.getId(), task.getUserId(), task.getCourseId(), task.getTitle(), task.getDueDate(), task.getCompleted());
+        return new TaskResponseDto(task.getId(), task.getCourseId(), task.getUserId(), task.getTitle(), task.getDueDate(), task.getCompleted());
     }
 
     public List<TaskResponseDto> getUserTasksByCourseId(Long userId, Long courseId){
