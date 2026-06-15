@@ -221,6 +221,7 @@ public class SettingsPageController {
                 Platform.runLater(() -> {
                     UserSession.getUser().setUsername(newUsername);
                     usernameLabel.setText("Username: " + newUsername);
+                    mainLayoutController.updateWelcomeMessage(newUsername);
                     cancelUsernameEdit();
                 });
             } catch (ApiException e) {

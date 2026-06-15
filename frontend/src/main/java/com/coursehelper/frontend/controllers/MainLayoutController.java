@@ -288,6 +288,10 @@ public class MainLayoutController {
         navigationController.setNavigationEnabled(true);
     }
 
+    public void updateWelcomeMessage(String username) {
+        navigationController.setWelcomeMessage(username);
+    }
+
 
     
 }
