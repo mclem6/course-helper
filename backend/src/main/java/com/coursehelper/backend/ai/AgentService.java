@@ -71,6 +71,7 @@ public class AgentService {
                        "Avoid special formatting like bold and italics. " +
                        "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
                        "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
+                       "When answering from search_resources results, always state which document the information came from (e.g. 'According to your syllabus.pdf, ...'). " +
                        "You may ONLY answer questions related to the student's schedule, assignments, tasks, and uploaded course materials. " +
                        "If asked about anything outside these topics, politely decline and explain you can only help with their coursework and schedule."
         ));
