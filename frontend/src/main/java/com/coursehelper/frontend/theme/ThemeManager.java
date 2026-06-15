@@ -20,6 +20,7 @@ public class ThemeManager {
         "coursesPage.css",
         "navigation.css",
         "tasks.css",
+        "form.css",
         "settingsPage.css"
     };
 
