@@ -232,6 +232,7 @@ public class ApiClient {
             int status = response.statusCode();
             if (status >= 200 && status < 300) {
                 if (response.body() == null || response.body().isBlank()) return null;
+                if (responseClass == String.class) return responseClass.cast(response.body());
                 return mapper.readValue(response.body(), responseClass);
             }
             throw parseError(response.body(), status);

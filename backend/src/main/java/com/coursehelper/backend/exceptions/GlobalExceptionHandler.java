@@ -64,6 +64,6 @@ public class GlobalExceptionHandler {
     }
 
     private Map<String, Object> errorBody(int status, String message) {
-        return Map.of("status", status, "message", message);
+        return Map.of("status", status, "error", message);
     }
 }
