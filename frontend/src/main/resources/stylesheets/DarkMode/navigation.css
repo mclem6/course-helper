@@ -1,4 +1,4 @@
-* {
+.nav-root * {
     -fx-text-fill: white;
 }
 
@@ -7,22 +7,12 @@
     -fx-fill: white;
 }
 
-
 .nav-glyph {
     -fx-fill: white;
 }
 
-
 .hyperlink:focused {
     -fx-border-color: transparent;
-}
-
-.hyperlink:visited {
-    -fx-border-color: transparent;
-}
-
-.nav-btn:visited {
-    -fx-border-color: white;
 }
 
 .nav-btn {
@@ -38,6 +28,7 @@
     -fx-alignment: center;
     -fx-cursor: hand;
     -fx-padding: 10;
+    -fx-opacity: 1.0;
 }
 
 .nav-btn:hover {
@@ -48,4 +39,19 @@
     -fx-background-color: rgba(255, 255, 255, 0.22);
 }
 
+.nav-btn-active {
+    -fx-background-color: #ABAAFF;
+}
 
+.nav-btn-logout {
+    -fx-background-color: #F44336;
+    -fx-border-color: #F44336;
+}
+
+.nav-btn-logout .nav-glyph {
+    -fx-fill: white;
+}
+
+.nav-btn-logout:hover {
+    -fx-background-color: #e53935;
+}
