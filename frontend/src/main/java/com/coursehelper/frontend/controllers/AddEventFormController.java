@@ -19,11 +19,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Popup;
+import javafx.util.Callback;
 
 public class AddEventFormController {
 
@@ -36,7 +38,9 @@ public class AddEventFormController {
     @FXML private CheckBox recurring_checkbox;
     @FXML private ComboBox<String> recurrence_combo;
     @FXML private HBox recurrence_hbox;
+    @FXML private HBox end_date_hbox;
     @FXML private CheckComboBox<String> repeat_days_checkComboBox;
+    @FXML private DatePicker end_date_picker;
     @FXML private Button add_event_button;
     @FXML private Label error_label;
 
@@ -86,6 +90,25 @@ public class AddEventFormController {
             return;
         }
 
+        if (!TimeUtils.isStartBeforeEnd(startTime, endTime)) {
+            showError("Start time must be before end time.");
+            return;
+        }
+
+        if (recurring && repeat_days_checkComboBox.getCheckModel().getCheckedItems().isEmpty()) {
+            showError("Please select at least one repeat day.");
+            return;
+        }
+
+        if (recurring) {
+            LocalDate semesterEnd = userStore.getSettings() != null ? userStore.getSettings().getEndDate() : null;
+            LocalDate endDate = end_date_picker.getValue();
+            if (semesterEnd != null && endDate != null && endDate.isAfter(semesterEnd)) {
+                showError("End date cannot be past the semester end date.");
+                return;
+            }
+        }
+
         Course course = userStore.getCourses().stream()
             .filter(c -> c.getName().equals(courseName))
             .findFirst().orElse(null);
@@ -124,18 +147,40 @@ public class AddEventFormController {
 
     @FXML
     public void handleRecurringToggle() {
-        if (recurring_checkbox.isSelected()) {
-            recurrence_combo.setVisible(true);
-            handleRecurrenceSelection();
+        boolean checked = recurring_checkbox.isSelected();
+        recurrence_combo.setVisible(checked);
+        recurrence_hbox.setVisible(checked);
+        recurrence_hbox.setManaged(checked);
+        end_date_hbox.setVisible(checked);
+        end_date_hbox.setManaged(checked);
+        if (checked) {
+            var settings = userStore.getSettings();
+            LocalDate semesterEnd = settings != null ? settings.getEndDate() : null;
+            end_date_picker.setValue(semesterEnd);
+            if (semesterEnd != null) {
+                LocalDate cap = semesterEnd;
+                Callback<DatePicker, DateCell> factory = dp -> new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null && item.isAfter(cap)) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #e0e0e0;");
+                        }
+                    }
+                };
+                end_date_picker.setDayCellFactory(factory);
+            }
         } else {
-            recurrence_combo.setVisible(false);
-            recurrence_hbox.setVisible(false);
+            end_date_picker.setValue(null);
+            end_date_picker.setDayCellFactory(null);
         }
     }
 
     @FXML
     public void handleRecurrenceSelection() {
         recurrence_hbox.setVisible(true);
+        recurrence_hbox.setManaged(true);
     }
 
     private void showError(String message) {

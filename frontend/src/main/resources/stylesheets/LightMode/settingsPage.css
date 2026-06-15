@@ -28,6 +28,10 @@
     -fx-opacity: 0.45;
 }
 
+.settings-root .combo-box:disabled {
+    -fx-opacity: 1.0;
+}
+
 .save-btn {
     -fx-background-color: #4CAF50;
     -fx-text-fill: white;

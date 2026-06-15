@@ -124,19 +124,18 @@ public class CalendarManager{
             List<String> lectureDays = event.getLectureDays();
             if (!lectureDays.isEmpty()) {
 
-                if (course.getEndDate() != null){
-                    String until = course.getEndDate()
-                        .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                java.time.LocalDate untilDate = course.getEndDate();
+                if (untilDate == null && userStore.getSettings() != null) {
+                    untilDate = userStore.getSettings().getEndDate();
+                }
 
-                    entry.setRecurrenceRule("RRULE:FREQ=WEEKLY;BYDAY=" + 
-                    String.join(",", lectureDays) +
-                    ";UNTIL=" + until);
-
+                if (untilDate != null) {
+                    String until = untilDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                    entry.setRecurrenceRule("RRULE:FREQ=WEEKLY;BYDAY=" +
+                        String.join(",", lectureDays) + ";UNTIL=" + until);
                 } else {
-
-                    entry.setRecurrenceRule("RRULE:FREQ=WEEKLY;BYDAY=" + 
-                    String.join(",", lectureDays));
-
+                    entry.setRecurrenceRule("RRULE:FREQ=WEEKLY;BYDAY=" +
+                        String.join(",", lectureDays));
                 } 
             }
 

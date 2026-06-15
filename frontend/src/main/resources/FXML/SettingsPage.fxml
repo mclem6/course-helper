@@ -6,6 +6,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.*?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 
 
 
@@ -30,11 +31,6 @@
                                    preserveRatio="true"
                                    style="-fx-cursor: hand;"/>
                      </VBox>
-                     <Button>
-                            <graphic>
-                                   <FontAwesomeIconView styleClass="edit-btn" glyphName="TRASH" onMouseClicked="#deleteProfilePhoto"/>   
-                            </graphic>
-                     </Button>
                      <Button text="Upload" styleClass="edit-btn" onMouseClicked="#uploadProfilePhoto"/>
 
               </HBox>
@@ -94,7 +90,7 @@
                                    <Label text="Current Year" styleClass="form-label"/>
                                    <ComboBox fx:id="yearCombo" prefWidth="200" promptText="Select year" disable="true"/>
                             </VBox>
-                            <Button fx:id="editSemesterBtn" text="Edit" styleClass="edit-btn" onAction="#toggleSemesterEdit"/>
+                            <Button fx:id="editSemesterBtn" text="Change Semester" styleClass="edit-btn" onAction="#toggleSemesterEdit"/>
                      </HBox>
 
                      <VBox fx:id="semesterEditSection" spacing="8" visible="false" managed="false">

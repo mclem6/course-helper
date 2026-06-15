@@ -127,11 +127,15 @@ public class MainLayoutController {
 
             Object controller = loader.getController();
             if (controller instanceof SettingsPageController settingsController) {
-                settingsController.setMain(this); // 
+                settingsController.setMain(this);
             }
 
             contentArea.getChildren().setAll(view);
-            
+
+            if (navigationController != null) {
+                navigationController.setActivePage(fxml);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -168,10 +172,10 @@ public class MainLayoutController {
             try {
                 String response = agentApiService.chat(
                     "Greet the student by name. Report only on incomplete assignments and tasks — never completed ones.\n" +
-                    "Structure your response in two short sections:\n" +
-                    "**Overdue:** Incomplete assignments or tasks already past due.\n" +
-                    "**Due Soon:** Upcoming incomplete assignments and tasks. List all of them — but if the total across both sections exceeds 5 items, only include items due within the next 3 days.\n" +
-                    "Only include the Overdue section if there are actually overdue items. End with one short encouraging sentence.");
+                    "Only include a section if there are actual items to list:\n" +
+                    "**Overdue:** Incomplete assignments or tasks already past due (only if any exist).\n" +
+                    "**Due Soon:** Upcoming incomplete assignments or tasks (only if any exist). If the total across both sections exceeds 5 items, limit to items due within the next 3 days.\n" +
+                    "If there is nothing overdue and nothing due soon, skip both sections and just say there is nothing on their schedule. End with one short encouraging sentence.");
                 Platform.runLater(() -> addMessage(response, false));
             } catch (Exception e) {
                 Platform.runLater(() -> addMessage("Hi! How can I help you today?", false));

@@ -124,33 +124,30 @@ public class SettingsPageController {
     }
 
     private Boolean validateSemesterInput(){
-        //check for errors
-        if(semesterCombo.getValue() == null){
-            errorLabel.setText("* select semester");
-            return false;
-        } 
-        if(yearCombo.getValue() == null){
-            errorLabel.setText("* select year");
-            return false;
-        } 
+        String error = null;
 
-        if(startDatePicker.getValue() == null){
-            errorLabel.setText("* select start date");
-            return false;
-        } 
-        
-        if(endDatePicker.getValue() == null){
-            errorLabel.setText("* select end date");
-            return false;
-        } 
+        if (semesterCombo.getValue() == null) {
+            error = "* select semester";
+        } else if (yearCombo.getValue() == null) {
+            error = "* select year";
+        } else if (startDatePicker.getValue() == null) {
+            error = "* select start date";
+        } else if (endDatePicker.getValue() == null) {
+            error = "* select end date";
+        } else if (!startDatePicker.getValue().isBefore(endDatePicker.getValue())) {
+            error = "Start date must be before end date";
+        }
 
-         // validate start is before end
-        if (!startDatePicker.getValue().isBefore(endDatePicker.getValue())) {
-            errorLabel.setText("Start date must be before end date");
+        if (error != null) {
+            errorLabel.setText(error);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
             return false;
         }
 
         errorLabel.setText("");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
         return true;
     }
 
@@ -191,8 +188,6 @@ public class SettingsPageController {
         }).start();
     }
 
-    @FXML
-    public void deleteProfilePhoto() {}
 
     @FXML
     public void toggleUsernameEdit() {

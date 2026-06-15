@@ -211,4 +211,14 @@ public class UserStore {
 
     public byte[] getProfilePicture() { return profilePicture.get(); }
 
+    public void clear() {
+        courses = new ArrayList<>();
+        eventsByCourse = new HashMap<>();
+        assignmentsByCourse = new HashMap<>();
+        tasksByCourse = new HashMap<>();
+        settings = null;
+        profilePicture.set(null);
+        upcomingAssignments.clear();
+    }
+
 }
