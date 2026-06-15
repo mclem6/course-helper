@@ -123,7 +123,6 @@ public class MainLayoutController {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent view = loader.load();
-            ThemeManager.setTheme(view, ThemeManager.getCurrentTheme());
 
             Object controller = loader.getController();
             if (controller instanceof SettingsPageController settingsController) {
@@ -151,11 +150,6 @@ public class MainLayoutController {
         }
 
         transition.play();
-
-        // Content pages carry their own stylesheets, so re-theme them as well.
-        if (!contentArea.getChildren().isEmpty() && contentArea.getChildren().get(0) instanceof Parent pageRoot) {
-            ThemeManager.setTheme(pageRoot, newTheme);
-        }
 
         ThemeManager.saveThemePreference(newTheme);
         
@@ -282,6 +276,10 @@ public class MainLayoutController {
         navigationController.setNavigationEnabled(true);
     }
 
+    public void updateWelcomeMessage(String username) {
+        navigationController.setWelcomeMessage(username);
+    }
 
-    
+
+
 }
