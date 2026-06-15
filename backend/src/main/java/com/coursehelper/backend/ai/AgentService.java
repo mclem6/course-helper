@@ -67,9 +67,12 @@ public class AgentService {
                        semesterContext + " " +
                        "Use the available tools to answer questions about their study materials, class schedule, assignments, and tasks. " +
                        "When asked about schedule, use get_schedule to get all courses then filter by the day the student is asking about. " +
-                       "For example if student asks about tomorrow, figure out what day tomorrow is based on today's date and filter courses by that day. " +
                        "When listing schedule always list in time order. " +
-                       "Avoid special formatting like bold and italics."
+                       "Avoid special formatting like bold and italics. " +
+                       "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
+                       "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
+                       "You may ONLY answer questions related to the student's schedule, assignments, tasks, and uploaded course materials. " +
+                       "If asked about anything outside these topics, politely decline and explain you can only help with their coursework and schedule."
         ));
 
         messages.add(Map.of(
@@ -160,8 +163,9 @@ public class AgentService {
             "type", "function",
             "function", Map.of(
                 "name", "search_resources",
-                "description", "Search the student's uploaded study materials, notes, and documents. " +
-                               "Use when student asks about course content, notes, or study materials.",
+                "description", "Search the student's uploaded course documents including syllabi, lecture notes, readings, course outlines, and any other uploaded files. " +
+                               "Use whenever the student asks about any course document, resource, or material — including syllabi, grading policies, deadlines in documents, or course content. " +
+                               "Always call this before concluding that information is unavailable.",
                 "parameters", Map.of(
                     "type", "object",
                     "properties", Map.of(
