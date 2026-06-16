@@ -1,5 +1,7 @@
 package com.coursehelper.backend.ai.task;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,14 +70,35 @@ public class TaskTool {
             return "No tasks found" + (query != null && !query.isBlank() ? " matching: " + query : ".");
         }
 
-        return filtered.stream()
-            .map(t -> String.format(
-                "Title: %s\nCourse: %s\nDue: %s\nCompleted: %s",
-                t.getTitle(),
-                courseNames.get(t.getCourseId()),
-                t.getDueDate() != null ? t.getDueDate() : "No date",
-                Boolean.TRUE.equals(t.getCompleted()) ? "Yes" : "No"
-            ))
-            .collect(Collectors.joining("\n\n---\n\n"));
+        LocalDate today = LocalDate.now();
+        List<Task> sorted = filtered.stream()
+            .sorted(Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder())))
+            .collect(Collectors.toList());
+
+        List<Task> overdue  = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isBefore(today)).toList();
+        List<Task> dueToday = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isEqual(today)).toList();
+        List<Task> upcoming = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isAfter(today)).toList();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== OVERDUE ===\n");
+        if (overdue.isEmpty()) sb.append("None\n\n");
+        else overdue.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
+
+        sb.append("=== DUE TODAY ===\n");
+        if (dueToday.isEmpty()) sb.append("None\n\n");
+        else dueToday.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
+
+        sb.append("=== UPCOMING ===\n");
+        if (upcoming.isEmpty()) sb.append("None\n\n");
+        else upcoming.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
+
+        return sb.toString().trim();
+    }
+
+    private String formatTask(Task t, Map<Long, String> courseNames) {
+        return String.format("Title: %s\nCourse: %s\nDue: %s",
+            t.getTitle(),
+            courseNames.get(t.getCourseId()),
+            t.getDueDate() != null ? t.getDueDate() : "No date");
     }
 }

@@ -3,6 +3,7 @@ package com.coursehelper.backend.ai;
 import com.coursehelper.backend.ai.assignment.AssignmentTool;
 import com.coursehelper.backend.ai.retrieval.ResourceRetrievalTool;
 import com.coursehelper.backend.ai.schedule.ScheduleTool;
+import com.coursehelper.backend.ai.summary.SummaryTool;
 import com.coursehelper.backend.ai.task.TaskTool;
 import com.coursehelper.backend.exceptions.AIServiceException;
 import com.coursehelper.backend.userSettings.UserSettings;
@@ -23,6 +24,7 @@ public class AgentService {
     private final ScheduleTool scheduleTool;
     private final AssignmentTool assignmentTool;
     private final TaskTool taskTool;
+    private final SummaryTool summaryTool;
     private final SettingsRepository settingsRepository;
     private final ObjectMapper mapper;
 
@@ -31,17 +33,27 @@ public class AgentService {
                         ScheduleTool scheduleTool,
                         AssignmentTool assignmentTool,
                         TaskTool taskTool,
+                        SummaryTool summaryTool,
                         SettingsRepository settingsRepository) {
         this.llmClient = llmClient;
         this.resourceRetrievalTool = resourceRetrievalTool;
         this.scheduleTool = scheduleTool;
         this.assignmentTool = assignmentTool;
         this.taskTool = taskTool;
+        this.summaryTool = summaryTool;
         this.settingsRepository = settingsRepository;
         this.mapper = new ObjectMapper();
     }
 
+    private static final String GREETING_PROMPT =
+        "You are a friendly course assistant for students. Greet the student by name.\n" +
+        "Call get_summary to fetch the student's incomplete assignments and tasks, already grouped by due date.\n" +
+        "Present the three sections exactly as returned — Overdue, Due Today, Upcoming.\n" +
+        "End with one short encouraging sentence.";
+
     public String answerQuery(String userQuestion, Long userId, String username) {
+
+        String resolvedQuestion = "greeting".equals(userQuestion) ? GREETING_PROMPT : userQuestion;
 
         // get current date and time
         String today = LocalDateTime.now().format(
@@ -68,6 +80,7 @@ public class AgentService {
                        "Use the available tools to answer questions about their study materials, class schedule, assignments, and tasks. " +
                        "When asked about schedule, use get_schedule to get all courses then filter by the day the student is asking about. " +
                        "When listing schedule always list in time order. " +
+                       "When summarizing assignments or tasks, the tools return items pre-grouped under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. Present these groups as-is under the same section names. Only include a section if the tool returned items in it. " +
                        "Avoid special formatting like bold and italics. " +
                        "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
                        "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
@@ -78,7 +91,7 @@ public class AgentService {
 
         messages.add(Map.of(
             "role", "user",
-            "content", userQuestion
+            "content", resolvedQuestion
         ));
 
         List<Map<String, Object>> tools = buildToolDefinitions();
@@ -106,7 +119,9 @@ public class AgentService {
 
             // done, return the answer
             if ("stop".equals(finishReason)) {
-                return (String) assistantMessage.get("content");
+                String content = (String) assistantMessage.get("content");
+                System.out.println("[AGENT] final response=\n" + content);
+                return content;
             }
 
             // GPT-4o tool call executions
@@ -123,6 +138,7 @@ public class AgentService {
                     String argsJson = (String) function.get("arguments");
 
                     String result = executeTool(toolName, argsJson, userId);
+                    System.out.println("[AGENT] tool=" + toolName + " result=\n" + result);
 
                     messages.add(Map.of(
                         "role", "tool",
@@ -150,6 +166,7 @@ public class AgentService {
                 case "get_schedule"     -> scheduleTool.search(query, userId);
                 case "get_assignments"  -> assignmentTool.search(query, userId, status);
                 case "get_tasks"        -> taskTool.search(query, userId, completed);
+                case "get_summary"      -> summaryTool.getSummary(userId);
                 default -> "Unknown tool: " + toolName;
             };
 
@@ -208,7 +225,7 @@ public class AgentService {
                 "name", "get_assignments",
                 "description", "Get the student's assignments for the current semester. " +
                                "Returns title, course name, type (HOMEWORK/TEST/PROJECT/LAB), due date, and status. " +
-                               "Use when student asks about assignments, homework, tests, projects, or deadlines. " +
+                               "Use when generating a student summary or greeting, or when the student asks about assignments, homework, tests, projects, or deadlines. " +
                                "Default status is INCOMPLETE — only pass COMPLETED or ALL when explicitly asked.",
                 "parameters", Map.of(
                     "type", "object",
@@ -234,7 +251,7 @@ public class AgentService {
                 "name", "get_tasks",
                 "description", "Get the student's tasks for the current semester. " +
                                "Returns title, course name, due date, and completion status. " +
-                               "Use when student asks about tasks or to-do items. " +
+                               "Use when generating a student summary or greeting, or when the student asks about tasks or to-do items. " +
                                "Default is incomplete tasks only — only pass 'completed' or 'all' when explicitly asked.",
                 "parameters", Map.of(
                     "type", "object",
@@ -254,6 +271,19 @@ public class AgentService {
             )
         );
 
-        return List.of(searchResourcesTool, getScheduleTool, getAssignmentsTool, getTasksTool);
+        Map<String, Object> getSummaryTool = Map.of(
+            "type", "function",
+            "function", Map.of(
+                "name", "get_summary",
+                "description", "Get a combined summary of the student's incomplete assignments and tasks, pre-grouped into Overdue, Due Today, and Upcoming sections. Use this for greetings and daily summaries.",
+                "parameters", Map.of(
+                    "type", "object",
+                    "properties", Map.of(),
+                    "required", List.of()
+                )
+            )
+        );
+
+        return List.of(searchResourcesTool, getScheduleTool, getAssignmentsTool, getTasksTool, getSummaryTool);
     }
 }
