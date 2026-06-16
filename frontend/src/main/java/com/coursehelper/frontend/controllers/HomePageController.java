@@ -109,7 +109,6 @@ public class HomePageController {
     }
 
     private void handleEdit(Course course){
-        //TODO: create edit popup or go to course page?
     }
 
     private void handleDelete(Course course){

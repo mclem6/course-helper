@@ -18,8 +18,6 @@
     -fx-text-fill: black;
 }
 
-/* SIDEBAT STYLE TODO: move to own css */
-
 /* Quote style */
 .quote-label{
     -fx-font-size: 20px;

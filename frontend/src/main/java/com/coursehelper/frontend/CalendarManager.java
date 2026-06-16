@@ -152,7 +152,6 @@ public class CalendarManager{
     }
 
     public void deleteEntry(Entry<String> entry){
-        //TODO: delete single calendar entry
 
     }
 

@@ -49,8 +49,7 @@
 //     private void createCalendars(List<Course> user_courses){
 
 //             //create calendar view
-//             //TODO: edit calendarView
-//             CalendarView calendarView = new CalendarView(); 
+//             CalendarView calendarView = new CalendarView();
 //             // calendarView.setPrefHeight(400);
 
     

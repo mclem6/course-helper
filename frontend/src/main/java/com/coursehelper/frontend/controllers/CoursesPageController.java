@@ -30,7 +30,6 @@
 //     public void addNewCourse(){
 
 //         //load and show couse form
-//         //TODO: should be a pop-up window 
 //         try {
 
 //             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/courseForm.fxml"));
