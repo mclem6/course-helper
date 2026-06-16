@@ -164,12 +164,7 @@ public class MainLayoutController {
     private void sendGreeting() {
         new Thread(() -> {
             try {
-                String response = agentApiService.chat(
-                    "Greet the student by name. Report only on incomplete assignments and tasks — never completed ones.\n" +
-                    "Only include a section if there are actual items to list:\n" +
-                    "**Overdue:** Incomplete assignments or tasks already past due (only if any exist).\n" +
-                    "**Due Soon:** Upcoming incomplete assignments or tasks (only if any exist). If the total across both sections exceeds 5 items, limit to items due within the next 3 days.\n" +
-                    "If there is nothing overdue and nothing due soon, skip both sections and just say there is nothing on their schedule. End with one short encouraging sentence.");
+                String response = agentApiService.chat("greeting");
                 Platform.runLater(() -> addMessage(response, false));
             } catch (Exception e) {
                 Platform.runLater(() -> addMessage("Hi! How can I help you today?", false));
