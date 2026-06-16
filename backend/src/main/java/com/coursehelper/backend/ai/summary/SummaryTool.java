@@ -114,7 +114,7 @@ public class SummaryTool {
             a.getTitle(),
             courseNames.get(a.getCourseId()),
             a.getDueDate().format(DATE_FORMAT),
-            a.getDueTime() != null ? " " + a.getDueTime() : "");
+            a.getDueTime() != null ? " at " + a.getDueTime() : "");
     }
 
     private String formatTask(Task t, Map<Long, String> courseNames) {
