@@ -141,7 +141,6 @@ public class AddAssignmentFormController {
 
         task.setOnFailed(e -> {
             Throwable error = task.getException();
-            System.out.println("Task failed: " + error.getMessage());
             error.printStackTrace();
         });
 

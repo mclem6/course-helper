@@ -85,8 +85,6 @@ public class DocumentsPageController {
                     } else {
                         setStatus("");
                         for (DocumentResponseDto doc : documents) {
-                             System.out.println("Doc id: " + doc.getId() + 
-                                " filename: " + doc.getFilename());
                             documentList.getChildren().add(buildDocumentRow(doc));
                         }
                     }

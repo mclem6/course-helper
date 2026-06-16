@@ -120,7 +120,6 @@ public class AgentService {
             // done, return the answer
             if ("stop".equals(finishReason)) {
                 String content = (String) assistantMessage.get("content");
-                System.out.println("[AGENT] final response=\n" + content);
                 return content;
             }
 
@@ -138,7 +137,6 @@ public class AgentService {
                     String argsJson = (String) function.get("arguments");
 
                     String result = executeTool(toolName, argsJson, userId);
-                    System.out.println("[AGENT] tool=" + toolName + " result=\n" + result);
 
                     messages.add(Map.of(
                         "role", "tool",

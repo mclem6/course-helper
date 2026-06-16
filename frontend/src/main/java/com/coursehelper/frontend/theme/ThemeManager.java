@@ -43,7 +43,7 @@ public class ThemeManager {
                 currentTheme = theme;
             }
         } catch (IOException e) {
-            System.out.println("Error loading local theme: " + e.getMessage());
+            // file may not exist on first run
         }
     }
 
@@ -56,7 +56,7 @@ public class ThemeManager {
             Files.write(Paths.get(LOCAL_THEME_FILE), theme.getBytes());
             currentTheme = theme;
         } catch (Exception e) {
-            System.out.println("Error saving local theme: " + e.getMessage());
+            // silently ignore — preference write failure is non-critical
         }
 
     }
@@ -106,7 +106,6 @@ public class ThemeManager {
             return ThemeManager.class.getResource(path).toExternalForm();
             
         } catch (Exception e) {
-            System.out.println("Stylesheet not found: " + stylesheetName);
             return null;
         }
     

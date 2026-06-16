@@ -36,8 +36,6 @@ public class IngestionService {
     }
 
     public int ingest(MultipartFile file, Long userId) throws IOException {
-        System.out.println("Starting ingestion for: " + file.getOriginalFilename());
-
          boolean exists = documentChunkRepository
         .existsByUserIdAndFilename(userId, file.getOriginalFilename());
     
@@ -48,14 +46,9 @@ public class IngestionService {
 
         // 1. extract text from PDF
         String text = pdfParser.extractText(file);
-        
-        System.out.println("Extracted text length: " + text.length());
-
 
         // 2. split into overlapping chunks
         List<String> chunks = textChunker.chunk(text);
-
-        System.out.println("Number of chunks: " + chunks.size());
 
         // 3. embed and save each chunk
         for (String chunkContent : chunks) {

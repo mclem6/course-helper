@@ -1,6 +1,8 @@
 # CourseHelper
 
-A full-stack Java desktop application that centralizes course resources, schedules, and tasks for students — with an AI assistant powered by a RAG pipeline and agentic tool-calling loop.
+A full-stack Java desktop application that centralizes course resources, schedules, assignments, and tasks for students — with an AI assistant powered by a RAG pipeline and agentic tool-calling loop.
+
+Developed by Maria Clement. Designed by Crystal Zelinske.
 
 ---
 
@@ -8,8 +10,8 @@ A full-stack Java desktop application that centralizes course resources, schedul
 
 | Light Mode | Dark Mode |
 |---|---|
-| ![Home Light](assests/home-light.png) | ![Home Dark](assests/home-dark.png) |
 | ![Login Light](assests/login-light.png) | ![Login Dark](assests/login-dark.png) |
+| ![Home Light](assests/home-light.png) | ![Home Dark](assests/home-dark.png) |
 
 **AI Chat**
 

@@ -30,7 +30,6 @@ public class SecurityConfig {
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        System.out.println("SecurityConfig loaded");
         return http.build();
     }
 }

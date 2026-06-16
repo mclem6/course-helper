@@ -102,7 +102,7 @@ public class TasksController {
                     UserStore.getInstance().getTasks().values().forEach(list -> list.remove(task));
                     Platform.runLater(() -> fadeAndRemove(item));
                 } catch (Exception ex) {
-                    System.out.println("Failed to delete task: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
             }).start();
         });
