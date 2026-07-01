@@ -159,6 +159,7 @@ public class SidebarController {
         }
 
         Label titleDate = new Label(assignment.getTitle() + " - " + dateDisplay);
+        titleDate.getStyleClass().add("theme-text");
 
         CheckBox checkBox = new CheckBox();
         checkBox.setOnAction(e -> {
