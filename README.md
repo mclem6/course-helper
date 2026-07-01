@@ -1,8 +1,6 @@
 # CourseHelper
 
-A full-stack Java desktop application that centralizes course resources, schedules, assignments, and tasks for students with an AI-powered assistant that can answer questions about uploaded documents and students' schedules. 
-
-Developed by Maria Clement. Designed by Crystal Zelinske.
+Students juggle courses, deadlines, and documents across a dozen tools. CourseHelper is a full-stack Java desktop application that centralizes it all, with an AI assistant that answers questions about their schedule and uploaded course materials.
 
 ---
 
@@ -29,13 +27,12 @@ Developed by Maria Clement. Designed by Crystal Zelinske.
 
 ## Features
 
-- JWT-secured authentication (register, login, logout)
-- Course management with color-coded calendar events
-- Assignment and task tracking with due date classification
-- CalendarFX integration with recurring event support
-- PDF document upload with semantic search via pgvector
-- AI assistant with agentic tool-calling loop (GPT-4o)
-- Light / dark theme with live toggle and persistent preference
+- Secure login and registration
+- Course, assignment, and task management
+- Interactive calendar with color-coded, recurring events
+- PDF upload with semantic document search
+- AI assistant with schedule and document awareness
+- Light / dark theme with live toggle
 
 ---
 
@@ -55,7 +52,7 @@ Developed by Maria Clement. Designed by Crystal Zelinske.
 
 ### Backend — Feature-based Modularization
 
-The backend is organized by domain, each as a self-contained package:
+I went with a modular backend — each domain is self-contained to make a future microservices split straightforward.
 
 ```
 backend/
@@ -71,21 +68,21 @@ backend/
     └── exceptions/    # Global exception handler
 ```
 
-Each domain exposes a REST controller, delegates to a service, and uses a Spring Data JPA repository. No domain leaks into another's layer.
+In each domain I enforced separation of concerns — controllers handle requests, services own the logic, and repositories talk to the database.
 
 ### Exception Handling
 
-A single `GlobalExceptionHandler` maps domain exceptions (`ResourceNotFoundException`, `UsernameAlreadyExistsException`, `InvalidCredentialsException`, `FileProcessingException`, `AIServiceException`) to consistent HTTP responses. Controllers throw; the handler catches.
+I used `@RestControllerAdvice` to centralize error handling — controllers just throw domain exceptions, and the global handler maps them to consistent HTTP responses.
 
 ### RAG Pipeline
 
-1. User uploads a PDF via `DocumentController`
-2. `IngestionService` extracts text (Apache PDFBox), splits into overlapping chunks (`TextChunker`), embeds each chunk via OpenAI (`EmbeddingService`), and stores vectors in PostgreSQL with pgvector
-3. On query, `ResourceRetrievalTool` runs a cosine similarity search and returns the top-matching chunks
+1. User uploads a PDF
+2. The backend extracts the text, splits it into overlapping chunks, embeds each chunk via OpenAI, and stores the vectors in PostgreSQL with pgvector
+3. When the agent detects the user is asking about their documents, it runs a cosine similarity search and pulls the most relevant chunks into context
 
 ### AI Agentic Loop
 
-`AgentService` runs a multi-turn loop with GPT-4o and five tools:
+The AI assistant runs an agentic loop with GPT-4o — it keeps calling tools until it has enough context to answer, then responds. I defined five tools that give the model access to the user's data:
 
 | Tool | Purpose |
 |---|---|
@@ -95,11 +92,11 @@ A single `GlobalExceptionHandler` maps domain exceptions (`ResourceNotFoundExcep
 | `get_tasks` | Fetch tasks filtered by completion |
 | `get_summary` | Combined overdue / due-today / upcoming summary |
 
-The loop continues until GPT-4o returns `finish_reason: stop`. Tools do all data classification server-side — the model only formats and presents.
+All data fetching and classification happens server-side — the model only formats and presents the result.
 
 ### Frontend — Theme System
 
-`ThemeManager` maintains a `LightMode/` and `DarkMode/` stylesheet folder. Calling `ThemeManager.setTheme(root, theme)` swaps all stylesheets on the root node; child pages inherit via CSS cascade. Preference is persisted to `~/.coursehelper/theme.txt`.
+The theme system uses CSS color tokens defined in a single file per theme. Toggling swaps that one file at the root and everything updates — pages, popups, and the access screen. Preference persists across sessions.
 
 ---
 
@@ -157,4 +154,8 @@ course-helper/
 └── assests/    # Screenshots
 ```
 
-The two modules are independent Maven projects. The frontend communicates with the backend at `http://localhost:8080/api`.
+The frontend and backend are independent Maven projects — run both simultaneously, the frontend calls the backend at `http://localhost:8080/api`.
+
+---
+
+Developed by Maria Clement. Designed by Crystal Zelinske.
