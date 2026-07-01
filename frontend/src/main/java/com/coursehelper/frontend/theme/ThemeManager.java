@@ -89,6 +89,14 @@ public class ThemeManager {
 
     
 
+    public static void setPopupTheme(Parent parent) {
+        parent.getStylesheets().clear();
+        String path = getThemeStyleSheet(currentTheme, "form.css");
+        if (path != null) {
+            parent.getStylesheets().add(path);
+        }
+    }
+
     public static void setAccessScreenTheme(Parent parent, String theme) {
         currentTheme = theme;
         parent.getStylesheets().clear();

@@ -131,7 +131,6 @@ public class AccessScreenController {
     public void onToggleTheme(){
 
         String newTheme = !ThemeManager.isDarkMode() ? "DarkMode" : "LightMode";
-        ThemeManager.setTheme(root, newTheme);
 
         if(ThemeManager.isDarkMode()){
             transition.setToX(12);
