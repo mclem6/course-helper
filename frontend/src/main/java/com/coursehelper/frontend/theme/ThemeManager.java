@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Parent;
 
 
 public class ThemeManager {
- 
+
     private static final String LOCAL_THEME_FILE = System.getProperty("user.home") + "/.coursehelper/theme.txt";
-    private static String currentTheme = "LightMode"; 
+    private static final StringProperty currentTheme = new SimpleStringProperty("LightMode");
     private static Long currentUserId;
 
     //list of all stylesheets
@@ -40,7 +42,7 @@ public class ThemeManager {
         try {
             if (Files.exists(Paths.get(LOCAL_THEME_FILE))) {
                 String theme = new String(Files.readAllBytes(Paths.get(LOCAL_THEME_FILE))).trim();
-                currentTheme = theme;
+                currentTheme.set(theme);
             }
         } catch (IOException e) {
             // file may not exist on first run
@@ -54,7 +56,7 @@ public class ThemeManager {
             Files.createDirectories(Paths.get(System.getProperty("user.home"), ".coursehelper"));
             //write to file
             Files.write(Paths.get(LOCAL_THEME_FILE), theme.getBytes());
-            currentTheme = theme;
+            currentTheme.set(theme);
         } catch (Exception e) {
             // silently ignore — preference write failure is non-critical
         }
@@ -74,10 +76,10 @@ public class ThemeManager {
             return;
         }
         
-        currentTheme = theme;
+        currentTheme.set(theme);
         parent.getStylesheets().clear();
 
-        //get each sheet's path and set new theme 
+        //get each sheet's path and set new theme
         for (String stylesheet : STYLESHEETS) {
             String path = getThemeStyleSheet(theme, stylesheet);
             if (path != null) {
@@ -91,14 +93,14 @@ public class ThemeManager {
 
     public static void setPopupTheme(Parent parent) {
         parent.getStylesheets().clear();
-        String path = getThemeStyleSheet(currentTheme, "form.css");
+        String path = getThemeStyleSheet(currentTheme.get(), "form.css");
         if (path != null) {
             parent.getStylesheets().add(path);
         }
     }
 
     public static void setAccessScreenTheme(Parent parent, String theme) {
-        currentTheme = theme;
+        currentTheme.set(theme);
         parent.getStylesheets().clear();
         String path = getThemeStyleSheet(theme, "accessPage.css");
         if (path != null) {
@@ -121,22 +123,26 @@ public class ThemeManager {
 
     //toggle between light/dark
     public static String toggleTheme (Parent parent){
-        String newTheme = currentTheme.equals("LightMode") ? "DarkMode" : "LightMode";
+        String newTheme = currentTheme.get().equals("LightMode") ? "DarkMode" : "LightMode";
         setTheme(parent, newTheme);
         return newTheme;
     }
 
     //getter for currentTheme
     public static String getCurrentTheme() {
+        return currentTheme.get();
+    }
+
+    public static StringProperty currentThemeProperty() {
         return currentTheme;
     }
 
     public static void setCurrentTheme(String newTheme){
-        currentTheme = newTheme;
+        currentTheme.set(newTheme);
     }
 
     public static boolean isDarkMode(){
-        return currentTheme.equals("DarkMode");
+        return currentTheme.get().equals("DarkMode");
     }
 
 

@@ -156,6 +156,7 @@ public class HomePageController {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/courseForm.fxml"));
             Parent formNode = loader.load();
             ThemeManager.setPopupTheme(formNode);
+            ThemeManager.currentThemeProperty().addListener((obs, oldTheme, newTheme) -> ThemeManager.setPopupTheme(formNode));
 
             // get access to form's controller
             AddCourseFormController addCourseFormController = loader.getController();
@@ -219,6 +220,7 @@ public class HomePageController {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/addEventPopup.fxml"));
             Parent popupNode = loader.load();
             ThemeManager.setPopupTheme(popupNode);
+            ThemeManager.currentThemeProperty().addListener((obs, oldTheme, newTheme) -> ThemeManager.setPopupTheme(popupNode));
 
             //get controller and pass homepage controller
             AddEventPopupController addEventPopupController = loader.getController();
@@ -269,6 +271,7 @@ public class HomePageController {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/FXML/taskForm.fxml"));
             Parent formNode = loader.load();
             ThemeManager.setPopupTheme(formNode);
+            ThemeManager.currentThemeProperty().addListener((obs, oldTheme, newTheme) -> ThemeManager.setPopupTheme(formNode));
 
             // get access to task's controller
             AddTaskFormController addTaskFormController = loader.getController();
