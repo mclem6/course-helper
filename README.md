@@ -27,22 +27,22 @@ Students juggle courses, deadlines, and documents across a dozen tools. CourseHe
 
 ## Features
 
-**Secure login and registration**
+**Secure login and registration**  
 Accounts use JWT authentication — credentials are never stored client-side and sessions restore automatically on login.
 
-**Course, assignment, and task management**
+**Course, assignment, and task management**  
 Add courses for the semester, track assignments with due dates and completion status, and manage personal tasks alongside coursework — all in one place.
 
-**Course calendar with color-coded events and recurring schedule support**
+**Course calendar with color-coded events and recurring schedule support**  
 Each course gets its own color across the day and week views. Recurring events repeat automatically so you only set them up once.
 
-**PDF upload with semantic document search**
+**PDF upload with semantic document search**  
 Upload syllabi or notes and they're indexed for meaning, not just keywords. The AI can retrieve relevant sections when you ask questions about your materials.
 
-**AI assistant with access to your schedule, assignments, and uploaded documents**
+**AI assistant with access to your schedule, assignments, and uploaded documents**  
 Ask what's due this week, when your next class is, or what a document covers. The assistant queries your actual data before responding.
 
-**Light / dark theme with live toggle**
+**Light / dark theme with live toggle**  
 Switch themes from anywhere in the app. The change applies instantly across every page and open panel.
 
 ---
