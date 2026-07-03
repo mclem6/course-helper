@@ -32,11 +32,13 @@ public class NavigationController {
         setWelcomeMessage(UserSession.getUser().getUsername());
         loadProfilePicture();
 
-        userStore.profilePictureProperty().addListener((obs, oldBytes, newBytes) ->
-            profileImageView.setImage(
-                AvatarUtils.getProfileImage(newBytes, UserSession.getUser().getUsername())
-            )
-        );
+        userStore.profilePictureProperty().addListener((obs, oldBytes, newBytes) -> {
+            if (UserSession.getUser() != null) {
+                profileImageView.setImage(
+                    AvatarUtils.getProfileImage(newBytes, UserSession.getUser().getUsername())
+                );
+            }
+        });
     }
 
     public void setActivePage(String fxmlPath) {
@@ -99,8 +101,8 @@ public class NavigationController {
 
     @FXML
     public void logout() {
-        UserSession.clear();
         UserStore.getInstance().clear();
+        UserSession.clear();
         try {
             Parent accessRoot = App.loadFXML("accessScreen");
             ThemeManager.setAccessScreenTheme(accessRoot, ThemeManager.getCurrentTheme());

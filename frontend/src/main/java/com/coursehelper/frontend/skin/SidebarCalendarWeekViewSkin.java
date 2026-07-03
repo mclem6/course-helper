@@ -43,7 +43,7 @@ public class SidebarCalendarWeekViewSkin
     protected void removeHourLines() {
 
         Runnable removeHourLines = () -> {
-            getSkinnable().getStylesheets().add(getClass().getResource("/stylesheets/LightMode/sideCalendar.css").toExternalForm());
+            getSkinnable().getStylesheets().add(getClass().getResource("/stylesheets/sideCalendar.css").toExternalForm());
 
         };
         Platform.runLater(removeHourLines);
