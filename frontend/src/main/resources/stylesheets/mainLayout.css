@@ -1,0 +1,239 @@
+/* Footer */
+.footer-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-text;
+    -fx-background-color: -color-surface;
+    -fx-padding: 4 0 4 0;
+}
+
+/* Root backgrounds */
+.root {
+    -fx-background-color: -color-bg;
+}
+
+.course-root {
+    -fx-background-color: -color-bg;
+}
+
+/* Text */
+.theme-text {
+    -fx-fill: -color-text;
+    -fx-text-fill: -color-text;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+}
+
+.form-label {
+    -fx-text-fill: -color-text;
+}
+
+/* Quote */
+.quote-label {
+    -fx-font-size: 20px;
+}
+
+.author-label {
+    -fx-font-size: 12px;
+}
+
+/* Due dates */
+.past-due-title {
+    -fx-text-fill: #c0392b;
+}
+
+.empty-state-label {
+    -fx-text-fill: #3fae03;
+    -fx-font-size: 14;
+}
+
+.due-soon-vbox {
+    -fx-padding: 0 0 0 20;
+}
+
+/* Layout panes */
+.vbox {
+    -fx-padding: 30 10 10 10;
+    -fx-alignment: top-center;
+}
+
+.left-pane {
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+}
+
+.middle-pane {
+    -fx-alignment: none;
+    -fx-border-color: transparent -color-border transparent -color-border;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-min-width: 500px;
+}
+
+.right-pane {
+    -fx-min-width: 350px;
+    -fx-max-width: 400px;
+}
+
+/* Scroll & flow */
+.main-scroll {
+    -fx-background-color: transparent;
+}
+
+.main-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.scrollPane {
+    -fx-background-color: -color-bg;
+}
+
+.scrollPane .viewport {
+    -fx-background-color: -color-bg;
+}
+
+.flowPane {
+    -fx-background-color: -color-bg;
+}
+
+/* Course tiles */
+.course-container-hbox {
+    -fx-min-width: 150px;
+    -fx-max-width: 150px;
+    -fx-pref-height: 150px;
+    -fx-max-height: 150px;
+}
+
+/* Buttons */
+.round-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-pref-width: 20px;
+    -fx-pref-height: 20px;
+    -fx-font-size: 9px;
+}
+
+/* Theme toggle */
+.toggle-track {
+    -fx-background-color: -color-toggle-track;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-border-color: -color-toggle-knob;
+    -fx-min-width: 50;
+    -fx-min-height: 22;
+    -fx-max-width: 50;
+    -fx-max-height: 22;
+}
+
+.toggle-thumb {
+    -fx-fill: -color-toggle-knob;
+}
+
+/* Calendar */
+.day-view {
+    -fx-background-color: transparent;
+}
+
+.day-view.weekend-day {
+    -fx-background-color: transparent;
+}
+
+.all-day-view > .container > .day-region {
+    -fx-background-color: transparent;
+}
+
+/* Tasks */
+.due-date-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: -color-text-muted;
+}
+
+.task-container {
+    -fx-padding: 20 0 0 10;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.task-title {
+    -fx-fill: -color-text;
+}
+
+/* Chat panel */
+.chat-toggle-btn {
+    -fx-background-color: transparent;
+}
+
+.chat-icon {
+    -fx-fill: #4A90D9;
+}
+
+.chat-panel {
+    -fx-background-color: -color-surface;
+    -fx-border-color: #d5d3d3;
+    -fx-border-width: .3;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, -4, 2);
+}
+
+.chat-header {
+    -fx-border-color: -color-border;
+    -fx-border-width: 0 0 .1 0;
+    -fx-padding: 15 10 10 10;
+}
+
+.chat-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text;
+    -fx-padding: 5 0 0 0;
+}
+
+.chat-close-btn {
+    -fx-background-color: transparent;
+}
+
+.arrow-glyph {
+    -fx-fill: -color-text;
+}
+
+.chat-scroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.chat-input {
+    -fx-background-radius: 4;
+    -fx-border-radius: 8;
+    -fx-border-color: #f4f4f4;
+    -fx-border-width: .02;
+    -fx-padding: 6;
+}
+
+.chat-input-row {
+    -fx-padding: 15;
+}
+
+.chat-send-btn {
+    -fx-background-color: #4A90D9;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 6 12;
+}
+
+.user-bubble {
+    -fx-background-color: #c0edff;
+    -fx-padding: 6;
+    -fx-background-radius: 8;
+    -fx-text-fill: #000000;
+}
+
+.agent-bubble {
+    -fx-padding: 6;
+    -fx-text-fill: -color-text;
+}

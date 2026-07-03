@@ -15,29 +15,22 @@ public class ThemeManager {
     private static final StringProperty currentTheme = new SimpleStringProperty("LightMode");
     private static Long currentUserId;
 
-    //list of all stylesheets
-    private static final String[] STYLESHEETS = {
-        "homePage.css",
-        "calendarPage.css",
-        "coursesPage.css",
+    private static final String[] SHARED_STYLESHEETS = {
+        "mainLayout.css",
         "navigation.css",
-        "tasks.css",
-        "form.css",
-        "settingsPage.css"
+        "settingsPage.css",
+        "sideCalendar.css"
     };
 
-    //for access page theme control 
     public static void initializeGuest() {
         currentUserId = (long) -1;
         loadLocalThemePreference();
-
     }
 
-    public static void initialize(Long userId){
+    public static void initialize(Long userId) {
         currentUserId = userId;
     }
 
-    // Load from local file for access screen
     public static void loadLocalThemePreference() {
         try {
             if (Files.exists(Paths.get(LOCAL_THEME_FILE))) {
@@ -49,86 +42,82 @@ public class ThemeManager {
         }
     }
 
-    //Save to local file preference in access screen
-    public static void saveLocalThemePreference(String theme){
+    public static void saveLocalThemePreference(String theme) {
         try {
-            //create directory if doesnt exist
             Files.createDirectories(Paths.get(System.getProperty("user.home"), ".coursehelper"));
-            //write to file
             Files.write(Paths.get(LOCAL_THEME_FILE), theme.getBytes());
             currentTheme.set(theme);
         } catch (Exception e) {
             // silently ignore — preference write failure is non-critical
         }
-
     }
 
-
-    //save user's preference
-    public static void saveThemePreference(String theme){
+    public static void saveThemePreference(String theme) {
         saveLocalThemePreference(theme);
     }
 
-    //set theme on all sheets  
     public static void setTheme(Parent parent, String theme) {
-
-        if (parent == null || theme == null) {
-            return;
-        }
-        
+        if (parent == null || theme == null) return;
         currentTheme.set(theme);
         parent.getStylesheets().clear();
 
-        //get each sheet's path and set new theme
-        for (String stylesheet : STYLESHEETS) {
-            String path = getThemeStyleSheet(theme, stylesheet);
-            if (path != null) {
-                parent.getStylesheets().add(path);
-            }
+        String themePath = getSharedStyleSheet(themeFileName(theme));
+        if (themePath != null) parent.getStylesheets().add(themePath);
+
+        for (String ss : SHARED_STYLESHEETS) {
+            String path = getSharedStyleSheet(ss);
+            if (path != null) parent.getStylesheets().add(path);
         }
-
     }
-
-    
 
     public static void setPopupTheme(Parent parent) {
         parent.getStylesheets().clear();
-        String path = getThemeStyleSheet(currentTheme.get(), "form.css");
-        if (path != null) {
-            parent.getStylesheets().add(path);
+
+        // Popup content has no parent in the main scene, so add the root style class
+        // directly so JavaFX can resolve the color tokens defined on .root
+        if (!parent.getStyleClass().contains("root")) {
+            parent.getStyleClass().add("root");
         }
+
+        String themePath = getSharedStyleSheet(themeFileName(currentTheme.get()));
+        if (themePath != null) parent.getStylesheets().add(themePath);
+
+        String formPath = getSharedStyleSheet("form.css");
+        if (formPath != null) parent.getStylesheets().add(formPath);
     }
 
     public static void setAccessScreenTheme(Parent parent, String theme) {
         currentTheme.set(theme);
         parent.getStylesheets().clear();
-        String path = getThemeStyleSheet(theme, "accessPage.css");
-        if (path != null) {
-            parent.getStylesheets().add(path);
-        }
+
+        String themePath = getSharedStyleSheet(themeFileName(theme));
+        if (themePath != null) parent.getStylesheets().add(themePath);
+
+        String accessPath = getSharedStyleSheet("accessPage.css");
+        if (accessPath != null) parent.getStylesheets().add(accessPath);
+
+        parent.getStyleClass().removeIf(c -> c.equals("access-bg-light") || c.equals("access-bg-dark"));
+        parent.getStyleClass().add(theme.equals("LightMode") ? "access-bg-light" : "access-bg-dark");
     }
 
-
-    //return css path for stylesheet
-    public static String getThemeStyleSheet(String theme, String stylesheetName){
+    private static String getSharedStyleSheet(String name) {
         try {
-            String path = "/stylesheets/" + theme + "/" + stylesheetName;
-            return ThemeManager.class.getResource(path).toExternalForm();
-            
+            return ThemeManager.class.getResource("/stylesheets/" + name).toExternalForm();
         } catch (Exception e) {
             return null;
         }
-    
     }
 
-    //toggle between light/dark
-    public static String toggleTheme (Parent parent){
+    private static String themeFileName(String theme) {
+        return theme.equals("LightMode") ? "theme-light.css" : "theme-dark.css";
+    }
+
+    public static String toggleTheme(Parent parent) {
         String newTheme = currentTheme.get().equals("LightMode") ? "DarkMode" : "LightMode";
         setTheme(parent, newTheme);
         return newTheme;
     }
 
-    //getter for currentTheme
     public static String getCurrentTheme() {
         return currentTheme.get();
     }
@@ -137,16 +126,11 @@ public class ThemeManager {
         return currentTheme;
     }
 
-    public static void setCurrentTheme(String newTheme){
+    public static void setCurrentTheme(String newTheme) {
         currentTheme.set(newTheme);
     }
 
-    public static boolean isDarkMode(){
+    public static boolean isDarkMode() {
         return currentTheme.get().equals("DarkMode");
     }
-
-
- 
 }
-
-

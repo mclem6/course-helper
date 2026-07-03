@@ -1,0 +1,12 @@
+.root {
+    -color-bg: #1C1C1E;
+    -color-surface: #1E2028;
+    -color-text: white;
+    -color-border: white;
+    -color-toggle-track: #1C1C1E;
+    -color-toggle-knob: white;
+    -color-nav-pressed: rgba(255, 255, 255, 0.22);
+    -color-error: #e05555;
+    -color-access-bg: #000000;
+    -color-text-muted: #aaaaaa;
+}

@@ -1,0 +1,37 @@
+.root-container {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 10;
+    -fx-border-width: .5;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 10;
+    -fx-padding: 40;
+}
+
+.form-container {
+    -fx-background-color: -color-surface;
+}
+
+.add-btn {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.cancel-btn {
+    -fx-background-color: #F44336;
+    -fx-text-fill: white;
+}
+
+.section-title {
+    -fx-text-fill: -color-text;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.form-label {
+    -fx-text-fill: -color-text;
+}
+
+.error-label {
+    -fx-text-fill: -color-error;
+    -fx-font-size: 12px;
+}

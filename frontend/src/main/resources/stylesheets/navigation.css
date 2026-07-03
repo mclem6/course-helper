@@ -1,14 +1,14 @@
 .nav-root * {
-    -fx-text-fill: black;
+    -fx-text-fill: -color-text;
 }
 
 .welcome {
     -fx-font-size: 16;
-    -fx-fill: black;
+    -fx-fill: -color-text;
 }
 
 .nav-glyph {
-    -fx-fill: black;
+    -fx-fill: -color-text;
 }
 
 .hyperlink:focused {
@@ -17,8 +17,8 @@
 
 .nav-btn {
     -fx-background-color: transparent;
-    -fx-border-color: black;
-    -fx-border-width: 0.2;
+    -fx-border-color: -color-border;
+    -fx-border-width: 0.4;
     -fx-background-radius: 50%;
     -fx-border-radius: 50%;
     -fx-min-width: 50px;
@@ -36,7 +36,7 @@
 }
 
 .nav-btn:pressed {
-    -fx-background-color: rgba(0, 0, 0, 0.15);
+    -fx-background-color: -color-nav-pressed;
 }
 
 .nav-btn-active {

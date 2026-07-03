@@ -1,13 +1,20 @@
-
-
-.settings-root{
-    /* -fx-padding: 20; */
-}
-
-.component-hbox{
+.component-hbox {
     -fx-padding: 20;
     -fx-border-width: 0 0 .2 0;
-    -fx-border-color: black;
+    -fx-border-color: -color-border;
+}
+
+/* Force readable text in native input controls regardless of theme */
+.text-input {
+    -fx-text-fill: black;
+}
+
+.date-picker-display-node {
+    -fx-text-fill: black;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: black;
 }
 
 .edit-btn {
@@ -49,4 +56,3 @@
 .cancel-edit-btn:hover {
     -fx-background-color: #e53935;
 }
-
