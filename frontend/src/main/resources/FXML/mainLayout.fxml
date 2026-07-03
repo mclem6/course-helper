@@ -61,7 +61,7 @@
                 <Label text="© Maria Clement"
                        maxWidth="Infinity"
                        alignment="CENTER"
-                       style="-fx-font-size: 11px; -fx-text-fill: white; -fx-background-color: #2C2C2E; -fx-padding: 4 0 4 0;"/>
+                       styleClass="footer-label"/>
             </bottom>
 
         </BorderPane>

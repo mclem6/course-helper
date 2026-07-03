@@ -60,7 +60,7 @@ public class TasksController {
 
         Label dueDate = new Label(task.getDueDate() != null
             ? task.getDueDate().format(DATE_FMT) : "");
-        dueDate.setStyle("-fx-font-size: 10px;");
+        dueDate.getStyleClass().add("due-date-label");
 
         String courseColor = UserStore.getInstance().getCourses().stream()
             .filter(c -> c.getId().equals(task.getCourseId()))

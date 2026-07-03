@@ -42,7 +42,7 @@
 
     <Region VBox.vgrow="ALWAYS"/>
 
-    <Hyperlink onAction="#logout" styleClass="nav-btn-logout">
+    <Hyperlink onAction="#logout" styleClass="nav-btn nav-btn-logout">
         <graphic>
             <FontAwesomeIconView glyphName="SIGN_OUT" size="22" styleClass="nav-glyph"/>
         </graphic>
