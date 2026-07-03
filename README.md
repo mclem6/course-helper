@@ -85,12 +85,6 @@ In each domain I enforced separation of concerns — controllers handle requests
 
 I used `@RestControllerAdvice` to centralize error handling — controllers just throw domain exceptions, and the global handler maps them to consistent HTTP responses.
 
-### RAG Pipeline
-
-1. User uploads a PDF
-2. The backend extracts the text, splits it into overlapping chunks, embeds each chunk via OpenAI, and stores the vectors in PostgreSQL with pgvector
-3. When the agent detects the user is asking about their documents, it runs a cosine similarity search and pulls the most relevant chunks into context
-
 ### AI Agentic Loop
 
 The AI assistant runs an agentic loop with GPT-4o — it keeps calling tools until it has enough context to answer, then responds. I defined five tools that give the model access to the user's data:
@@ -104,6 +98,12 @@ The AI assistant runs an agentic loop with GPT-4o — it keeps calling tools unt
 | `get_summary` | Combined overdue / due-today / upcoming summary |
 
 All data fetching and classification happens server-side — the model only formats and presents the result.
+
+### RAG Pipeline
+
+1. User uploads a PDF
+2. The backend extracts the text, splits it into overlapping chunks, embeds each chunk via OpenAI, and stores the vectors in PostgreSQL with pgvector
+3. When the agent detects the user is asking about their documents, it runs a cosine similarity search and pulls the most relevant chunks into context
 
 ### Frontend — Theme System
 
