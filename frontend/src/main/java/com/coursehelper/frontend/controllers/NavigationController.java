@@ -6,11 +6,9 @@ import com.coursehelper.frontend.UserStore;
 import com.coursehelper.frontend.theme.ThemeManager;
 import com.coursehelper.frontend.util.AvatarUtils;
 
-import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
-import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -105,9 +103,8 @@ public class NavigationController {
         UserStore.getInstance().clear();
         try {
             Parent accessRoot = App.loadFXML("accessScreen");
-            String css = ThemeManager.getThemeStyleSheet(ThemeManager.getCurrentTheme(), "accessPage.css");
+            ThemeManager.setAccessScreenTheme(accessRoot, ThemeManager.getCurrentTheme());
             Scene scene = new Scene(accessRoot, 800, 555);
-            if (css != null) scene.getStylesheets().add(css);
             App.primaryStage.setScene(scene);
             App.primaryStage.setWidth(800);
             App.primaryStage.setHeight(555);

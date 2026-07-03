@@ -20,13 +20,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        //load access screen
         primaryStage = stage;
         ThemeManager.initializeGuest();
-        scene = new Scene(loadFXML("accessScreen"), 800, 555);
-        
-        
-        scene.getStylesheets().add(getClass().getResource("/stylesheets/" + ThemeManager.getCurrentTheme() + "/accessPage.css").toExternalForm());
+
+        Parent accessRoot = loadFXML("accessScreen");
+        ThemeManager.setAccessScreenTheme(accessRoot, ThemeManager.getCurrentTheme());
+
+        scene = new Scene(accessRoot, 800, 555);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

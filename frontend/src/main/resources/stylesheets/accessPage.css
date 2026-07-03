@@ -1,0 +1,91 @@
+@font-face {
+    -fx-font-family: "Jost Light";
+    src: url("/stylesheets/fonts/Jost-Light.ttf");
+}
+
+.root {
+    -fx-background-color: -color-access-bg;
+}
+
+.access-bg-light {
+    -fx-background-image: url("/images/accessScreen-light-mode.png");
+    -fx-background-size: 314px 555px;
+    -fx-background-repeat: no-repeat;
+}
+
+.access-bg-dark {
+    -fx-background-image: url("/images/accessScreen-dark-mode.png");
+    -fx-background-size: 314px 555px;
+    -fx-background-repeat: no-repeat;
+}
+
+.app-name {
+    -fx-font-size: 30px;
+    -fx-font-family: "Jost Light";
+    -fx-text-fill: -color-text;
+    -fx-display: flex;
+    -fx-width: 300px;
+    -fx-height: 50px;
+    -fx-flex-direction: column;
+    -fx-justify-content: center;
+}
+
+.login-button {
+    -fx-pref-width: 147px;
+    -fx-pref-height: 35px;
+    -fx-background-color: #FFB8B9;
+    -fx-background-radius: 15px;
+    -fx-text-fill: white;
+}
+
+.access-container {
+    -fx-padding: 20 20 20 20;
+    -fx-pref-width: 250px;
+    -fx-max-height: 300px;
+}
+
+.un-pw-text {
+    -fx-padding: 13px 0 0 10px;
+    -fx-text-fill: -color-text;
+}
+
+.text-field {
+    -fx-padding: 3px 0 3px 9px;
+    -fx-pref-width: 250;
+    -fx-pref-height: 35;
+    -fx-background-radius: 12;
+    -fx-border: 1px 1px 1px 1px solid #E6E6E6;
+    -fx-background: #FFF;
+}
+
+.login-signup-btns {
+    -fx-background-color: transparent;
+    -fx-pref-width: 75;
+    -fx-pref-height: 25;
+    -fx-background-radius: 8;
+    -fx-font-size: 12;
+    -fx-text-fill: -color-text;
+}
+
+.login-signup-btns:selected {
+    -fx-background-color: #ABAAFF;
+}
+
+.toggle-track {
+    -fx-background-color: -color-toggle-track;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-border-color: -color-toggle-knob;
+    -fx-min-width: 50;
+    -fx-min-height: 22;
+    -fx-max-width: 50;
+    -fx-max-height: 22;
+}
+
+.toggle-thumb {
+    -fx-fill: -color-toggle-knob;
+}
+
+.navigation-pane {
+    -fx-text-fill: -color-text;
+}
