@@ -33,10 +33,6 @@ public class App extends Application {
     
     }
 
-    //sets the scene, pass root result of loadFMXL which returns root
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
 
     public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/FXML/" + fxml + ".fxml"));
