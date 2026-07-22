@@ -21,12 +21,17 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build and test
-        run: ./mvnw --batch-mode clean verify
+      - name: Build and test backend
+        run: mvn --batch-mode -f backend/pom.xml clean verify
+
+      - name: Build and test frontend
+        run: mvn --batch-mode -f frontend/pom.xml clean verify
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: surefire-reports
-          path: target/surefire-reports/
+          path: 
+            backend/target/surefire-reports/
+            frontend/target/surefire-reports/
