@@ -2,6 +2,9 @@
 
 Students juggle courses, deadlines, and documents across a dozen tools. CourseHelper is a full-stack Java desktop application that centralizes it all, with an AI assistant that answers questions about their schedule and uploaded course materials.
 
+
+![CI](https://github.com/mclem6/course-helper/actions/workflows/ci.yml/badge.svg)
+
 ---
 
 ## Screenshots
