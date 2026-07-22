@@ -76,10 +76,8 @@ jobs:
       # 4. Run all tests with headless JavaFX mode
       - name: Run tests
         run: |
-          mvn clean test \git push origin
-            -Dglass.platform=Monocle \
-            -Dmonocle.platform=Headless \
-            -Dprism.order=sw
+          mvn --batch-mode -f backend/pom.xml clean test
+          mvn --batch-mode -f frontend/pom.xml clean test -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw
         env:
           DISPLAY: ':99'
 
