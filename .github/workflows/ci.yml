@@ -91,4 +91,6 @@ jobs:
 
       # 6. (Optional) Build the full JAR to verify compilation
       - name: Build JAR
-        run: mvn package -DskipTests
+        run: |
+          mvn --batch-mode -f backend/pom.xml package -DskipTests
+          mvn --batch-mode -f frontend/pom.xml package -DskipTests
