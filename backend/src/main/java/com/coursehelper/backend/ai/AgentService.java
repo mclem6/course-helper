@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+
+import com.coursehelper.backend.ai.memory.ChatTurn;            
+import com.coursehelper.backend.ai.memory.ConversationMemory; 
+
 @Service
 public class AgentService {
 
@@ -28,13 +32,16 @@ public class AgentService {
     private final SettingsRepository settingsRepository;
     private final ObjectMapper mapper;
 
+    private final ConversationMemory memory;  
+
     public AgentService(LLMClient llmClient,
                         ResourceRetrievalTool resourceRetrievalTool,
                         ScheduleTool scheduleTool,
                         AssignmentTool assignmentTool,
                         TaskTool taskTool,
                         SummaryTool summaryTool,
-                        SettingsRepository settingsRepository) {
+                        SettingsRepository settingsRepository, 
+                        ConversationMemory memory) {
         this.llmClient = llmClient;
         this.resourceRetrievalTool = resourceRetrievalTool;
         this.scheduleTool = scheduleTool;
@@ -43,6 +50,7 @@ public class AgentService {
         this.summaryTool = summaryTool;
         this.settingsRepository = settingsRepository;
         this.mapper = new ObjectMapper();
+        this.memory = memory;  
     }
 
     private static final String GREETING_PROMPT =
@@ -51,9 +59,17 @@ public class AgentService {
         "Present the three sections exactly as returned — Overdue, Due Today, Upcoming.\n" +
         "End with one short encouraging sentence.";
 
+
     public String answerQuery(String userQuestion, Long userId, String username) {
+        return answerQuery(userQuestion, userId, username, null);
+    }
+
+    public String answerQuery(String userQuestion, Long userId, String username, String conversationId) {
 
         String resolvedQuestion = "greeting".equals(userQuestion) ? GREETING_PROMPT : userQuestion;
+
+        boolean isGreeting = "greeting".equals(userQuestion);
+        boolean useMemory = conversationId != null && !isGreeting;
 
         // get current date and time
         String today = LocalDateTime.now().format(
@@ -73,21 +89,14 @@ public class AgentService {
         List<Map<String, Object>> messages = new ArrayList<>();
         messages.add(Map.of(
             "role", "system",
-            "content", "You are a friendly and helpful course assistant for students. " +
-                       "The student's name is " + username + ". " +
-                       "Today is " + today + ". Current time is " + time + ". " +
-                       semesterContext + " " +
-                       "Use the available tools to answer questions about their study materials, class schedule, assignments, and tasks. " +
-                       "When asked about schedule, use get_schedule to get all courses then filter by the day the student is asking about. " +
-                       "When listing schedule always list in time order. " +
-                       "When summarizing assignments or tasks, the tools return items pre-grouped under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. Present these groups as-is under the same section names. Only include a section if the tool returned items in it. " +
-                       "Avoid special formatting like bold and italics. " +
-                       "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
-                       "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
-                       "When answering from search_resources results, always state which document the information came from (e.g. 'According to your syllabus.pdf, ...'). " +
-                       "You may ONLY answer questions related to the student's schedule, assignments, tasks, and uploaded course materials. " +
-                       "If asked about anything outside these topics, politely decline and explain you can only help with their coursework and schedule."
+            "content", buildSystemPrompt(username, today, time, semesterContext)
         ));
+
+        if (useMemory) {
+            for (ChatTurn turn : memory.load(userId, conversationId)) {
+                messages.add(Map.of("role", turn.role(), "content", turn.content()));
+            }
+        }
 
         messages.add(Map.of(
             "role", "user",
@@ -120,7 +129,13 @@ public class AgentService {
             // done, return the answer
             if ("stop".equals(finishReason)) {
                 String content = (String) assistantMessage.get("content");
+                
+                 if (useMemory && content != null) {
+                    memory.append(userId, conversationId, new ChatTurn("user", resolvedQuestion));
+                    memory.append(userId, conversationId, new ChatTurn("assistant", content));
+                }
                 return content;
+        
             }
 
             // GPT-4o tool call executions
@@ -283,5 +298,27 @@ public class AgentService {
         );
 
         return List.of(searchResourcesTool, getScheduleTool, getAssignmentsTool, getTasksTool, getSummaryTool);
+    }
+
+    private String buildSystemPrompt(String username, String today, String time, String semesterContext) {
+        return "You are a friendly and helpful course assistant for students. " +
+               "The student's name is " + username + ". " +
+               "Today is " + today + ". Current time is " + time + ". " +
+               semesterContext + " " +
+               "Use the available tools to answer questions about their study materials, class schedule, assignments, and tasks. " +
+               "When asked about schedule, use get_schedule to get all courses then filter by the day the student is asking about. " +
+               "When listing schedule always list in time order. " +
+               "When summarizing assignments or tasks, the tools return items pre-grouped under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. Present these groups as-is under the same section names. Only include a section if the tool returned items in it. " +
+               "Avoid special formatting like bold and italics. " +
+               "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
+               "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
+               "When answering from search_resources results, always state which document the information came from (e.g. 'According to your syllabus.pdf, ...'). " +
+               "You may ONLY answer questions related to the student's schedule, assignments, tasks, and uploaded course materials. " +
+               "If asked about anything outside these topics, politely decline and explain you can only help with their coursework and schedule. " +
+               // MEMORY: teach the model that earlier turns are context, not fresh truth.
+               "Earlier messages in this conversation are prior context. Resolve follow-up references " +
+               "like 'that one', 'it', or 'what about tomorrow?' against them. " +
+               "Never reuse tool results from earlier turns — always re-call the relevant tool, " +
+               "since assignments, tasks and the current time may have changed.";
     }
 }
