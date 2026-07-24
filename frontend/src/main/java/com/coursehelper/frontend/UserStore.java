@@ -26,6 +26,7 @@ public class UserStore {
     private Map<Long, List<Task>> tasksByCourse = new HashMap<>();
     private UserSettings settings;
     private final ObjectProperty<byte[]> profilePicture = new SimpleObjectProperty<>();
+    private String conversationId;
 
 
     private final ObservableList<Assignment> upcomingAssignments = 
@@ -219,6 +220,16 @@ public class UserStore {
         settings = null;
         profilePicture.set(null);
         upcomingAssignments.clear();
+    }
+
+
+
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
     }
 
 }

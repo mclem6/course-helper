@@ -1,24 +1,22 @@
 package com.coursehelper.backend.ai;
 
 import com.coursehelper.backend.ai.assignment.AssignmentTool;
+import com.coursehelper.backend.ai.memory.ChatTurn;              // MEMORY
+import com.coursehelper.backend.ai.memory.ConversationMemory;    // MEMORY
 import com.coursehelper.backend.ai.retrieval.ResourceRetrievalTool;
 import com.coursehelper.backend.ai.schedule.ScheduleTool;
 import com.coursehelper.backend.ai.summary.SummaryTool;
 import com.coursehelper.backend.ai.task.TaskTool;
 import com.coursehelper.backend.exceptions.AIServiceException;
-import com.coursehelper.backend.userSettings.UserSettings;
 import com.coursehelper.backend.userSettings.SettingsRepository;
+import com.coursehelper.backend.userSettings.UserSettings;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-
-import com.coursehelper.backend.ai.memory.ChatTurn;            
-import com.coursehelper.backend.ai.memory.ConversationMemory; 
 
 @Service
 public class AgentService {
@@ -30,9 +28,8 @@ public class AgentService {
     private final TaskTool taskTool;
     private final SummaryTool summaryTool;
     private final SettingsRepository settingsRepository;
+    private final ConversationMemory memory;                     // MEMORY
     private final ObjectMapper mapper;
-
-    private final ConversationMemory memory;  
 
     public AgentService(LLMClient llmClient,
                         ResourceRetrievalTool resourceRetrievalTool,
@@ -40,8 +37,8 @@ public class AgentService {
                         AssignmentTool assignmentTool,
                         TaskTool taskTool,
                         SummaryTool summaryTool,
-                        SettingsRepository settingsRepository, 
-                        ConversationMemory memory) {
+                        SettingsRepository settingsRepository,
+                        ConversationMemory memory) {             // MEMORY
         this.llmClient = llmClient;
         this.resourceRetrievalTool = resourceRetrievalTool;
         this.scheduleTool = scheduleTool;
@@ -49,8 +46,8 @@ public class AgentService {
         this.taskTool = taskTool;
         this.summaryTool = summaryTool;
         this.settingsRepository = settingsRepository;
+        this.memory = memory;                                    // MEMORY
         this.mapper = new ObjectMapper();
-        this.memory = memory;  
     }
 
     private static final String GREETING_PROMPT =
@@ -59,25 +56,25 @@ public class AgentService {
         "Present the three sections exactly as returned — Overdue, Due Today, Upcoming.\n" +
         "End with one short encouraging sentence.";
 
-
+    /** Back-compat overload: stateless single-shot, no memory. */
     public String answerQuery(String userQuestion, Long userId, String username) {
         return answerQuery(userQuestion, userId, username, null);
     }
 
-    public String answerQuery(String userQuestion, Long userId, String username, String conversationId) {
-
-        String resolvedQuestion = "greeting".equals(userQuestion) ? GREETING_PROMPT : userQuestion;
+    public String answerQuery(String userQuestion, Long userId, String username,
+                             String conversationId) {            // MEMORY
 
         boolean isGreeting = "greeting".equals(userQuestion);
-        boolean useMemory = conversationId != null && !isGreeting;
+        String resolvedQuestion = isGreeting ? GREETING_PROMPT : userQuestion;
 
-        // get current date and time
+        // A greeting is a fresh daily summary — don't carry stale context into it.
+        boolean useMemory = conversationId != null && !isGreeting;   // MEMORY
+
         String today = LocalDateTime.now().format(
             DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"));
         String time = LocalDateTime.now().format(
             DateTimeFormatter.ofPattern("HH:mm"));
 
-        // get user semester settings
         UserSettings settings = settingsRepository.findByUserId(userId).orElse(null);
 
         String semesterContext = settings != null
@@ -85,60 +82,52 @@ public class AgentService {
               "Semester runs from " + settings.getSemesterStart() + " to " + settings.getSemesterEnd() + "."
             : "";
 
-        // build conversation history
         List<Map<String, Object>> messages = new ArrayList<>();
         messages.add(Map.of(
             "role", "system",
             "content", buildSystemPrompt(username, today, time, semesterContext)
         ));
 
+        // MEMORY: replay prior turns between the (freshly rebuilt) system prompt
+        // and the new user message.
         if (useMemory) {
             for (ChatTurn turn : memory.load(userId, conversationId)) {
                 messages.add(Map.of("role", turn.role(), "content", turn.content()));
             }
         }
 
-        messages.add(Map.of(
-            "role", "user",
-            "content", resolvedQuestion
-        ));
+        messages.add(Map.of("role", "user", "content", resolvedQuestion));
 
         List<Map<String, Object>> tools = buildToolDefinitions();
 
         int maxIterations = 10;
         int iterations = 0;
 
-        // loop until GPT-4o gives a final answer
         while (iterations++ < maxIterations) {
 
-            // call GPT-4o
             Map<String, Object> response = llmClient.callWithTools(messages, tools);
 
-            // extract the first choice
             List<Map<String, Object>> choices = mapper.convertValue(
                 response.get("choices"), new TypeReference<List<Map<String, Object>>>(){});
-         
+
             Map<String, Object> choice = choices.get(0);
             String finishReason = (String) choice.get("finish_reason");
             Map<String, Object> assistantMessage = mapper.convertValue(
-                 choice.get("message"), new TypeReference<Map<String, Object>>(){});    
+                choice.get("message"), new TypeReference<Map<String, Object>>(){});
 
-            // add assistant response to conversation history
             messages.add(assistantMessage);
 
-            // done, return the answer
             if ("stop".equals(finishReason)) {
                 String content = (String) assistantMessage.get("content");
-                
-                 if (useMemory && content != null) {
+
+                // MEMORY: persist only the clean exchange, not the ReAct scratchpad.
+                if (useMemory && content != null) {
                     memory.append(userId, conversationId, new ChatTurn("user", resolvedQuestion));
                     memory.append(userId, conversationId, new ChatTurn("assistant", content));
                 }
                 return content;
-        
             }
 
-            // GPT-4o tool call executions
             if ("tool_calls".equals(finishReason)) {
                 List<Map<String, Object>> toolCalls = mapper.convertValue(
                     assistantMessage.get("tool_calls"), new TypeReference<List<Map<String, Object>>>(){});
@@ -146,8 +135,8 @@ public class AgentService {
                 for (Map<String, Object> toolCall : toolCalls) {
                     String toolCallId = (String) toolCall.get("id");
                     Map<String, Object> function = mapper.convertValue(
-                         toolCall.get("function"), new TypeReference<Map<String, Object>>(){});
-                    
+                        toolCall.get("function"), new TypeReference<Map<String, Object>>(){});
+
                     String toolName = (String) function.get("name");
                     String argsJson = (String) function.get("arguments");
 
@@ -163,6 +152,28 @@ public class AgentService {
         }
 
         throw new AIServiceException("Agent exceeded maximum iterations", null);
+    }
+
+    private String buildSystemPrompt(String username, String today, String time, String semesterContext) {
+        return "You are a friendly and helpful course assistant for students. " +
+               "The student's name is " + username + ". " +
+               "Today is " + today + ". Current time is " + time + ". " +
+               semesterContext + " " +
+               "Use the available tools to answer questions about their study materials, class schedule, assignments, and tasks. " +
+               "When asked about schedule, use get_schedule to get all courses then filter by the day the student is asking about. " +
+               "When listing schedule always list in time order. " +
+               "When summarizing assignments or tasks, the tools return items pre-grouped under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. Present these groups as-is under the same section names. Only include a section if the tool returned items in it. " +
+               "Avoid special formatting like bold and italics. " +
+               "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
+               "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
+               "When answering from search_resources results, always state which document the information came from (e.g. 'According to your syllabus.pdf, ...'). " +
+               "You may ONLY answer questions related to the student's schedule, assignments, tasks, and uploaded course materials. " +
+               "If asked about anything outside these topics, politely decline and explain you can only help with their coursework and schedule. " +
+               // MEMORY: teach the model that earlier turns are context, not fresh truth.
+               "Earlier messages in this conversation are prior context. Resolve follow-up references " +
+               "like 'that one', 'it', or 'what about tomorrow?' against them. " +
+               "Never reuse tool results from earlier turns — always re-call the relevant tool, " +
+               "since assignments, tasks and the current time may have changed.";
     }
 
     private String executeTool(String toolName, String argsJson, Long userId) {
@@ -300,25 +311,5 @@ public class AgentService {
         return List.of(searchResourcesTool, getScheduleTool, getAssignmentsTool, getTasksTool, getSummaryTool);
     }
 
-    private String buildSystemPrompt(String username, String today, String time, String semesterContext) {
-        return "You are a friendly and helpful course assistant for students. " +
-               "The student's name is " + username + ". " +
-               "Today is " + today + ". Current time is " + time + ". " +
-               semesterContext + " " +
-               "Use the available tools to answer questions about their study materials, class schedule, assignments, and tasks. " +
-               "When asked about schedule, use get_schedule to get all courses then filter by the day the student is asking about. " +
-               "When listing schedule always list in time order. " +
-               "When summarizing assignments or tasks, the tools return items pre-grouped under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. Present these groups as-is under the same section names. Only include a section if the tool returned items in it. " +
-               "Avoid special formatting like bold and italics. " +
-               "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
-               "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
-               "When answering from search_resources results, always state which document the information came from (e.g. 'According to your syllabus.pdf, ...'). " +
-               "You may ONLY answer questions related to the student's schedule, assignments, tasks, and uploaded course materials. " +
-               "If asked about anything outside these topics, politely decline and explain you can only help with their coursework and schedule. " +
-               // MEMORY: teach the model that earlier turns are context, not fresh truth.
-               "Earlier messages in this conversation are prior context. Resolve follow-up references " +
-               "like 'that one', 'it', or 'what about tomorrow?' against them. " +
-               "Never reuse tool results from earlier turns — always re-call the relevant tool, " +
-               "since assignments, tasks and the current time may have changed.";
-    }
+
 }

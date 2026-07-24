@@ -12,9 +12,9 @@ public class AgentApiService {
         this.apiClient = apiClient;
     }
 
-    public String chat(String message) {
+    public String chat(String message, String conversationId){
         try {
-            return apiClient.post("/agent/chat", new ChatRequestDto(message), String.class);
+            return apiClient.post("/agent/chat", new ChatRequestDto(message, conversationId ), String.class);
         } catch (ApiException e) {
             throw new ApiException(friendlyMessage(e.getStatus()), e.getStatus());
         }
