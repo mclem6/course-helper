@@ -164,7 +164,7 @@ public class MainLayoutController {
     private void sendGreeting() {
         new Thread(() -> {
             try {
-                String response = agentApiService.chat("greeting");
+                String response = agentApiService.chat("greeting", userStore.getConversationId());
                 Platform.runLater(() -> addMessage(response, false));
             } catch (Exception e) {
                 Platform.runLater(() -> addMessage("Hi! How can I help you today?", false));
@@ -189,7 +189,7 @@ public class MainLayoutController {
         new Thread(() -> {
 
             try {
-                String response = agentApiService.chat(message);
+                String response = agentApiService.chat(message, userStore.getConversationId());
 
                 Platform.runLater(() -> {
                     addMessage(response, false);

@@ -244,6 +244,7 @@ public class AccessScreenController {
                             userStore.setTasks(tasks);
                             userStore.setProfilePicture(profilePicture);
                             userStore.filterDataByCurrentCourses();
+                            userStore.setConversationId(UserSession.getUser().getId() + "-" + System.currentTimeMillis());
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -256,7 +257,7 @@ public class AccessScreenController {
                                 "Only include a section if there are actual items to list:\n" +
                                 "**Overdue:** Incomplete assignments or tasks already past due (only if any exist).\n" +
                                 "**Due Soon:** Upcoming incomplete assignments or tasks (only if any exist). If the total across both sections exceeds 5 items, limit to items due within the next 3 days.\n" +
-                                "If there is nothing overdue and nothing due soon, skip both sections and just say there is nothing on their schedule. End with one short encouraging sentence.");
+                                "If there is nothing overdue and nothing due soon, skip both sections and just say there is nothing on their schedule. End with one short encouraging sentence.", userStore.getConversationId());
                             UserSession.setPendingGreeting(greeting);
                         } catch (Exception e) {
                             UserSession.setPendingGreeting("Hi! How can I help you today?");

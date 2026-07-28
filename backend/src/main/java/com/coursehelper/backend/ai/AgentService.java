@@ -1,6 +1,7 @@
 package com.coursehelper.backend.ai;
 
 import com.coursehelper.backend.ai.assignment.AssignmentTool;
+import com.coursehelper.backend.ai.memory.ConversationMemoryService;
 import com.coursehelper.backend.ai.retrieval.ResourceRetrievalTool;
 import com.coursehelper.backend.ai.schedule.ScheduleTool;
 import com.coursehelper.backend.ai.summary.SummaryTool;
@@ -26,6 +27,7 @@ public class AgentService {
     private final TaskTool taskTool;
     private final SummaryTool summaryTool;
     private final SettingsRepository settingsRepository;
+    private final ConversationMemoryService memory;   // *** MEMORY ***
     private final ObjectMapper mapper;
 
     public AgentService(LLMClient llmClient,
@@ -34,7 +36,8 @@ public class AgentService {
                         AssignmentTool assignmentTool,
                         TaskTool taskTool,
                         SummaryTool summaryTool,
-                        SettingsRepository settingsRepository) {
+                        SettingsRepository settingsRepository,
+                        ConversationMemoryService memory) {   // *** MEMORY ***
         this.llmClient = llmClient;
         this.resourceRetrievalTool = resourceRetrievalTool;
         this.scheduleTool = scheduleTool;
@@ -42,6 +45,7 @@ public class AgentService {
         this.taskTool = taskTool;
         this.summaryTool = summaryTool;
         this.settingsRepository = settingsRepository;
+        this.memory = memory;                                  // *** MEMORY ***
         this.mapper = new ObjectMapper();
     }
 
@@ -51,97 +55,96 @@ public class AgentService {
         "Present the three sections exactly as returned — Overdue, Due Today, Upcoming.\n" +
         "End with one short encouraging sentence.";
 
-    public String answerQuery(String userQuestion, Long userId, String username) {
+    // *** MEMORY *** — added conversationId parameter
+    public String answerQuery(String userQuestion,
+                              Long userId,
+                              String username,
+                              String conversationId) {
 
-        String resolvedQuestion = "greeting".equals(userQuestion) ? GREETING_PROMPT : userQuestion;
+        boolean isGreeting = "greeting".equals(userQuestion);
+        String resolvedQuestion = isGreeting ? GREETING_PROMPT : userQuestion;
 
-        // get current date and time
-        String today = LocalDateTime.now().format(
-            DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"));
-        String time = LocalDateTime.now().format(
-            DateTimeFormatter.ofPattern("HH:mm"));
+        // current date/time
+        String today = LocalDateTime.now()
+            .format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"));
+        String time  = LocalDateTime.now()
+            .format(DateTimeFormatter.ofPattern("HH:mm"));
 
-        // get user semester settings
+        // semester context
         UserSettings settings = settingsRepository.findByUserId(userId).orElse(null);
-
         String semesterContext = settings != null
-            ? "Current semester: " + settings.getCurrentSemester() + " " + settings.getCurrentYear() + ". " +
-              "Semester runs from " + settings.getSemesterStart() + " to " + settings.getSemesterEnd() + "."
+            ? "Current semester: " + settings.getCurrentSemester() + " "
+              + settings.getCurrentYear() + ". "
+              + "Semester runs from " + settings.getSemesterStart()
+              + " to " + settings.getSemesterEnd() + "."
             : "";
 
-        // build conversation history
+        // ── build message list ──────────────────────────────────
         List<Map<String, Object>> messages = new ArrayList<>();
+
+        // 1) system prompt (always first, never stored in memory)
         messages.add(Map.of(
             "role", "system",
-            "content", "You are a friendly and helpful course assistant for students. " +
-                       "The student's name is " + username + ". " +
-                       "Today is " + today + ". Current time is " + time + ". " +
-                       semesterContext + " " +
-                       "Use the available tools to answer questions about their study materials, class schedule, assignments, and tasks. " +
-                       "When asked about schedule, use get_schedule to get all courses then filter by the day the student is asking about. " +
-                       "When listing schedule always list in time order. " +
-                       "When summarizing assignments or tasks, the tools return items pre-grouped under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. Present these groups as-is under the same section names. Only include a section if the tool returned items in it. " +
-                       "Avoid special formatting like bold and italics. " +
-                       "When a student asks about any course document or resource — such as a syllabus, lecture notes, readings, course outline, or any uploaded material — always call search_resources first. " +
-                       "If search_resources returns no results, tell the student that no matching documents were found and suggest they upload the relevant file. " +
-                       "When answering from search_resources results, always state which document the information came from (e.g. 'According to your syllabus.pdf, ...'). " +
-                       "You may ONLY answer questions related to the student's schedule, assignments, tasks, and uploaded course materials. " +
-                       "If asked about anything outside these topics, politely decline and explain you can only help with their coursework and schedule."
+            "content", buildSystemPrompt(username, today, time, semesterContext)
         ));
 
-        messages.add(Map.of(
-            "role", "user",
-            "content", resolvedQuestion
-        ));
+        // 2) *** MEMORY *** — inject prior conversation turns
+        messages.addAll(memory.loadHistory(conversationId));
 
+        // 3) current user message
+        messages.add(Map.of("role", "user", "content", resolvedQuestion));
+
+        // ── ReAct loop (unchanged) ──────────────────────────────
         List<Map<String, Object>> tools = buildToolDefinitions();
-
         int maxIterations = 10;
-        int iterations = 0;
+        int iterations    = 0;
 
-        // loop until GPT-4o gives a final answer
         while (iterations++ < maxIterations) {
 
-            // call GPT-4o
             Map<String, Object> response = llmClient.callWithTools(messages, tools);
 
-            // extract the first choice
             List<Map<String, Object>> choices = mapper.convertValue(
-                response.get("choices"), new TypeReference<List<Map<String, Object>>>(){});
-         
+                response.get("choices"),
+                new TypeReference<List<Map<String, Object>>>(){});
+
             Map<String, Object> choice = choices.get(0);
             String finishReason = (String) choice.get("finish_reason");
             Map<String, Object> assistantMessage = mapper.convertValue(
-                 choice.get("message"), new TypeReference<Map<String, Object>>(){});    
+                choice.get("message"),
+                new TypeReference<Map<String, Object>>(){});
 
-            // add assistant response to conversation history
             messages.add(assistantMessage);
 
-            // done, return the answer
             if ("stop".equals(finishReason)) {
                 String content = (String) assistantMessage.get("content");
+
+                // *** MEMORY *** — persist the completed turn
+                // Store a clean user string (not the verbose greeting prompt)
+                String storedUserText = isGreeting ? "Hello" : userQuestion;
+                memory.saveTurn(conversationId, userId, storedUserText, content);
+
                 return content;
             }
 
-            // GPT-4o tool call executions
             if ("tool_calls".equals(finishReason)) {
                 List<Map<String, Object>> toolCalls = mapper.convertValue(
-                    assistantMessage.get("tool_calls"), new TypeReference<List<Map<String, Object>>>(){});
+                    assistantMessage.get("tool_calls"),
+                    new TypeReference<List<Map<String, Object>>>(){});
 
                 for (Map<String, Object> toolCall : toolCalls) {
                     String toolCallId = (String) toolCall.get("id");
                     Map<String, Object> function = mapper.convertValue(
-                         toolCall.get("function"), new TypeReference<Map<String, Object>>(){});
-                    
+                        toolCall.get("function"),
+                        new TypeReference<Map<String, Object>>(){});
+
                     String toolName = (String) function.get("name");
                     String argsJson = (String) function.get("arguments");
-
-                    String result = executeTool(toolName, argsJson, userId);
+                    String result   = executeTool(toolName, argsJson, userId);
 
                     messages.add(Map.of(
-                        "role", "tool",
+                        "role",         "tool",
                         "tool_call_id", toolCallId,
-                        "content", result
+                        "content",      result
                     ));
                 }
             }
@@ -149,6 +152,36 @@ public class AgentService {
 
         throw new AIServiceException("Agent exceeded maximum iterations", null);
     }
+
+    // *** MEMORY *** — extracted so the system prompt is built in one place
+    private String buildSystemPrompt(String username, String today,
+                                     String time, String semesterContext) {
+        return "You are a friendly and helpful course assistant for students. " +
+               "The student's name is " + username + ". " +
+               "Today is " + today + ". Current time is " + time + ". " +
+               semesterContext + " " +
+               "Use the available tools to answer questions about their study materials, " +
+               "class schedule, assignments, and tasks. " +
+               "When asked about schedule, use get_schedule to get all courses then filter " +
+               "by the day the student is asking about. " +
+               "When listing schedule always list in time order. " +
+               "When summarizing assignments or tasks, the tools return items pre-grouped " +
+               "under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. " +
+               "Present these groups as-is under the same section names. " +
+               "Only include a section if the tool returned items in it. " +
+               "Avoid special formatting like bold and italics. " +
+               "When a student asks about any course document or resource, always call " +
+               "search_resources first. " +
+               "If search_resources returns no results, tell the student that no matching " +
+               "documents were found and suggest they upload the relevant file. " +
+               "When answering from search_resources results, always state which document " +
+               "the information came from. " +
+               "You may ONLY answer questions related to the student's schedule, assignments, " +
+               "tasks, and uploaded course materials. " +
+               "If asked about anything outside these topics, politely decline and explain " +
+               "you can only help with their coursework and schedule.";
+    }
+
 
     private String executeTool(String toolName, String argsJson, Long userId) {
         try {
