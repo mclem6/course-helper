@@ -27,7 +27,7 @@ public class ChatMessage {
     private String conversationId;
 
     @Column(nullable = false, length = 16)
-    private String role;               // "user" or "assistant"
+    private String role;              
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -48,7 +48,6 @@ public class ChatMessage {
         this.createdAt      = LocalDateTime.now();
     }
 
-    // -------- getters --------
     public Long   getId()             { return id; }
     public Long   getUserId()         { return userId; }
     public String getConversationId() { return conversationId; }

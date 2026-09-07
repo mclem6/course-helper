@@ -77,24 +77,35 @@ public class AssignmentTool {
             .sorted(Comparator.comparing(Assignment::getDueDate, Comparator.nullsLast(Comparator.naturalOrder())))
             .collect(Collectors.toList());
 
-        List<Assignment> overdue  = sorted.stream().filter(a -> a.getDueDate() != null && a.getDueDate().isBefore(today)).toList();
-        List<Assignment> dueToday = sorted.stream().filter(a -> a.getDueDate() != null && a.getDueDate().isEqual(today)).toList();
-        List<Assignment> upcoming = sorted.stream().filter(a -> a.getDueDate() != null && a.getDueDate().isAfter(today)).toList();
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== OVERDUE ===\n");
-        if (overdue.isEmpty()) sb.append("None\n\n");
-        else overdue.forEach(a -> sb.append(formatAssignment(a, courseNames)).append("\n\n"));
+        if("COMPLETED".equalsIgnoreCase(status)){
+            return sorted.stream()
+                .map(a -> formatAssignment(a, courseNames))
+                .collect(Collectors.joining("\n\n"));
+        } else {
 
-        sb.append("=== DUE TODAY ===\n");
-        if (dueToday.isEmpty()) sb.append("None\n\n");
-        else dueToday.forEach(a -> sb.append(formatAssignment(a, courseNames)).append("\n\n"));
+            List<Assignment> overdue  = sorted.stream().filter(a -> a.getDueDate() != null && a.getDueDate().isBefore(today)).toList();
+            List<Assignment> dueToday = sorted.stream().filter(a -> a.getDueDate() != null && a.getDueDate().isEqual(today)).toList();
+            List<Assignment> upcoming = sorted.stream().filter(a -> a.getDueDate() != null && a.getDueDate().isAfter(today)).toList();
 
-        sb.append("=== UPCOMING ===\n");
-        if (upcoming.isEmpty()) sb.append("None\n\n");
-        else upcoming.forEach(a -> sb.append(formatAssignment(a, courseNames)).append("\n\n"));
+            StringBuilder sb = new StringBuilder();
+            sb.append("=== OVERDUE ===\n");
+            if (overdue.isEmpty()) sb.append("None\n\n");
+            else overdue.forEach(a -> sb.append(formatAssignment(a, courseNames)).append("\n\n"));
 
-        return sb.toString().trim();
+            sb.append("=== DUE TODAY ===\n");
+            if (dueToday.isEmpty()) sb.append("None\n\n");
+            else dueToday.forEach(a -> sb.append(formatAssignment(a, courseNames)).append("\n\n"));
+
+            sb.append("=== UPCOMING ===\n");
+            if (upcoming.isEmpty()) sb.append("None\n\n");
+            else upcoming.forEach(a -> sb.append(formatAssignment(a, courseNames)).append("\n\n"));
+
+            return sb.toString().trim();
+
+        }
+
+
     }
 
     private String formatAssignment(Assignment a, Map<Long, String> courseNames) {

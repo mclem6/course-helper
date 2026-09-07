@@ -12,6 +12,8 @@ import com.coursehelper.backend.userSettings.SettingsRepository;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.core.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,8 +29,9 @@ public class AgentService {
     private final TaskTool taskTool;
     private final SummaryTool summaryTool;
     private final SettingsRepository settingsRepository;
-    private final ConversationMemoryService memory;   // *** MEMORY ***
+    private final ConversationMemoryService memory;  
     private final ObjectMapper mapper;
+    private static final Logger log = LoggerFactory.getLogger(AgentService.class);
 
     public AgentService(LLMClient llmClient,
                         ResourceRetrievalTool resourceRetrievalTool,
@@ -37,7 +40,7 @@ public class AgentService {
                         TaskTool taskTool,
                         SummaryTool summaryTool,
                         SettingsRepository settingsRepository,
-                        ConversationMemoryService memory) {   // *** MEMORY ***
+                        ConversationMemoryService memory) {   
         this.llmClient = llmClient;
         this.resourceRetrievalTool = resourceRetrievalTool;
         this.scheduleTool = scheduleTool;
@@ -45,17 +48,16 @@ public class AgentService {
         this.taskTool = taskTool;
         this.summaryTool = summaryTool;
         this.settingsRepository = settingsRepository;
-        this.memory = memory;                                  // *** MEMORY ***
+        this.memory = memory;                                  
         this.mapper = new ObjectMapper();
     }
 
     private static final String GREETING_PROMPT =
-        "You are a friendly course assistant for students. Greet the student by name.\n" +
-        "Call get_summary to fetch the student's incomplete assignments and tasks, already grouped by due date.\n" +
-        "Present the three sections exactly as returned — Overdue, Due Today, Upcoming.\n" +
+        "Greet the student by name.\n" +
+        "Call get_summary. \n" +
         "End with one short encouraging sentence.";
 
-    // *** MEMORY *** — added conversationId parameter
+
     public String answerQuery(String userQuestion,
                               Long userId,
                               String username,
@@ -82,19 +84,19 @@ public class AgentService {
         // ── build message list ──────────────────────────────────
         List<Map<String, Object>> messages = new ArrayList<>();
 
-        // 1) system prompt (always first, never stored in memory)
+        // don't store in memory 
         messages.add(Map.of(
             "role", "system",
             "content", buildSystemPrompt(username, today, time, semesterContext)
         ));
 
-        // 2) *** MEMORY *** — inject prior conversation turns
+        // inject prior conversation turns
         messages.addAll(memory.loadHistory(conversationId));
 
         // 3) current user message
         messages.add(Map.of("role", "user", "content", resolvedQuestion));
 
-        // ── ReAct loop (unchanged) ──────────────────────────────
+        // ReAct loop
         List<Map<String, Object>> tools = buildToolDefinitions();
         int maxIterations = 10;
         int iterations    = 0;
@@ -115,10 +117,16 @@ public class AgentService {
 
             messages.add(assistantMessage);
 
+            
+
+            log.info("finishReason={} content={} tool_calls={}",
+            finishReason,
+            assistantMessage.get("content"),
+            assistantMessage.get("tool_calls"));
+
             if ("stop".equals(finishReason)) {
                 String content = (String) assistantMessage.get("content");
 
-                // *** MEMORY *** — persist the completed turn
                 // Store a clean user string (not the verbose greeting prompt)
                 String storedUserText = isGreeting ? "Hello" : userQuestion;
                 memory.saveTurn(conversationId, userId, storedUserText, content);
@@ -153,7 +161,7 @@ public class AgentService {
         throw new AIServiceException("Agent exceeded maximum iterations", null);
     }
 
-    // *** MEMORY *** — extracted so the system prompt is built in one place
+    
     private String buildSystemPrompt(String username, String today,
                                      String time, String semesterContext) {
         return "You are a friendly and helpful course assistant for students. " +
@@ -162,16 +170,14 @@ public class AgentService {
                semesterContext + " " +
                "Use the available tools to answer questions about their study materials, " +
                "class schedule, assignments, and tasks. " +
-               "When asked about schedule, use get_schedule to get all courses then filter " +
-               "by the day the student is asking about. " +
-               "When listing schedule always list in time order. " +
-               "When summarizing assignments or tasks, the tools return items pre-grouped " +
+               "When listing schedule always list in chronological order. " +
+               "When summarizing assignments and/or tasks, the tools return items pre-grouped " +
                "under === OVERDUE ===, === DUE TODAY ===, and === UPCOMING === headers. " +
                "Present these groups as-is under the same section names. " +
-               "Only include a section if the tool returned items in it. " +
-               "Avoid special formatting like bold and italics. " +
-               "When a student asks about any course document or resource, always call " +
-               "search_resources first. " +
+               "Only include a section if it's list is not null or empty. " +
+               "When presenting an assignment or task, always include its course, due date, and status. " +
+               "For assignments, also include the type (homework, test, project, or lab). " +
+               "Do not use or include any formatting markdown. " +
                "If search_resources returns no results, tell the student that no matching " +
                "documents were found and suggest they upload the relevant file. " +
                "When answering from search_resources results, always state which document " +
@@ -192,7 +198,7 @@ public class AgentService {
             String status    = (String) args.getOrDefault("status", "INCOMPLETE");
             String completed = (String) args.getOrDefault("completed", "incomplete");
 
-            return switch (toolName) {
+            String result = switch (toolName) {
                 case "search_resources" -> resourceRetrievalTool.search(query, userId);
                 case "get_schedule"     -> scheduleTool.search(query, userId);
                 case "get_assignments"  -> assignmentTool.search(query, userId, status);
@@ -201,7 +207,12 @@ public class AgentService {
                 default -> "Unknown tool: " + toolName;
             };
 
+            String reasoning = (String) args.get("reasoning");
+            log.info("Tool call: {} reasoning=\"{}\" args={} result={}", toolName, reasoning, argsJson, result);
+            return result;
+
         } catch (Exception e) {
+            log.error("Tool execution failed: {} args={}", toolName, argsJson, e);
             throw new AIServiceException("Failed to execute tool: " + toolName, e);
         }
     }
@@ -254,13 +265,17 @@ public class AgentService {
             "type", "function",
             "function", Map.of(
                 "name", "get_assignments",
-                "description", "Get the student's assignments for the current semester. " +
-                               "Returns title, course name, type (HOMEWORK/TEST/PROJECT/LAB), due date, and status. " +
-                               "Use when generating a student summary or greeting, or when the student asks about assignments, homework, tests, projects, or deadlines. " +
-                               "Default status is INCOMPLETE — only pass COMPLETED or ALL when explicitly asked.",
+                "description", "Get the student's assignments for the current semester, filtered by course, type, or title. " +
+               "Returns title, course name, type (HOMEWORK/TEST/PROJECT/LAB), due date, and status, as a flat list when filtering by COMPLETED, grouped by due dates otherwise. " +
+               "Use when the student filters by a specific course, assignment type, or title, or wants completed/all assignments rather than just what's currently due. " +
+               "Default status is INCOMPLETE — only pass COMPLETED or ALL when asked.",
                 "parameters", Map.of(
                     "type", "object",
                     "properties", Map.of(
+                        "reasoning", Map.of(
+                            "type", "string",
+                            "description", "Briefly explain why this tool is the right choice for the student's question before calling it."
+                        ),
                         "query", Map.of(
                             "type", "string",
                             "description", "Filter by course name, assignment type, or title. Pass empty string for all."
@@ -268,10 +283,11 @@ public class AgentService {
                         "status", Map.of(
                             "type", "string",
                             "enum", List.of("INCOMPLETE", "COMPLETED", "ALL"),
-                            "description", "Filter by completion status. Defaults to INCOMPLETE."
+                            "description", "Filter by completion status. Defaults to INCOMPLETE. Words like 'overdue', 'due today', or 'upcoming' always imply INCOMPLETE regardless of prior conversation context. " +
+                            "Use ALL when the student's phrasing includes words like 'all' or 'every'. Use COMPLETED only when they ask specifically for finished/done work."
                         )
                     ),
-                    "required", List.of("query")
+                    "required", List.of("reasoning", "query")
                 )
             )
         );
@@ -280,24 +296,29 @@ public class AgentService {
             "type", "function",
             "function", Map.of(
                 "name", "get_tasks",
-                "description", "Get the student's tasks for the current semester. " +
-                               "Returns title, course name, due date, and completion status. " +
-                               "Use when generating a student summary or greeting, or when the student asks about tasks or to-do items. " +
-                               "Default is incomplete tasks only — only pass 'completed' or 'all' when explicitly asked.",
+                "description","Get the student's tasks for the current semester, filtered by course or title, grouped by due date. " +
+               "Returns title, course name, due date, and staus (COMPLETE or INCOMPLETE)" +
+               "Use when the student filters by a specific course or title, or wants completed/all tasks rather than just what's currently due. " +
+               "Default is incomplete tasks only — only pass 'completed' or 'all' when asked.",
                 "parameters", Map.of(
                     "type", "object",
                     "properties", Map.of(
+                        "reasoning", Map.of(
+                            "type", "string",
+                            "description", "Briefly explain why this tool is the right choice for the student's question before calling it."
+                        ),
                         "query", Map.of(
                             "type", "string",
                             "description", "Filter by course name or title. Pass empty string for all."
                         ),
                         "completed", Map.of(
                             "type", "string",
-                            "enum", List.of("incomplete", "completed", "all"),
-                            "description", "Filter by completion. Defaults to incomplete."
+                            "enum", List.of("INCOMPLETE", "COMPLETED", "ALL"),
+                            "description", "Filter by completion status. Defaults to INCOMPLETE. Words like 'overdue', 'due today', or 'upcoming' always imply INCOMPLETE regardless of prior conversation context. " +
+                            "Use ALL when the student's phrasing includes words like 'all' or 'every'. Use COMPLETED only when they ask specifically for finished/done work."
                         )
                     ),
-                    "required", List.of("query")
+                    "required", List.of("reasoning", "query")
                 )
             )
         );
@@ -306,11 +327,15 @@ public class AgentService {
             "type", "function",
             "function", Map.of(
                 "name", "get_summary",
-                "description", "Get a combined summary of the student's incomplete assignments and tasks, pre-grouped into Overdue, Due Today, and Upcoming sections. Use this for greetings and daily summaries.",
+                "description", "Get a combined overview of the student's incomplete assignments and tasks across all courses, with no filtering. Use this for greetings, daily summaries, and general 'what's due' questions with no course, type, or status filter specified.",
                 "parameters", Map.of(
                     "type", "object",
-                    "properties", Map.of(),
-                    "required", List.of()
+                    "properties", Map.of(
+                        "reasoning", Map.of(
+                    "type", "string",
+                    "description", "Briefly explain why this tool is the right choice for the student's question before calling it.")
+                    ),
+                    "required", List.of("reasoning")
                 )
             )
         );

@@ -75,30 +75,47 @@ public class TaskTool {
             .sorted(Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder())))
             .collect(Collectors.toList());
 
-        List<Task> overdue  = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isBefore(today)).toList();
-        List<Task> dueToday = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isEqual(today)).toList();
-        List<Task> upcoming = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isAfter(today)).toList();
+        if(completed.equals("COMPLETED")){
+            return sorted.stream()
+                .map(t -> formatTask(t, courseNames))
+                .collect(Collectors.joining("\n\n"));
+        } 
+        else {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== OVERDUE ===\n");
-        if (overdue.isEmpty()) sb.append("None\n\n");
-        else overdue.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
+            List<Task> overdue  = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isBefore(today)).toList();
+            List<Task> dueToday = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isEqual(today)).toList();
+            List<Task> upcoming = sorted.stream().filter(t -> t.getDueDate() != null && t.getDueDate().isAfter(today)).toList();
 
-        sb.append("=== DUE TODAY ===\n");
-        if (dueToday.isEmpty()) sb.append("None\n\n");
-        else dueToday.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
 
-        sb.append("=== UPCOMING ===\n");
-        if (upcoming.isEmpty()) sb.append("None\n\n");
-        else upcoming.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
 
-        return sb.toString().trim();
+            StringBuilder sb = new StringBuilder();
+            if (!overdue.isEmpty()) {
+                sb.append("=== OVERDUE ===\n");
+                overdue.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
+            }
+
+            if (!dueToday.isEmpty()) {
+                sb.append("=== DUE TODAY ===\n");
+                dueToday.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
+            }
+
+            if (!upcoming.isEmpty()) {
+                sb.append("=== UPCOMING ===\n");
+                upcoming.forEach(t -> sb.append(formatTask(t, courseNames)).append("\n\n"));
+            }
+
+            return sb.toString().trim();
+
+        }
+
+
     }
 
     private String formatTask(Task t, Map<Long, String> courseNames) {
-        return String.format("Title: %s\nCourse: %s\nDue: %s",
+        return String.format("Title: %s\nCourse: %s\nDue: %s, Status: %s",
             t.getTitle(),
             courseNames.get(t.getCourseId()),
-            t.getDueDate() != null ? t.getDueDate() : "No date");
+            t.getDueDate() != null ? t.getDueDate() : "No date",
+            t.getCompleted() ? "COMPLETED" : "INCOMPLETE");
     }
 }
