@@ -1,6 +1,6 @@
 # CourseHelper
 
-Students juggle courses, deadlines, and documents across a dozen tools. CourseHelper is a full-stack Java desktop application that centralizes it all, with an AI assistant that answers questions about their schedule and uploaded course materials.
+Students juggle courses, deadlines, and documents across a dozen tools. CourseHelper is a full-stack Java desktop application that centralizes it all, with an agentic AI assistant that autonomously selects and calls backend tools to answer questions about their schedule and uploaded course materials.
 
 
 ![CI](https://github.com/mclem6/course-helper/actions/workflows/ci.yml/badge.svg)
@@ -100,7 +100,7 @@ The AI assistant runs an agentic loop with GPT-4o — it keeps calling tools unt
 | `get_tasks` | Fetch tasks filtered by completion |
 | `get_summary` | Combined overdue / due-today / upcoming summary |
 
-All data fetching and classification happens server-side — the model only formats and presents the result.
+All data fetching and deterministic structuring happens server-side — the model interprets student intent to select the right tool and filters, then presents the result.
 
 ### RAG Pipeline
 
